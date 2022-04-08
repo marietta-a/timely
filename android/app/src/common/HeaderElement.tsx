@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     mainWrapper: {
        width: '100%',
        backgroundColor: '#3e5ba3',
-       height: '15%',
+       height: '18%',
        flexDirection:'row',
        justifyContent: 'flex-start',
        paddingTop: 10,

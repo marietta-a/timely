@@ -11,7 +11,7 @@ style? : any
 }> = ({style}) => {
     style = style != null ? style : styles;
     return (
-        <View style={style.wrapper}>
+        <View style={style}>
             <TouchableOpacity
               onPress={() => {console.log('add button pressed!')}}
             >
@@ -25,6 +25,7 @@ style? : any
 
 const styles = StyleSheet.create({
     design: {
+        zIndex: 1,
         justifyContent: 'center',
         fontWeight: 'bold',
         borderWidth: 1,
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#3e9ca3',
         borderColor: '#ffffff',
         shadowRadius: 5,
-        
+        position: 'absolute',
     },
     text: {
         fontSize: 18,

@@ -4,12 +4,15 @@
 
 import React, { Component } from "react"
 import { Text, View } from "react-native";
+import AddButton from "./AddButton";
 
 const FooterElement: React.FC<{
     Element?: View
 }> = ({Element}) => {
   return (
-      <View> </View>
+      <View>
+        <AddButton />
+      </View>
   );
 };
 

@@ -1,7 +1,9 @@
+/* eslint-disable no-return-assign */
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Button, FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import AddButton from '../../common/AddButton';
 import { Subject } from '../../models/Subject';
@@ -21,15 +23,18 @@ const STUDENTS : Subject[] = [
     },
 ];
 
+let subjectColor = '#000000';
+
 const Item: React.FC<{
     record: Subject
 }> = ({record}) => (
+
     <View style={styles.container}>
         <View style = {{
             height: 50,
             width: 10,
-            backgroundColor: record.Color
-        }}></View>
+            backgroundColor: record.Color,
+        }} />
         <View style={styles.textContainer}>
             <Text style={styles.header}>{record.Name}</Text>
             <Text>{record.Teacher}</Text>
@@ -51,7 +56,7 @@ class SubjectPage extends Component{
                   renderItem={renderItem}
                   keyExtractor={item => item.Id}
                 />
-                <AddButton style={null}/>
+                <AddButton style={styles.buttonAdd} />
             </SafeAreaView>
         );
     }
@@ -63,24 +68,31 @@ const styles = StyleSheet.create(
             display: 'flex',
             flexDirection: 'row',
             marginTop: 4,
-            borderTopWidth: 1,
+            borderTopWidth: 0.3,
+            borderTopColor: subjectColor,
 
         },
         header: {
             fontSize: 18,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
         },
         textContainer: {
-            paddingLeft: 4
+            paddingLeft: 4,
         },
         main: {
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          position: 'relative',
+          height: '100%',
+          width: '100%',
         },
         buttonAdd: {
-
-        }
+            zIndex: 1,
+            position: 'absolute',
+            bottom: '15%',
+            right: '25%',
+        },
     }
-)
+);
 
 export default SubjectPage;

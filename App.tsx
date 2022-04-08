@@ -10,28 +10,31 @@
  * @format
  */
 
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import {
-  SafeAreaView,
-} from 'react-native';
-import HeaderElement from './android/app/src/common/HeaderElement';
+import {LogBox} from 'react-native';
+import { CustomDrawerContent } from './android/app/src/common/CustomDrawerSettings';
+import { HeaderScreen, SubjectScreen } from './android/app/src/screens/Screen';
 
-import SubjectPage from './android/app/src/pages/subject/SubjectPage';
+LogBox.ignoreLogs([
+  "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
+]);
 
 
+const Drawer = createDrawerNavigator();
 const App = () => {
-
-  /*
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-  */
-
   return (
-    <SafeAreaView>
-      <HeaderElement title='Subjects'/>
-     <SubjectPage/>
-    </SafeAreaView>
+    <NavigationContainer>
+       <Drawer.Navigator
+         initialRouteName="Subjects"
+         useLegacyImplementation
+         drawerContent={(props)=> <CustomDrawerContent {...props}/>}
+        >
+          <Drawer.Screen name="Subjects" component={SubjectScreen} />
+          <Drawer.Screen name="Header" component={HeaderScreen} />
+       </Drawer.Navigator>
+    </NavigationContainer>
   );
 };
 
