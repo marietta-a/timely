@@ -2,18 +2,20 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import React, { Component } from "react";
+import React, { Component, SyntheticEvent } from "react";
+import { GestureResponderHandlers } from "react-native";
 import { Button, SafeAreaView, StyleSheet, Text, TextBase, TouchableOpacity, View } from "react-native";
+import { GestureEvent } from "react-native-gesture-handler";
 
-
-const AddButton: React.FC<{
+const AddButton : React.FC<{
 style? : any
-}> = ({style}) => {
+onButtonClicked?: any,
+}> = ({style, onButtonClicked}) => {
     style = style != null ? style : styles;
     return (
         <View style={style}>
             <TouchableOpacity
-              onPress={() => {console.log('add button pressed!')}}
+              onPress={onButtonClicked}
             >
                 <View style={styles.design}>
                     <Text style={styles.text}>+</Text>
@@ -21,7 +23,7 @@ style? : any
             </TouchableOpacity>
         </View>
     );
-};
+}; 
 
 const styles = StyleSheet.create({
     design: {
