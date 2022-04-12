@@ -7,6 +7,7 @@ import React, { Component, useState } from 'react';
 import { Button, FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import AddButton from '../../common/AddButton';
 import SubjectModal from '../../modals/SubjectModal';
+import { ModalState } from '../../models/ModalState';
 import { Subject } from '../../models/Subject';
 
 const STUDENTS : Subject[] = [
@@ -49,17 +50,21 @@ const renderItem: React.FC<{
      <Item record={item}/>
  );
 class SubjectPage extends Component{
-    state = {
-        modalVisble: false
-    }
+
+   state: ModalState = {
+       modalVisible: false,
+   }
 
    invokeModal(){
-        //console.log('triggered');
-        this.setState({modalVisble: true});
+        this.setState({modalVisible: true});
+    }
+    invokeModalClosing(){
+        this.setState({modalVisible: false});
     }
 
 
     render(){
+        const modalVisible = this.state.modalVisible;
         return (
             <SafeAreaView style={styles.main}>
                 <FlatList
@@ -67,11 +72,11 @@ class SubjectPage extends Component{
                   renderItem={renderItem}
                   keyExtractor={item => item.Id}
                 />
-                <AddButton 
-                    style={styles.buttonAdd} 
+                <AddButton
+                    style={styles.buttonAdd}
                     onButtonClicked={this.invokeModal.bind(this)}
                 />
-                <SubjectModal style={styles.modalWrapper} modalVisible={this.state.modalVisble}/>
+                <SubjectModal modalVisible={modalVisible} modalClosing={this.invokeModalClosing.bind(this)}/>
             </SafeAreaView>
         );
     }
