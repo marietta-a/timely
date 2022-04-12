@@ -12,45 +12,53 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ModalState } from '../models/ModalState';
 
 
-let subject = "Subject's name";
-let teacher = "Teacher's name";
-
 //const SubjectModal = (props: any) => {
 
 class SubjectModal extends Component<ModalState>{
   constructor(props: any){
     super(props);
   }
- 
-  closeModal = (visible : boolean) => {
-     this.setState({modalVisible: !visible});
+  state = {
+    subject: "",
+    teacher: "",
+  }
+  updateSubject = (value: string) => {
+      this.setState({subject: value});
+  }
+  updateTeacher = (value: string) => {
+    this.setState({teacher: value});
   }
 
   render() {
+ 
       const modalVisible = this.props.modalVisible;
+      const subject = this.state.subject;
+      const teacher = this.state.teacher;
       return (
         <SafeAreaView>
             <Modal
               animationType="slide"
               transparent={true}
               visible = {modalVisible}
-              onRequestClose={() => this.closeModal(modalVisible)}
+              onRequestClose={() => this.props.onRequestClose}
             >
             <View style={styles.mainWrapper}>
               <Pressable
                 style={styles.textWrapper}
-                onPress={() => this.closeModal(modalVisible)}
+                onPress={this.props.onRequestClose}
               >
                   <Text style={styles.text}>X</Text>
               </Pressable>
               <View style={styles.modalView}>
                 <TextInput
                   value={subject}
-                  onChangeText={(value) => {console.log(value);}}
+                  placeholder="Subject name"
+                  onChangeText={(txt) => this.updateSubject(txt)}
                 />
                 <TextInput
                   value={teacher}
-                  onChangeText={(value) => {console.log(value);}}
+                  placeholder="Teacher's name"
+                  onChangeText={(txt) => this.updateTeacher(txt)}
                 />
               </View>
             </View>

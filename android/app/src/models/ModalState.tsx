@@ -2,7 +2,7 @@
 /* eslint-disable prettier/prettier */
 
 export interface ModalState {
-  modalVisible: boolean
-  modalClosing?: any
+  modalVisible: boolean,
+  onRequestClose?: any,
 }
 

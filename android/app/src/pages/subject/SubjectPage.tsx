@@ -76,7 +76,7 @@ class SubjectPage extends Component{
                     style={styles.buttonAdd}
                     onButtonClicked={this.invokeModal.bind(this)}
                 />
-                <SubjectModal modalVisible={modalVisible} modalClosing={this.invokeModalClosing.bind(this)}/>
+                <SubjectModal modalVisible={modalVisible} onRequestClose={this.invokeModalClosing.bind(this)}/>
             </SafeAreaView>
         );
     }
