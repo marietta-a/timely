@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-export interface Mark {
+
+import { ModelBase } from "../common/model/ModelBase";
+
+
+export interface Mark extends ModelBase{
   Subject: string;
   Mark: number;
 }

@@ -3,8 +3,9 @@
 /* eslint-disable prettier/prettier */
 import React from "react"
 import { SafeAreaView } from "react-native"
-import AddButton from "../common/AddButton";
+import AddButton from "../common/custom/AddButton";
 import HeaderElement from "../common/HeaderElement"
+import EventPage from "../pages/event/EventPage";
 import SubjectPage from "../pages/subject/SubjectPage"
 
 function SubjectScreen(){
@@ -14,6 +15,13 @@ function SubjectScreen(){
       </SafeAreaView>
     );
   }
+function EventScreen(){
+  return (
+    <SafeAreaView>
+      <EventPage/>
+    </SafeAreaView>
+  );
+}
 function HeaderScreen(){
     return (
       <SafeAreaView>
@@ -29,4 +37,4 @@ function AddButtonScreen(){
     );
 }
 
-export {SubjectScreen, HeaderScreen, AddButtonScreen};
+export {SubjectScreen, EventScreen, HeaderScreen, AddButtonScreen};

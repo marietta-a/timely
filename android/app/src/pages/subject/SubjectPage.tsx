@@ -3,9 +3,10 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
 import React, { Component, useState } from 'react';
 import { Button, FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import AddButton from '../../common/AddButton';
+import AddButton from '../../common/custom/AddButton';
 import SubjectModal from '../../modals/SubjectModal';
 import { ModalState } from '../../models/ModalState';
 import { Subject } from '../../models/Subject';
