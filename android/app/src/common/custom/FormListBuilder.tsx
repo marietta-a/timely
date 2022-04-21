@@ -10,12 +10,11 @@ import ItemListBuilder from "./ItemListBuider";
 
 
 const FormListBuilder: React.FC<{
-  ItemList? : any[],
-  Headers: any[]
-}> = ({ItemList, Headers}) => {
+  ItemList? : any[]
+}> = ({ItemList}) => {
      return (
         <SafeAreaView>
-           <ItemListBuilder ItemList={ItemList} H/>
+           <ItemListBuilder ItemList={ItemList} />
         </SafeAreaView>
      );
 };
