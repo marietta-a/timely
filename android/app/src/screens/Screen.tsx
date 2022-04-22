@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native"
 import AddButton from "../common/custom/AddButton";
 import HeaderElement from "../common/HeaderElement"
 import EventPage from "../pages/event/EventPage";
+import { MarkPage } from "../pages/mark/MarkPage";
 import SubjectPage from "../pages/subject/SubjectPage"
 
 function SubjectScreen(){
@@ -29,12 +30,12 @@ function HeaderScreen(){
       </SafeAreaView>
     );
   }
-function AddButtonScreen(){
-    return (
-        <SafeAreaView>
-          <AddButton/>
-        </SafeAreaView>
-    );
+function MarkScreen(){
+  return (
+    <SafeAreaView>
+      <MarkPage/>
+    </SafeAreaView>
+  );
 }
 
-export {SubjectScreen, EventScreen, HeaderScreen, AddButtonScreen};
+export {SubjectScreen, EventScreen, HeaderScreen, MarkScreen};

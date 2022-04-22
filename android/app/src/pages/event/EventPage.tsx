@@ -12,6 +12,7 @@ import FormListBuilder from '../../common/custom/FormListBuilder';
 import { ModalBuilder } from '../../common/modal/ModalBuilder';
 import { EventTypes } from '../../core/Enums';
 import { EventModel } from '../../models/EventModel';
+import { ModalState } from '../../models/ModalState';
 
 const events: EventModel[] = [
     {
@@ -33,9 +34,17 @@ class EventPage extends Component{
     constructor(props : any){
         super(props);
     }
+    state : ModalState = {
+        modalVisible: false,
+    };
+
    invokeModal(){
-    this.setState({modalVisible: true});
-}
+        this.setState({modalVisible: true});
+        ModalBuilder.modalVisible = true;
+    }
+    invokeModalClose(){
+         this.setState({modalVisible: false});
+     }
     render(){
         return (
            <SafeAreaView>
@@ -43,6 +52,10 @@ class EventPage extends Component{
                 <AddButton
                     style={styles.buttonAdd}
                     onButtonClicked={this.invokeModal.bind(this)}
+                />
+                <ModalBuilder<EventModel>
+                 Id={''} Name={''}
+                 EventType={0}
                 />
            </SafeAreaView>
         );
@@ -69,12 +82,6 @@ const styles = StyleSheet.create(
             bottom: '15%',
             right: '25%',
         },
-        modalWrapper: {
-            position: 'relative',
-            marginTop: '40%',
-            height: '50%',
-            width: '50%'
-        }
     }
 );
 

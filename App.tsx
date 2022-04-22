@@ -15,7 +15,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 import {LogBox} from 'react-native';
 import { CustomDrawerContent } from './android/app/src/common/main/CustomDrawerSettings';
-import { EventScreen, HeaderScreen, SubjectScreen } from './android/app/src/screens/Screen';
+import { EventScreen, MarkScreen, SubjectScreen } from './android/app/src/screens/Screen';
 
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
@@ -33,7 +33,7 @@ const App = () => {
         >
           <Drawer.Screen name="Subjects" component={SubjectScreen} />
           <Drawer.Screen name="Events" component={EventScreen} />
-          <Drawer.Screen name="Header" component={HeaderScreen} />
+          <Drawer.Screen name="Marks" component={MarkScreen} />
        </Drawer.Navigator>
     </NavigationContainer>
   );

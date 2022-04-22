@@ -7,6 +7,7 @@
 import React, { Component, useState } from 'react';
 import { Button, FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import AddButton from '../../common/custom/AddButton';
+import FormListBuilder from '../../common/custom/FormListBuilder';
 import SubjectModal from '../../modals/SubjectModal';
 import { ModalState } from '../../models/ModalState';
 import { Subject } from '../../models/Subject';
@@ -32,7 +33,7 @@ const Item: React.FC<{
     record: Subject
 }> = ({record}) => (
 
-    <View style={styles.container}>
+    <View style={styles.contentWrapper}>
         <View style = {{
             height: 50,
             width: 10,
@@ -63,15 +64,14 @@ class SubjectPage extends Component{
         this.setState({modalVisible: false});
     }
 
-
     render(){
         const modalVisible = this.state.modalVisible;
         return (
             <SafeAreaView style={styles.main}>
                 <FlatList
-                  data={STUDENTS}
-                  renderItem={renderItem}
-                  keyExtractor={item => item.Id}
+                data={STUDENTS}
+                renderItem={renderItem}
+                keyExtractor={item => item.Id}
                 />
                 <AddButton
                     style={styles.buttonAdd}
@@ -92,6 +92,19 @@ const styles = StyleSheet.create(
             borderTopWidth: 0.3,
             borderTopColor: subjectColor,
 
+        },
+        contentWrapper: {
+            flexDirection: 'row',
+            width: '100%',
+            backgroundColor: 'white',
+            marginTop: 3,
+            borderRadius: 10,
+            shadowColor:'black',
+            shadowOffset: {
+                height: 1,
+                width: 5,
+            },
+            elevation: 6,
         },
         header: {
             fontSize: 18,

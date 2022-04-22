@@ -82,8 +82,9 @@ const renderItem: React.FC<{
  );
 
 const ItemListBuilder: React.FC<{
-  ItemList?: any[]
-}> = ({ItemList}) => {
+  ItemList?: any[],
+  style?: any
+}> = ({ItemList, style}) => {
    if (ItemList){
         const headers = Object.keys(longest(ItemList));
         HEADERS = headers;
@@ -117,13 +118,21 @@ const ItemListBuilder: React.FC<{
 const styles = StyleSheet.create({
     mainWrapper: {
        width: '100%',
-       height: '100%'
+       height: '100%',
+       backgroundColor: '#cccccc'
     },
     rowWrapper: {
         flexDirection: 'row',
         width: '100%',
-        elevation: 2,
-        shadowColor: 'black',
+        backgroundColor: 'white',
+        margin: 2,
+        borderRadius: 10,
+        shadowColor:'black',
+        shadowOffset: {
+            height: 1,
+            width: 5,
+        },
+        elevation: 6,
     },
     cellContentWrapper:{
         justifyContent: 'space-between',

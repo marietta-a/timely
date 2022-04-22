@@ -7,4 +7,7 @@ import { ModelBase } from "../common/model/ModelBase";
 export interface Mark extends ModelBase{
   Subject: string;
   Mark: number;
+  Weight?: number;
+  Title?: string,
+  Description?: string
 }
