@@ -60,7 +60,7 @@ export class MarkPage extends Component{
                         style={buttonAddStyle.buttonAdd}
                         onButtonClicked={this.invokeModal.bind(this)}
                     />
-                    <ModalBuilder<Mark> Subject={""} Mark={0}                    />
+                    <ModalBuilder<Mark> Subject={''} Mark={1}/>
                </SafeAreaView>
             );
         }

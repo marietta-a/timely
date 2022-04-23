@@ -12,7 +12,7 @@ import { modalStyles } from "../assets/ModalDesigner";
 import { ModalBuilder } from "../common/modal/ModalBuilder";
 import { EventModel } from "../models/EventModel";
 import { ModalState } from '../models/ModalState';
-import { CloseModal } from "./CloseModal";
+import { ModalHeader } from "./ModalHeader";
 
 class EventModal extends Component<ModalState>{
     constructor(props : any){
@@ -30,7 +30,7 @@ class EventModal extends Component<ModalState>{
                 onRequestClose={() => this.props.onRequestClose}
                 >
                 <View style={modalStyles.mainWrapper}>
-                    <CloseModal onRequestClose={() => this.props.onRequestClose}/>
+                    <ModalHeader onRequestClose={() => this.props.onRequestClose}/>
                     <ModalBuilder<EventModel> Id={""} Name={""} EventType={0}/>
                 </View>
                 </Modal>

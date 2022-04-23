@@ -8,6 +8,7 @@ import React, { Component, useState } from 'react';
 import { Button, FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import AddButton from '../../common/custom/AddButton';
 import FormListBuilder from '../../common/custom/FormListBuilder';
+import { ModalBuilder } from '../../common/modal/ModalBuilder';
 import SubjectModal from '../../modals/SubjectModal';
 import { ModalState } from '../../models/ModalState';
 import { Subject } from '../../models/Subject';
@@ -59,9 +60,11 @@ class SubjectPage extends Component{
 
    invokeModal(){
         this.setState({modalVisible: true});
+        ModalBuilder.modalVisible = this.state.modalVisible;
     }
     invokeModalClosing(){
         this.setState({modalVisible: false});
+        ModalBuilder.modalVisible = this.state.modalVisible;
     }
 
     render(){
@@ -77,7 +80,7 @@ class SubjectPage extends Component{
                     style={styles.buttonAdd}
                     onButtonClicked={this.invokeModal.bind(this)}
                 />
-                <SubjectModal modalVisible={modalVisible} onRequestClose={this.invokeModalClosing.bind(this)}/>
+                <ModalBuilder<Subject> Id={''} Name={''} Color={''} Teacher={''}/>
             </SafeAreaView>
         );
     }

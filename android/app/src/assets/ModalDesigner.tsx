@@ -21,21 +21,39 @@ const modalStyles = StyleSheet.create({
        height: 2,
      },
      elevation: 10,
+     height: '95%',
     },
     modalView:{
-      height: 200,
+      paddingTop: 50,
       alignItems: 'center',
       borderRadius: 20,
     },
     textWrapper:{
-      alignItems: 'flex-end',
-      paddingRight: 20,
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+      paddingLeft: 20,
       paddingTop: 10,
+    },
+    textInput: {
+      fontSize: 18,
     },
     text: {
       fontWeight: 'bold',
       fontSize: 24,
+      color: '#000000',
+    },
+    headerWrapper: {
+      flexDirection: 'row',
+      backgroundColor: '#cccccc',
+      position: 'relative',
+      width: '100%',
+    },
+    crudWrapper: {
+       alignItems: 'center',
+       justifyContent: 'center',
+       borderRadius: 10,
     },
  });
 
  export {modalStyles};
+

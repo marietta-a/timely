@@ -19,9 +19,10 @@ class SubjectModal extends Component<ModalState>{
     super(props);
   }
   state = {
-    subject: "",
-    teacher: "",
+    subject: '',
+    teacher: '',
   }
+
   updateSubject = (value: string) => {
       this.setState({subject: value});
   }
@@ -30,7 +31,6 @@ class SubjectModal extends Component<ModalState>{
   }
 
   render() {
- 
       const modalVisible = this.props.modalVisible;
       const subject = this.state.subject;
       const teacher = this.state.teacher;
