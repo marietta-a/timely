@@ -6,7 +6,7 @@
 
 import React, { Component } from "react";
 import { SafeAreaView } from "react-native";
-import { buttonAddStyle } from "../../assets/ButtonDesigner";
+import { buttonAddStyle, buttonStyles } from "../../assets/ButtonDesigner";
 import AddButton from "../../common/custom/AddButton";
 import FormListBuilder from "../../common/custom/FormListBuilder";
 import { ModalBuilder } from "../../common/modal/ModalBuilder";
@@ -57,7 +57,7 @@ export class MarkPage extends Component{
                <SafeAreaView>
                    <FormListBuilder ItemList={marks} />
                     <AddButton
-                        style={buttonAddStyle.buttonAdd}
+                        style={buttonStyles.buttonAdd}
                         onButtonClicked={this.invokeModal.bind(this)}
                     />
                     <ModalBuilder<Mark> Subject={''} Mark={1}/>

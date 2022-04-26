@@ -8,14 +8,22 @@
 
 import { StyleSheet } from "react-native";
 
-const buttonAddStyle = StyleSheet.create({
+const buttonStyles = StyleSheet.create({
     buttonAdd: {
         zIndex: 1,
         position: 'absolute',
         bottom: '15%',
         right: '25%',
     },
+    buttonMore: {
+        width: 10,
+        height: 20,
+        alignItems: 'flex-start',
+    },
+});
+const buttonMoreStyle = StyleSheet.create({
+   
 });
 
 
-export {buttonAddStyle};
+export {buttonStyles}

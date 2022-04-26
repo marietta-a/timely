@@ -6,7 +6,7 @@
 
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ItemListBuilder from "./ItemListBuiderSty";
+import ItemListBuilder from "./ItemListBuider";
 
 
 const FormListBuilder: React.FC<{

@@ -17,20 +17,21 @@ let HEADERS: any[] = [];
 
 const Item: React.FC<{
     record: any,
+    style?: any
 }> = ({record}) => {
     let i = 0;
     const itemList = Object.entries(record);
     const elements = HEADERS.map(function(header){
         if (record[header]){
             return (
-                <View key={i++}>
+                <View key={i++} style={{width: WIDTH}}>
                     <View style={styles.cellContentWrapper}><Text>{record[header]}</Text></View>
                 </View>
             );
         }
        else {
             return (
-                <View key={i++}>
+                <View key={i++} style={{width: WIDTH}}>
                     <View style={styles.cellContentWrapper}><Text/></View>
                 </View>
             );
@@ -57,7 +58,7 @@ const ItemHeader: React.FC<{
     let i = 1000;
     const elements = HeaderItems?.map(function(item){
         return (
-            <View key={i--}>
+            <View key={i--} style={{width: WIDTH}}>
                 <View style={styles.cellHeaderWrapper}><Text>{item}</Text></View>
             </View>
         );
@@ -82,9 +83,8 @@ const renderItem: React.FC<{
  );
 
 const ItemListBuilder: React.FC<{
-  ItemList?: any[],
-  style?: any
-}> = ({ItemList, style}) => {
+  ItemList?: any[]
+}> = ({ItemList}) => {
    if (ItemList){
         const headers = Object.keys(longest(ItemList));
         HEADERS = headers;
@@ -92,14 +92,17 @@ const ItemListBuilder: React.FC<{
         const colnum = headers.length;
         WIDTH = Math.ceil(100 / (colnum)) + '%';
         return (
-            <SafeAreaView style={styles.mainWrapper}>
-                <View>
+            <SafeAreaView>
+                <View style={styles.mainWrapper}>
                     <View>
                         <FlatList
+                        ListHeaderComponent={(<ItemHeader HeaderItems={headers}/>)}
+                        ListHeaderComponentStyle={styles.headerWrapper}
                         data={ItemList}
                         renderItem={renderItem}
                         keyExtractor = {(item) => (i++).toString()}
                         horizontal={false}
+                        contentContainerStyle={styles.mainWrapper}
                         />
                     </View>
                 </View>
@@ -117,30 +120,19 @@ const ItemListBuilder: React.FC<{
 
 const styles = StyleSheet.create({
     mainWrapper: {
-       width: '100%',
-       height: '100%',
-       backgroundColor: '#cccccc'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     rowWrapper: {
-        flexDirection: 'row',
-        width: '100%',
-        backgroundColor: 'white',
-        margin: 2,
-        borderRadius: 10,
-        shadowColor:'black',
-        shadowOffset: {
-            height: 1,
-            width: 5,
-        },
-        elevation: 6,
+       flexDirection: 'row',
     },
     cellContentWrapper:{
-        justifyContent: 'space-between',
-        alignContent: 'space-around',
-        padding: 10,
+        borderWidth: 0.1,
+        elevation: 0.2,
+        alignItems: 'center',
     },
     cellHeaderWrapper:{
-      justifyContent:'space-around'
+      alignItems: 'center'
     },
     headerWrapper: {
        borderWidth: 0.5,
