@@ -12,11 +12,12 @@ import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DataType } from '../model/DataType';
 import {Mark} from '../../models/Marks';
-import { Alert, Modal, StyleSheet, View } from 'react-native';
+import { Alert, Modal, StyleSheet, Text, View } from 'react-native';
 import { ModalState } from '../../models/ModalState';
 import { ModalHeader } from '../../modals/ModalHeader';
 import { tsImportEqualsDeclaration } from '@babel/types';
 import { modalStyles } from '../../assets/ModalDesigner';
+import { isNullOrEmpty } from '../../core/Functions';
 
 
 function Item(propTypes : any){
@@ -24,6 +25,7 @@ function Item(propTypes : any){
 }
 export class ModalBuilder<T> extends Component<T>{
     static props: any;
+    static DATA: any;
     static modalVisible: boolean = false;
     constructor(props : T){
         super(props);
@@ -34,8 +36,8 @@ export class ModalBuilder<T> extends Component<T>{
     };
     static propTypes = () => {
         let dataTypes: DataType[] = [];
+        let objectTypes: unknown[][] = [];
         if (ModalBuilder.props){
-            
             const items = Object.entries(ModalBuilder.props).map(function(item){
                 const dataType: DataType = {
                     Name: item[0],
@@ -43,9 +45,10 @@ export class ModalBuilder<T> extends Component<T>{
                     Value: item[1],
                 };
                 dataTypes.push(dataType);
+                objectTypes.push([item[0], item[1]]);
             });
         }
-
+        ModalBuilder.DATA = Object.fromEntries(objectTypes);
         return dataTypes;
     }
 
@@ -63,40 +66,55 @@ export class ModalBuilder<T> extends Component<T>{
 
             const onChangeText = (val: any)=> {
                  prop.Value = val;
+                 ModalBuilder.DATA[prop.Name] = val;
             };
+            const focusable = key === 1;
             
             if (prop.DataType === typeof ('')){
                element = (
-                    <TextInput
-                      placeholder={prop.Name}
-                      key={prop.Name}
-                      blurOnSubmit={true}
-                      style={modalStyles.textInput}
-                      onChangeText={(val) => onChangeText(val)}
-                     />
+                   <View key={prop.Name} style={modalStyles.inputWrapper}>
+                    <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>{prop.Name}</Text></View>
+                        <TextInput
+                        key={prop.Name}
+                        blurOnSubmit={true}
+                        style={modalStyles.textInput}
+                        onChangeText={(val) => onChangeText(val)}
+                        defaultValue = {isNullOrEmpty(prop.Value) ? null : prop.Value}
+                        autoFocus={focusable}
+                        />
+                    </View>
                 );
             }
             else if (prop.DataType === typeof (1)){
                element = (
+                   <View key={prop.Name} style={modalStyles.inputWrapper}>
+                    <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>{prop.Name}</Text></View>
                     <TextInput
-                      placeholder={prop.Name}
                       key={prop.Name}
                       keyboardType="numeric"
                       blurOnSubmit={true}
                       style={modalStyles.textInput}
                       onChangeText={(val) => onChangeText(val)}
+                      defaultValue = {isNullOrEmpty(prop.Value) ? null : prop.Value.toString()}
+                      autoFocus={focusable}
                      />
+                    </View>
                 );
             }
             else {
                 element = (
+                    <View key={prop.Name} style={modalStyles.inputWrapper}>
+                     <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>{prop.Name}</Text></View>
                      <TextInput
                        placeholder={prop.Name}
                        key={prop.Name}
                        blurOnSubmit={true}
                        style={modalStyles.textInput}
                        onChangeText={(val) => onChangeText(val)}
+                       defaultValue = {isNullOrEmpty(prop.Value) ? null : prop.Value.toString()}
+                       autoFocus={focusable}
                       />
+                    </View>
                  );
             }
             elements.push(element);

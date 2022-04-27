@@ -3,10 +3,11 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import React from 'react';
+import { View } from 'react-native';
 
-export enum EventTypes{
-   Exam = 1,
-   Assignment,
-   ReturnBook,
-   Other
+function isNullOrEmpty(val?: any) {
+    return val === '' || val === null;
 }
+
+export {isNullOrEmpty};

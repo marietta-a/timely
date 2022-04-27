@@ -2,7 +2,7 @@
 /* eslint-disable prettier/prettier */
 
 export interface ItemListModel{
-    ItemList?: any,
+    ItemList: any,
     style?: any,
-    openModal?: any
+    openModal: any
 }

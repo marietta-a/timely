@@ -48,7 +48,7 @@ class EventPage extends Component{
     render(){
         return (
            <SafeAreaView>
-               <FormListBuilder ItemList={events} />
+               <FormListBuilder ItemList={events} openModal={this.invokeModal.bind(this)}/>
                 <AddButton
                     style={styles.buttonAdd}
                     onButtonClicked={this.invokeModal.bind(this)}

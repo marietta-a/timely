@@ -38,6 +38,11 @@ const marks: Mark[] = [
     },
 ];
 
+var currentMark:Mark | null = {
+    Subject: '',
+    Mark: 0,
+};
+
 export class MarkPage extends Component{
         constructor(props : any){
             super(props);
@@ -45,9 +50,10 @@ export class MarkPage extends Component{
         state : ModalState = {
             modalVisible: false,
         };
-       invokeModal(){
+       invokeModal(mark: Mark | null){
             this.setState({modalVisible: true});
             ModalBuilder.modalVisible = true;
+            currentMark = mark;
         }
         invokeModalClose(){
              this.setState({modalVisible: false});
@@ -55,12 +61,14 @@ export class MarkPage extends Component{
         render(){
             return (
                <SafeAreaView>
-                   <FormListBuilder ItemList={marks} />
+                   <FormListBuilder ItemList={marks} openModal={this.invokeModal.bind(this)} />
                     <AddButton
                         style={buttonStyles.buttonAdd}
                         onButtonClicked={this.invokeModal.bind(this)}
                     />
-                    <ModalBuilder<Mark> Subject={''} Mark={1}/>
+                    <ModalBuilder<Mark>
+                    Subject={currentMark?.Subject ?? ''}
+                    Mark={currentMark?.Mark ?? 0}/>
                </SafeAreaView>
             );
         }

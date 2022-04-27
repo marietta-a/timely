@@ -13,7 +13,7 @@ import { modalStyles } from '../assets/ModalDesigner';
 const ModalHeader: React.FC<{
   textWrapper?: any,
   textStyle?: any,
-  onRequestClose?: any
+  onRequestClose?: any,
 }> = ({textWrapper, textStyle, onRequestClose}) => {
     textWrapper = textWrapper == null ? modalStyles.textWrapper : textWrapper;
     textStyle = textStyle == null ? modalStyles.text : textStyle;

@@ -25,17 +25,29 @@ const modalStyles = StyleSheet.create({
     },
     modalView:{
       paddingTop: 50,
-      alignItems: 'center',
+      alignItems: 'flex-start',
       borderRadius: 20,
     },
     textWrapper:{
-      alignItems: 'flex-start',
-      justifyContent: 'flex-start',
       paddingLeft: 20,
       paddingTop: 10,
     },
     textInput: {
       fontSize: 18,
+      borderBottomWidth: 2,
+      width: '100%',
+      borderBottomColor: '#555555',
+      paddingBottom: 0,
+    },
+    inputWrapper:{
+      marginLeft: 5,
+    },
+    textLabel: {
+      fontSize: 18,
+      color: '#bbbbbb',
+    },
+    labelWrapper:{
+      marginBottom: -10,
     },
     text: {
       fontWeight: 'bold',

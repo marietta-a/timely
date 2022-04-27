@@ -4,20 +4,24 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import React from "react";
+import React, { Component } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ItemListModel } from "../model/ItemListModel";
 import ItemListBuilder from "./ItemListBuider";
 
 
-const FormListBuilder: React.FC<{
-  ItemList? : any[],
-  style?: any
-}> = ({ItemList, style}) => {
+class FormListBuilder extends Component<ItemListModel>{
+   constructor(props: ItemListModel){
+      super(props);
+   }
+
+   render(){
      return (
         <SafeAreaView>
-           <ItemListBuilder ItemList={ItemList} style={style} />
+        <ItemListBuilder ItemList={this.props.ItemList} style={this.props.style} openModal={this.props.openModal}/>
         </SafeAreaView>
      );
-};
+   }
+}
 
 export default FormListBuilder;

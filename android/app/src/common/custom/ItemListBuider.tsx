@@ -21,47 +21,10 @@ let HEADERS: any[] = [];
 
 
 class ItemListBuilder extends Component<ItemListModel> {
-   constructor(props: ItemListModel){
+   constructor(props: any){
        super(props);
    }
 
-    Item: React.FC<{
-    record: any,
-    }> = ({record}) => {
-        let i = 0;
-        const itemList = Object.entries(record);
-        const elements = HEADERS.map(function(header){
-            if (record[header]){
-                return (
-                    <View key={i++}>
-                        <View style={styles.cellContentWrapper}><Text>{record[header]}</Text></View>
-                    </View>
-                );
-            }
-        else {
-                return (
-                    <View key={i++}>
-                        <View style={styles.cellContentWrapper}><Text/></View>
-                    </View>
-                );
-        }
-        });
-        /*const elements = Object.entries(record).map(function(item){
-            return (
-                <View key={i++} style={{width: WIDTH}}><Text>{item[1]}</Text></View>
-            );
-        });*/
-
-        return (
-                <TouchableOpacity
-                style = {styles.rowWrapper}
-                >
-                    {elements.map(function(item){
-                        return item;
-                    })}
-                </TouchableOpacity>
-            );
-};
 
  ItemHeader: React.FC<{
    HeaderItems: any[]
@@ -91,7 +54,7 @@ class ItemListBuilder extends Component<ItemListModel> {
  renderItem: React.FC<{
     item : Object,
  }> = ({item}) => (
-     <this.Item record={item}/>
+     <Item record={item} openModal={this.props.openModal}/>
  );
 
    render (){
@@ -125,6 +88,46 @@ class ItemListBuilder extends Component<ItemListModel> {
     }
     }
 }
+const Item: React.FC<{
+    record: any,
+    openModal?: any,
+    }> = ({record, openModal}) => {
+        let i = 0;
+        const itemList = Object.entries(record);
+        const elements = HEADERS.map(function(header){
+            if (record[header]){
+                return (
+                    <View key={i++}>
+                        <View style={styles.cellContentWrapper}><Text>{record[header]}</Text></View>
+                    </View>
+                );
+            }
+        else {
+                return (
+                    <View key={i++}>
+                        <View style={styles.cellContentWrapper}><Text/></View>
+                    </View>
+                );
+        }
+        });
+        /*const elements = Object.entries(record).map(function(item){
+            return (
+                <View key={i++} style={{width: WIDTH}}><Text>{item[1]}</Text></View>
+            );
+        });*/
+
+        return (
+                <TouchableOpacity
+                style = {styles.rowWrapper}
+                onPress={openModal.bind(this)}
+                >
+                    {elements.map(function(item){
+                        return item;
+                    })}
+                </TouchableOpacity>
+            );
+};
+
 
 const styles = StyleSheet.create({
     mainWrapper: {
@@ -160,6 +163,7 @@ const styles = StyleSheet.create({
        backgroundColor: '#dfdfdf',
     },
 });
+
 
 
 export default ItemListBuilder;
