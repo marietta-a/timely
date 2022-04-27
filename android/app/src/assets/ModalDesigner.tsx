@@ -40,7 +40,7 @@ const modalStyles = StyleSheet.create({
       paddingBottom: 0,
     },
     inputWrapper:{
-      marginLeft: 5,
+      marginLeft: 20,
     },
     textLabel: {
       fontSize: 18,

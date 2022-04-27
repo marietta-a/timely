@@ -37,10 +37,16 @@ class EventPage extends Component{
     state : ModalState = {
         modalVisible: false,
     };
+    emptyEvent: EventModel ={
+        Id: '',
+        Name: '',
+        EventType: 0,
+    }
 
-   invokeModal(){
-        this.setState({modalVisible: true});
+   invokeModal(event : EventModel | undefined){
+        ModalBuilder.props = event;
         ModalBuilder.modalVisible = true;
+        this.setState({modalVisible: true});
     }
     invokeModalClose(){
          this.setState({modalVisible: false});
@@ -48,10 +54,10 @@ class EventPage extends Component{
     render(){
         return (
            <SafeAreaView>
-               <FormListBuilder ItemList={events} openModal={this.invokeModal.bind(this)}/>
+               <FormListBuilder ItemList={events} openModal={(item: EventModel | undefined) => this.invokeModal(item)}/>
                 <AddButton
                     style={styles.buttonAdd}
-                    onButtonClicked={this.invokeModal.bind(this)}
+                    onButtonClicked={this.invokeModal.bind(this, this.emptyEvent)}
                 />
                 <ModalBuilder<EventModel>
                  Id={''} Name={''}

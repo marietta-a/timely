@@ -21,41 +21,21 @@ let HEADERS: any[] = [];
 
 
 class ItemListBuilder extends Component<ItemListModel> {
+   static SelectedItem : any;
    constructor(props: any){
        super(props);
    }
 
+   handleOpenModal(selectedItem: any){
+       ItemListBuilder.SelectedItem = selectedItem;
+       this.props.openModal(selectedItem);
+   }
 
- ItemHeader: React.FC<{
-   HeaderItems: any[]
-}> = ({HeaderItems}) => {
-    let i = 1000;
-    const elements = HeaderItems?.map(function(item){
-        return (
-            <View key={i--}>
-                <View style={styles.cellHeaderWrapper}><Text>{item}</Text></View>
-            </View>
-        );
-    });
-
-    return (
-            <View style={styles.rowWrapper}>
-            {
-                elements != null ?
-                elements.map(function(item){
-                    console.log(item);
-                    return item;
-                }) : null
-            }
-            </View>
-        );
-};
-
- renderItem: React.FC<{
-    item : Object,
- }> = ({item}) => (
-     <Item record={item} openModal={this.props.openModal}/>
- );
+    renderItem: React.FC<{
+        item : any,
+    }> = ({item}) => (
+        <Item record={item} openModal={this.handleOpenModal.bind(this, item)}/>
+    );
 
    render (){
     if (this.props.ItemList){
@@ -71,7 +51,7 @@ class ItemListBuilder extends Component<ItemListModel> {
                             <FlatList
                             data={this.props.ItemList}
                             renderItem={this.renderItem}
-                            keyExtractor = {(item) => (i++).toString()}
+                            keyExtractor = {(item, index) => { return (index).toString()}}
                             horizontal={false}
                             />
                         </View>
@@ -93,7 +73,6 @@ const Item: React.FC<{
     openModal?: any,
     }> = ({record, openModal}) => {
         let i = 0;
-        const itemList = Object.entries(record);
         const elements = HEADERS.map(function(header){
             if (record[header]){
                 return (
@@ -119,7 +98,7 @@ const Item: React.FC<{
         return (
                 <TouchableOpacity
                 style = {styles.rowWrapper}
-                onPress={openModal.bind(this)}
+                onPress={openModal}
                 >
                     {elements.map(function(item){
                         return item;

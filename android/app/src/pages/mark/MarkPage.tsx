@@ -4,11 +4,12 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { SafeAreaView } from "react-native";
-import { buttonAddStyle, buttonStyles } from "../../assets/ButtonDesigner";
+import { buttonStyles } from "../../assets/ButtonDesigner";
 import AddButton from "../../common/custom/AddButton";
 import FormListBuilder from "../../common/custom/FormListBuilder";
+import ItemListBuilder from "../../common/custom/ItemListBuider";
 import { ModalBuilder } from "../../common/modal/ModalBuilder";
 import { EventModel } from "../../models/EventModel";
 import { Mark } from "../../models/Marks";
@@ -38,22 +39,24 @@ const marks: Mark[] = [
     },
 ];
 
-var currentMark:Mark | null = {
-    Subject: '',
-    Mark: 0,
-};
 
 export class MarkPage extends Component{
         constructor(props : any){
             super(props);
         }
-        state : ModalState = {
+        state: ModalState = {
             modalVisible: false,
         };
-       invokeModal(mark: Mark | null){
-            this.setState({modalVisible: true});
+
+        emptyMark : Mark ={
+            Subject: '',
+            Mark: 0,
+        }
+
+       invokeModal(mark: Mark | undefined){
+            ModalBuilder.props =  mark;
             ModalBuilder.modalVisible = true;
-            currentMark = mark;
+            this.setState({modalVisible: true});
         }
         invokeModalClose(){
              this.setState({modalVisible: false});
@@ -61,14 +64,14 @@ export class MarkPage extends Component{
         render(){
             return (
                <SafeAreaView>
-                   <FormListBuilder ItemList={marks} openModal={this.invokeModal.bind(this)} />
+                   <FormListBuilder ItemList={marks} openModal={(item: Mark | undefined) => this.invokeModal(item)} />
                     <AddButton
                         style={buttonStyles.buttonAdd}
-                        onButtonClicked={this.invokeModal.bind(this)}
+                        onButtonClicked={this.invokeModal.bind(this, this.emptyMark)}
                     />
                     <ModalBuilder<Mark>
-                    Subject={currentMark?.Subject ?? ''}
-                    Mark={currentMark?.Mark ?? 0}/>
+                    Subject={''}
+                    Mark={0}/>
                </SafeAreaView>
             );
         }

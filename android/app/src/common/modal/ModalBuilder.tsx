@@ -19,10 +19,6 @@ import { tsImportEqualsDeclaration } from '@babel/types';
 import { modalStyles } from '../../assets/ModalDesigner';
 import { isNullOrEmpty } from '../../core/Functions';
 
-
-function Item(propTypes : any){
-
-}
 export class ModalBuilder<T> extends Component<T>{
     static props: any;
     static DATA: any;

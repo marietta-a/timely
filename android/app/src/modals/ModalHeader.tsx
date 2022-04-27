@@ -9,6 +9,7 @@
 import React from 'react';
 import {View, Pressable, Text, StyleSheet, Alert} from 'react-native';
 import { modalStyles } from '../assets/ModalDesigner';
+import { ModalBuilder } from '../common/modal/ModalBuilder';
 
 const ModalHeader: React.FC<{
   textWrapper?: any,
@@ -19,7 +20,7 @@ const ModalHeader: React.FC<{
     textStyle = textStyle == null ? modalStyles.text : textStyle;
     const saveClick = () => {
       onRequestClose();
-      Alert.alert('record saved');
+      Alert.alert( ModalBuilder.DATA + '\nrecord saved');
     };
   return (
       <View style={modalStyles.headerWrapper}>

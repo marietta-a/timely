@@ -11,6 +11,7 @@ import ItemListBuilder from "./ItemListBuider";
 
 
 class FormListBuilder extends Component<ItemListModel>{
+   static SelectedItem : any;
    constructor(props: ItemListModel){
       super(props);
    }
