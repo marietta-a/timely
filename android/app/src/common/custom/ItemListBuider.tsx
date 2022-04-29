@@ -10,7 +10,7 @@ import React, { Component, ReactElement } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { buttonStyles } from '../../assets/ButtonDesigner';
+import { buttonStyles } from '../../assets/styles/ButtonDesigner';
 import { longest } from '../Functions';
 import { ModalBuilder } from '../modal/ModalBuilder';
 import { ItemListModel } from '../model/ItemListModel';

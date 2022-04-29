@@ -11,10 +11,10 @@ import AddButton from '../../common/custom/AddButton';
 import FormListBuilder from '../../common/custom/FormListBuilder';
 import { ModalBuilder } from '../../common/modal/ModalBuilder';
 import { EventTypes } from '../../core/Enums';
-import { EventModel } from '../../models/EventModel';
+import { Events } from '../../models/Events';
 import { ModalState } from '../../models/ModalState';
 
-const events: EventModel[] = [
+const events: Events[] = [
     {
         Id: '01',
         EventType: EventTypes.Assignment,
@@ -37,13 +37,15 @@ class EventPage extends Component{
     state : ModalState = {
         modalVisible: false,
     };
-    emptyEvent: EventModel ={
+    emptyEvent: Events ={
         Id: '',
         Name: '',
         EventType: 0,
+        Description: '',
+        Subject: '',
     }
 
-   invokeModal(event : EventModel | undefined){
+   invokeModal(event : Events | undefined){
         ModalBuilder.props = event;
         ModalBuilder.modalVisible = true;
         this.setState({modalVisible: true});
@@ -54,12 +56,12 @@ class EventPage extends Component{
     render(){
         return (
            <SafeAreaView>
-               <FormListBuilder ItemList={events} openModal={(item: EventModel | undefined) => this.invokeModal(item)}/>
+               <FormListBuilder ItemList={events} openModal={(item: Events | undefined) => this.invokeModal(item)}/>
                 <AddButton
                     style={styles.buttonAdd}
                     onButtonClicked={this.invokeModal.bind(this, this.emptyEvent)}
                 />
-                <ModalBuilder<EventModel>
+                <ModalBuilder<Events>
                  Id={''} Name={''}
                  EventType={0}
                 />

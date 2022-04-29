@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable prettier/prettier */
 /**
@@ -16,10 +17,14 @@ import React from 'react';
 import {LogBox} from 'react-native';
 import { CustomDrawerContent } from './android/app/src/common/main/CustomDrawerSettings';
 import { EventScreen, MarkScreen, SubjectScreen } from './android/app/src/screens/Screen';
+import SQLite from 'react-native-sqlite-storage';
+import EventCRUD from './android/app/src/assets/crud/events/EventCRUD';
+
 
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
 ]);
+
 
 
 const Drawer = createDrawerNavigator();

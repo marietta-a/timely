@@ -16,7 +16,7 @@ import { Alert, Modal, StyleSheet, Text, View } from 'react-native';
 import { ModalState } from '../../models/ModalState';
 import { ModalHeader } from '../../modals/ModalHeader';
 import { tsImportEqualsDeclaration } from '@babel/types';
-import { modalStyles } from '../../assets/ModalDesigner';
+import { modalStyles } from '../../assets/styles/ModalDesigner';
 import { isNullOrEmpty } from '../../core/Functions';
 
 export class ModalBuilder<T> extends Component<T>{

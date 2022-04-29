@@ -8,9 +8,9 @@
 import React, { Component } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { modalStyles } from "../assets/ModalDesigner";
+import { modalStyles } from "../assets/styles/ModalDesigner";
 import { ModalBuilder } from "../common/modal/ModalBuilder";
-import { EventModel } from "../models/EventModel";
+import { Events } from "../models/Events";
 import { ModalState } from '../models/ModalState';
 import { ModalHeader } from "./ModalHeader";
 
@@ -31,7 +31,7 @@ class EventModal extends Component<ModalState>{
                 >
                 <View style={modalStyles.mainWrapper}>
                     <ModalHeader onRequestClose={() => this.props.onRequestClose}/>
-                    <ModalBuilder<EventModel> Id={""} Name={""} EventType={0}/>
+                    <ModalBuilder<Events> Id={""} Name={""} EventType={0}/>
                 </View>
                 </Modal>
             </SafeAreaView>

@@ -8,7 +8,7 @@
 
 import React from 'react';
 import {View, Pressable, Text, StyleSheet, Alert} from 'react-native';
-import { modalStyles } from '../assets/ModalDesigner';
+import { modalStyles } from '../assets/styles/ModalDesigner';
 import { ModalBuilder } from '../common/modal/ModalBuilder';
 
 const ModalHeader: React.FC<{

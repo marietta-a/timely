@@ -4,5 +4,5 @@
 
 export interface ModelBase{
     DateCreated?: Date,
-    onChangeText?: any
+    CreatedBy?: string,
 }

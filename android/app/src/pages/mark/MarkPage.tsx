@@ -6,12 +6,12 @@
 
 import React, { Component, useState } from "react";
 import { SafeAreaView } from "react-native";
-import { buttonStyles } from "../../assets/ButtonDesigner";
+import { buttonStyles } from "../../assets/styles/ButtonDesigner";
 import AddButton from "../../common/custom/AddButton";
 import FormListBuilder from "../../common/custom/FormListBuilder";
 import ItemListBuilder from "../../common/custom/ItemListBuider";
 import { ModalBuilder } from "../../common/modal/ModalBuilder";
-import { EventModel } from "../../models/EventModel";
+import { Events } from "../../models/Events";
 import { Mark } from "../../models/Marks";
 import { ModalState } from "../../models/ModalState";
 
@@ -51,6 +51,9 @@ export class MarkPage extends Component{
         emptyMark : Mark ={
             Subject: '',
             Mark: 0,
+            Title: '',
+            Description: '',
+            Weight: 0,
         }
 
        invokeModal(mark: Mark | undefined){
@@ -64,7 +67,10 @@ export class MarkPage extends Component{
         render(){
             return (
                <SafeAreaView>
-                   <FormListBuilder ItemList={marks} openModal={(item: Mark | undefined) => this.invokeModal(item)} />
+                   <FormListBuilder
+                   ItemList={marks}
+                   openModal={(item: Mark | undefined) => this.invokeModal(item)}
+                   />
                     <AddButton
                         style={buttonStyles.buttonAdd}
                         onButtonClicked={this.invokeModal.bind(this, this.emptyMark)}
