@@ -18,7 +18,7 @@ import {LogBox} from 'react-native';
 import { CustomDrawerContent } from './android/app/src/common/main/CustomDrawerSettings';
 import { EventScreen, MarkScreen, SubjectScreen } from './android/app/src/screens/Screen';
 import SQLite from 'react-native-sqlite-storage';
-import EventCRUD from './android/app/src/assets/crud/events/EventCRUD';
+import EventCRUD from './android/app/src/assets/crud/EventCRUD';
 
 
 LogBox.ignoreLogs([

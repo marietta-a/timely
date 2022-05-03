@@ -12,6 +12,7 @@ export interface Events extends ModelBase{
     Time?: Timestamp,
     Subject?: string,
     SubjectCode?: string,
-    EventTypeCode: EventType,
+    EventType?: EventType,
+    EventTypeCode?: EventType,
     Description?: string,
 }

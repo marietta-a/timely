@@ -23,6 +23,7 @@ export class ModalBuilder<T> extends Component<T>{
     static props: any;
     static DATA: any;
     static modalVisible: boolean = false;
+    static handleSave?: any;
     constructor(props : T){
         super(props);
         ModalBuilder.props = props;
@@ -49,7 +50,13 @@ export class ModalBuilder<T> extends Component<T>{
     }
 
     onRequestClose(){
-       this.setState({modalVisible: false});
+        this.setState({modalVisible: false});
+        ModalBuilder.modalVisible = false;
+    }
+
+    onItemSaved(){
+        ModalBuilder.handleSave();
+        this.setState({modalVisible: false});
         ModalBuilder.modalVisible = false;
     }
     
@@ -128,7 +135,10 @@ export class ModalBuilder<T> extends Component<T>{
                   visible={ModalBuilder.modalVisible}
                 >
                 <View style={modalStyles.mainWrapper}>
-                    <ModalHeader onRequestClose={this.onRequestClose.bind(this)}/>
+                    <ModalHeader 
+                        onRequestClose={this.onRequestClose.bind(this)} 
+                        handleSave={this.onItemSaved.bind(this)}
+                    />
                     <View style={modalStyles.modalView}>
                         {this.Item().map(function(item){
                             return item;

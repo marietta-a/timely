@@ -7,12 +7,14 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import EventCRUD from '../../assets/crud/EventCRUD';
 import AddButton from '../../common/custom/AddButton';
 import FormListBuilder from '../../common/custom/FormListBuilder';
 import { ModalBuilder } from '../../common/modal/ModalBuilder';
 import { EventTypes } from '../../core/Enums';
 import { Events } from '../../models/Events';
 import { ModalState } from '../../models/ModalState';
+import SQLite from 'react-native-sqlite-storage';
 
 const events: Events[] = [
     {
@@ -54,6 +56,8 @@ class EventPage extends Component{
          this.setState({modalVisible: false});
      }
     render(){
+        SQLite.enablePromise(true);
+        EventCRUD.createTable();
         return (
            <SafeAreaView>
                <FormListBuilder ItemList={events} openModal={(item: Events | undefined) => this.invokeModal(item)}/>

@@ -15,10 +15,12 @@ const ModalHeader: React.FC<{
   textWrapper?: any,
   textStyle?: any,
   onRequestClose?: any,
-}> = ({textWrapper, textStyle, onRequestClose}) => {
+  handleSave?: any,
+}> = ({textWrapper, textStyle, onRequestClose, handleSave}) => {
     textWrapper = textWrapper == null ? modalStyles.textWrapper : textWrapper;
     textStyle = textStyle == null ? modalStyles.text : textStyle;
     const saveClick = () => {
+      handleSave();
       onRequestClose();
       Alert.alert( ModalBuilder.DATA + '\nrecord saved');
     };
