@@ -6,12 +6,15 @@
 
 import SQLite from 'react-native-sqlite-storage';
 
-const dbName = 'Timely';
+
+const dbName = 'Timely.db';
+const dbLocation = '~Timely.db'
 
 const db = SQLite.openDatabase({
   name: dbName,
-  location: 'default',
-  createFromLocation: '~Timely.db',
-});
+  createFromLocation: dbLocation,
+},
+() => {},
+error => console.log('Error msg: ' + error));
 
 export {db, dbName};

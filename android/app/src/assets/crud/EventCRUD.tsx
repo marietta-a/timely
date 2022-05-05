@@ -9,7 +9,7 @@
 import React, { Component } from "react"
 import { Events } from "../../models/Events"
 import SQLite from 'react-native-sqlite-storage';
-import {db} from "../DBConfig";
+import {db} from "../../main/assets/DBConfig";
 
 SQLite.enablePromise(true);
 

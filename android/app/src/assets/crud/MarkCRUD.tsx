@@ -8,10 +8,14 @@
 
 import React, { Component } from "react";
 import SQLite from 'react-native-sqlite-storage';
+import { db } from "../../main/assets/DBConfig";
 import { Mark } from "../../models/Marks";
-import { db } from "../DBConfig";
 
 SQLite.enablePromise(true);
+/*const db = SQLite.openDatabase({
+    name: 'Timely.db',
+    createFromLocation: '~Timely.db',
+  });*/
 
 export default class MarkCRUD extends Component<Mark>{
     constructor(props: Mark){
@@ -31,7 +35,7 @@ export default class MarkCRUD extends Component<Mark>{
 
         (await db).transaction(function(trans){
             trans.executeSql(query, [], 
-                (txn, res) => console.log(res.rows.item(0)), 
+                (txn, res) => {}, 
                 (err) => console.log('failed to create mark table'));
                   
         });
@@ -39,15 +43,22 @@ export default class MarkCRUD extends Component<Mark>{
 
     static async getMarks(){
          let query = `SELECT * FROM Marks`;
-         let records: any[] = [];
-         let results = (await db).transaction(function(trans){
+         let records: Mark[] = [];
+         const trans = (await db).transaction(function(trans){
             trans.executeSql(query,[],
                 function(txn, res){
-                    records = res.rows.raw();
+                    res.rows.raw().forEach(data => {
+                        var entry = Object.entries(data);
+                        var record = Object.fromEntries(entry);
+                        var mark = Object.setPrototypeOf(record, Mark);
+                        records.push(mark);
+                        console.log(mark);
+                    })
                 }
             )
          }).catch(err => {
             console.log(err);
+            records = [];
          });
 
          return records;

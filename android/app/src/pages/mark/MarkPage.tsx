@@ -69,7 +69,6 @@ export class MarkPage extends Component{
 
         async getAllMarks(){
             let allMarks = await MarkCRUD.getMarks();
-            console.log(allMarks);
             return allMarks;
         }
         
@@ -84,16 +83,12 @@ export class MarkPage extends Component{
          }
          
         render(){
-            const allMarks = this.getAllMarks();
-            console.log(allMarks);
             MarkCRUD.createTable();
             ModalBuilder.handleSave = () => {
-                console.log('creating new item ...');
                 let mark = Object.assign(new Mark(), ModalBuilder.DATA);
-                console.log(mark);
                 MarkCRUD.addMark(mark);
-                console.log(marks);
             }
+            const allMarks = this.getAllMarks();
             return (
                <SafeAreaView>
                    <FormListBuilder
