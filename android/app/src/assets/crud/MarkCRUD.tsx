@@ -7,7 +7,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import React, { Component } from "react";
-import SQLite from 'react-native-sqlite-storage';
+import SQLite, { Transaction } from 'react-native-sqlite-storage';
 import { db } from "../../main/assets/DBConfig";
 import { Mark } from "../../models/Marks";
 
@@ -21,7 +21,7 @@ export default class MarkCRUD extends Component<Mark>{
     constructor(props: Mark){
         super(props);
     }
-
+    
 
     static async createTable(){
         let query = `CREATE TABLE IF NOT EXISTS Marks(
@@ -41,26 +41,30 @@ export default class MarkCRUD extends Component<Mark>{
         });
     }
 
-    static async getMarks(){
-         let query = `SELECT * FROM Marks`;
+    static async  getMarks(){
+         let query = 'SELECT * FROM Marks';
+         
          let records: Mark[] = [];
-         const trans = (await db).transaction(function(trans){
-            trans.executeSql(query,[],
+         const transaction = async() => (await db).transaction(function(trans){
+            return trans.executeSql(query,[],
                 function(txn, res){
-                    res.rows.raw().forEach(data => {
-                        var entry = Object.entries(data);
+                   res.rows.raw().map(item => {
+                        var entry = Object.entries(item);
                         var record = Object.fromEntries(entry);
                         var mark = Object.setPrototypeOf(record, Mark);
                         records.push(mark);
-                        console.log(mark);
-                    })
+                    });
+                   // console.log(records);
+                    return records;
                 }
-            )
+            );
          }).catch(err => {
-            console.log(err);
+            console.log('displaying error:' + err);
             records = [];
-         });
+            return records;
+         }).finally(() => {console.log('fetch completed'); return records; });
 
+         await transaction();
          return records;
     }
 

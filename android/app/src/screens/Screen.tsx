@@ -5,9 +5,9 @@
 import React from "react"
 import { SafeAreaView } from "react-native"
 import HeaderElement from "../common/HeaderElement"
-import EventPage from "../pages/event/EventPage";
-import { MarkPage } from "../pages/mark/MarkPage";
-import SubjectPage from "../pages/subject/SubjectPage"
+import EventPage from "../pages/EventPage";
+import { MarkPage } from "../pages/MarkPage";
+import SubjectPage from "../pages/SubjectPage"
 
 function SubjectScreen(){
     return (

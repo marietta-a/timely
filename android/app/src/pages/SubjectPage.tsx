@@ -6,12 +6,12 @@
 
 import React, { Component, useState } from 'react';
 import { Button, FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import AddButton from '../../common/custom/AddButton';
-import FormListBuilder from '../../common/custom/FormListBuilder';
-import { ModalBuilder } from '../../common/modal/ModalBuilder';
-import SubjectModal from '../../modals/SubjectModal';
-import { ModalState } from '../../models/ModalState';
-import { Subject } from '../../models/Subject';
+import AddButton from '../common/custom/AddButton';
+import FormListBuilder from '../common/custom/FormListBuilder';
+import { ModalBuilder } from '../common/modal/ModalBuilder';
+import SubjectModal from '../modals/SubjectModal';
+import { ModalState } from '../models/ModalState';
+import { Subject } from '../models/Subject';
 
 const STUDENTS : Subject[] = [
     {

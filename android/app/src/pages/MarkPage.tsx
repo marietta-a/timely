@@ -6,15 +6,16 @@
 
 import React, { Component, useState } from "react";
 import { SafeAreaView } from "react-native";
-import MarkCRUD from "../../assets/crud/MarkCRUD";
-import { buttonStyles } from "../../assets/styles/ButtonDesigner";
-import AddButton from "../../common/custom/AddButton";
-import FormListBuilder from "../../common/custom/FormListBuilder";
-import ItemListBuilder from "../../common/custom/ItemListBuider";
-import { ModalBuilder } from "../../common/modal/ModalBuilder";
-import { Events } from "../../models/Events";
-import { Mark } from "../../models/Marks";
-import { ModalState } from "../../models/ModalState";
+import MarkCRUD from "../assets/crud/MarkCRUD";
+import { buttonStyles } from "../assets/styles/ButtonDesigner";
+import AddButton from "../common/custom/AddButton";
+import FormListBuilder from "../common/custom/FormListBuilder";
+import ItemListBuilder from "../common/custom/ItemListBuider";
+import { ModalBuilder } from "../common/modal/ModalBuilder";
+import { getMarks } from "../effects/MarkEffect";
+import { Events } from "../models/Events";
+import { Mark } from "../models/Marks";
+import { ModalState } from "../models/ModalState";
 
 
 const marks: Mark[] = [
@@ -48,6 +49,8 @@ const marks: Mark[] = [
     },
 ];
 
+const allMarks = getMarks();
+console.log('Marks from effects: '+ allMarks);
 
 export class MarkPage extends Component{
         constructor(props : any){
@@ -67,11 +70,6 @@ export class MarkPage extends Component{
             Weight: 0,
         }
 
-        async getAllMarks(){
-            let allMarks = await MarkCRUD.getMarks();
-            return allMarks;
-        }
-        
 
        invokeModal(mark: Mark | undefined){
             ModalBuilder.props =  mark;
@@ -87,8 +85,7 @@ export class MarkPage extends Component{
             ModalBuilder.handleSave = () => {
                 let mark = Object.assign(new Mark(), ModalBuilder.DATA);
                 MarkCRUD.addMark(mark);
-            }
-            const allMarks = this.getAllMarks();
+            };
             return (
                <SafeAreaView>
                    <FormListBuilder
