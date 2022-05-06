@@ -24,6 +24,8 @@ export class ModalBuilder<T> extends Component<T>{
     static DATA: any;
     static modalVisible: boolean = false;
     static handleSave?: any;
+    static handleDelete?: any;
+    static deleteVisible: boolean = false;
     constructor(props : T){
         super(props);
         ModalBuilder.props = props;
@@ -60,6 +62,12 @@ export class ModalBuilder<T> extends Component<T>{
         ModalBuilder.modalVisible = false;
     }
     
+    onItemDeleted(){
+        ModalBuilder.handleDelete();
+        this.setState({modalVisible: false});
+        ModalBuilder.modalVisible = false;
+    }
+
     Item = () => {
         let key = 0;
         const elements : ReactElement<any>[] = [];
@@ -138,6 +146,8 @@ export class ModalBuilder<T> extends Component<T>{
                     <ModalHeader 
                         onRequestClose={this.onRequestClose.bind(this)} 
                         handleSave={this.onItemSaved.bind(this)}
+                        handleDelete={this.onItemDeleted.bind(this)}
+                        deleteVisible={ModalBuilder.deleteVisible}
                     />
                     <View style={modalStyles.modalView}>
                         {this.Item().map(function(item){

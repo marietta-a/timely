@@ -14,27 +14,75 @@ import { ModalBuilder } from '../common/modal/ModalBuilder';
 const ModalHeader: React.FC<{
   textWrapper?: any,
   textStyle?: any,
+  deleteTextStyle?: any,
   onRequestClose?: any,
   handleSave?: any,
-}> = ({textWrapper, textStyle, onRequestClose, handleSave}) => {
+  handleDelete?: any,
+  deleteVisible: boolean,
+}> = ({textWrapper, textStyle, deleteTextStyle, onRequestClose, handleSave, handleDelete, deleteVisible}) => {
     textWrapper = textWrapper == null ? modalStyles.textWrapper : textWrapper;
     textStyle = textStyle == null ? modalStyles.text : textStyle;
+    deleteTextStyle = deleteTextStyle == null ? modalStyles.deleteText : deleteTextStyle;
     const saveClick = () => {
       handleSave();
       onRequestClose();
-      Alert.alert( ModalBuilder.DATA + '\nrecord saved');
     };
-  return (
-      <View style={modalStyles.headerWrapper}>
-        <Pressable style={textWrapper} onPress={onRequestClose}>
-          <Text style={textStyle}>X</Text>
-        </Pressable>
-        <View style={{justifyContent: 'center', alignItems:'center', width:'65%'}}/>
-        <Pressable style={modalStyles.crudWrapper} onPress={() => saveClick()}>
-          <Text style={modalStyles.text}>Save</Text>
-        </Pressable>
-      </View>
-  );
+    const deleteClick = () => {
+       Alert.alert(
+         "",
+         "Are you sure you want to delete this record?",
+         [
+           {
+             text: 'Cancel',
+             onPress: () => {},
+             style:'default'
+           },
+           {
+             text: 'Confirm',
+             onPress: () => {
+               handleDelete();
+               onRequestClose();
+             },
+             style:'destructive'
+           }
+         ]
+       )
+    }
+    if(deleteVisible){
+      return (
+          <View style={modalStyles.headerWrapper}>
+            <Pressable style={textWrapper} onPress={onRequestClose}>
+              <Text style={textStyle}>X</Text>
+            </Pressable>
+            <View style={{justifyContent: 'center', alignItems:'center', width:'20%'}}/>
+            <Pressable style={textWrapper} onPress={() => deleteClick()}>
+              <Text style={deleteTextStyle}>Delete</Text>
+            </Pressable> 
+            <View style={{justifyContent: 'center', alignItems:'center', width:'20%'}}/>
+            <Pressable style={modalStyles.crudWrapper} onPress={() => saveClick()}>
+              <Text style={modalStyles.text}>Save</Text>
+            </Pressable>
+          </View>
+      );
+    }
+    else{
+      return (
+          <View style={modalStyles.headerWrapper}>
+            <Pressable style={textWrapper} onPress={onRequestClose}>
+              <Text style={textStyle}>X</Text>
+            </Pressable>
+            <View style={{justifyContent: 'center', alignItems:'center', width:'65%'}}/>
+            <Pressable style={modalStyles.crudWrapper} onPress={() => saveClick()}>
+              <Text style={modalStyles.text}>Save</Text>
+            </Pressable>
+          </View>
+      );
+    }
 };
 
+const styles = StyleSheet.create({
+   alertDelete:{
+     color: '#9B0E0E'
+   }
+});
 export {ModalHeader};

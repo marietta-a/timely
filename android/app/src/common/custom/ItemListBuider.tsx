@@ -45,7 +45,7 @@ class ItemListBuilder extends Component<ItemListModel> {
     }
 
    render (){
-    if (this.props.ItemList){
+    if (this.props.ItemList.length > 0){
             const headers = Object.keys(longest(this.props.ItemList));
             HEADERS = headers;
             let i = 0;

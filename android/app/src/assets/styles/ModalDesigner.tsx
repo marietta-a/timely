@@ -54,6 +54,11 @@ const modalStyles = StyleSheet.create({
       fontSize: 24,
       color: '#000000',
     },
+    deleteText: {
+      fontWeight: 'bold',
+      fontSize: 24,
+      color: '#9B0E0E',
+    },
     headerWrapper: {
       flexDirection: 'row',
       backgroundColor: '#cccccc',

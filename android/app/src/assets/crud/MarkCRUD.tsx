@@ -83,10 +83,33 @@ export default class MarkCRUD extends Component<Mark>{
         return results;
     }
 
-    static async deleteMark(id: string){
-        let query = `DELETE FROM Marks where Id=${id}`;
+    static async updateMark(mark: Mark){
+        let query = `UPDATE Marks set
+              SubjectCode=?,
+              Mark=?,
+              Weight=?,
+              Title=?,
+              Description=?
+              Where Id=?
+        `;
+        let params = [mark.SubjectCode, mark.Mark, mark.Weight, mark.Title, mark.Description, mark.Id];
+
         let results = (await db).transaction(function(trans){
-           trans.executeSql(query,[])
+           trans.executeSql(query,params,
+            (txn, res) => console.log(mark + ' successfully updated.'),
+            (err) => console.log(err)
+           )
+        }).catch(err => console.log(err));
+
+        return results;
+    }
+
+    static async deleteMark(id: number){
+        let query = `DELETE FROM Marks where Id=?`;
+        let results = (await db).transaction(function(trans){
+           trans.executeSql(query,[id],
+            (txn, res) => console.log('successfully deleted.'),
+            (err) => console.log(err))
         }).catch(err => console.log(err));
 
         return results;

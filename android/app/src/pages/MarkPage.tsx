@@ -5,56 +5,34 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import React, { Component, useState } from "react";
-import { useCallback } from "react";
-import { useEffect } from "react";
-import { SafeAreaView } from "react-native";
+import { Alert, SafeAreaView } from "react-native";
 import MarkCRUD from "../assets/crud/MarkCRUD";
 import { buttonStyles } from "../assets/styles/ButtonDesigner";
 import AddButton from "../common/custom/AddButton";
 import FormListBuilder from "../common/custom/FormListBuilder";
-import ItemListBuilder from "../common/custom/ItemListBuider";
 import { ModalBuilder } from "../common/modal/ModalBuilder";
-import { getMarks } from "../effects/MarkEffect";
-import { Events } from "../models/Events";
 import { Mark } from "../models/Marks";
 import { ModalState } from "../models/ModalState";
 
 
-let marks: Mark[] = [
-    {
-        Id: 1,
-        Subject: 'Maths',
-        SubjectCode: '01',
-        Mark: 60,
-        Description: 'Maths Test',
-    },
-    {
-        Id: 2,
-        Subject: 'English',
-        SubjectCode: '02',
-        Mark: 60,
-        Description: 'English Test',
-    },
-    {
-        Id: 3,
-        Subject: 'French',
-        SubjectCode: '03',
-        Mark: 60,
-        Description: 'French Test',
-    },
-    {
-        Id: 4,
-        Subject: 'Computer Science',
-        SubjectCode: '04',
-        Mark: 60,
-        Description: 'Computer Science Test',
-    },
-];
+const marks: Mark[] = [];
 
+const getAllMarks = async() => {
+
+    var record = await MarkCRUD.getMarks();
+    var res = JSON.stringify(record);
+    var obj = JSON.parse(res);
+    
+    Object.entries(obj).map(item => {
+        let mark = Object.setPrototypeOf(item[1], Mark);
+        marks.push(mark);
+    })
+}
 
 export class MarkPage extends Component{
         constructor(props : any){
             super(props);
+            getAllMarks().then(() => this.forceUpdate());
         }
         state: ModalState = {
             modalVisible: false,
@@ -70,37 +48,57 @@ export class MarkPage extends Component{
             Weight: 0,
         }
         
-        componentDidMount(){
-            const getAllMarks = async() => {
-
-                var record = await MarkCRUD.getMarks();
-                var res = JSON.stringify(record);
-                var obj = JSON.parse(res);
-                
-                var data = Object.entries(obj).map(item => {return Object.setPrototypeOf(item[1], Mark)})
-                marks = data;
-                this.forceUpdate();
-            }
-
-            getAllMarks();
-        }
-        
 
        invokeModal(mark: Mark | undefined){
             ModalBuilder.props =  mark;
             ModalBuilder.modalVisible = true;
+            ModalBuilder.deleteVisible = mark != undefined && mark.Id > 0;
             this.setState({modalVisible: true});
         }
         invokeModalClose(){
              this.setState({modalVisible: false});
          }
-         
+
+        addNewRecord(mark: Mark){
+            MarkCRUD.addMark(mark).then(() => {marks.push(mark); this.forceUpdate();});
+        }
+
+        updateRecord(mark: Mark){
+            MarkCRUD.updateMark(mark).then(() => {
+                var oldRecord = marks.find(m => m.Id == mark.Id);
+                if(oldRecord){
+                    var index = marks.indexOf(oldRecord);
+                    marks.splice(index, 1, mark);
+                }
+                this.forceUpdate();
+            });
+        }
+        deleteRecord(id: number){
+            MarkCRUD.deleteMark(id).then(() => {
+                var oldRecord = marks.find(m => m.Id == id);
+                if(oldRecord){
+                    var index = marks.indexOf(oldRecord);
+                    marks.splice(index, 1);
+                }
+                this.forceUpdate();
+            });
+        }
+        
         render(){
             MarkCRUD.createTable();
             ModalBuilder.handleSave = () => {
                 let mark = Object.assign(new Mark(), ModalBuilder.DATA);
-                MarkCRUD.addMark(mark).then(() => {marks.push(mark); this.forceUpdate();});
+                if(mark.Id > 0){
+                    this.updateRecord(mark);
+                }
+                else{
+                    this.addNewRecord(mark);
+                }
             };
+            ModalBuilder.handleDelete = () => {
+                let mark = Object.assign(new Mark(), ModalBuilder.DATA);
+                this.deleteRecord(mark.Id);
+            }
             return (
                <SafeAreaView>
                    <FormListBuilder
