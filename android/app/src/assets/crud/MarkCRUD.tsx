@@ -41,7 +41,7 @@ export default class MarkCRUD extends Component<Mark>{
         });
     }
 
-    static async  getMarks(){
+    static async getMarks(){
          let query = 'SELECT * FROM Marks';
          
          let records: Mark[] = [];

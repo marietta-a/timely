@@ -7,7 +7,7 @@
 
 
 import React, { Component, ReactElement } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { buttonStyles } from '../../assets/styles/ButtonDesigner';
@@ -22,6 +22,9 @@ let HEADERS: any[] = [];
 
 class ItemListBuilder extends Component<ItemListModel> {
    static SelectedItem : any;
+   static handleRefresh?: any;
+   static refreshing: boolean;
+   
    constructor(props: any){
        super(props);
    }
@@ -36,6 +39,10 @@ class ItemListBuilder extends Component<ItemListModel> {
     }> = ({item}) => (
         <Item record={item} openModal={this.handleOpenModal.bind(this, item)}/>
     );
+
+    onRefresh(){
+        ItemListBuilder.handleRefresh();
+    }
 
    render (){
     if (this.props.ItemList){
@@ -53,6 +60,7 @@ class ItemListBuilder extends Component<ItemListModel> {
                             renderItem={this.renderItem}
                             keyExtractor = {(item, index) => { return (index).toString()}}
                             horizontal={false}
+                            refreshing ={ItemListBuilder.refreshing}
                             />
                         </View>
                     </View>

@@ -5,6 +5,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import React, { Component, useState } from "react";
+import { useCallback } from "react";
+import { useEffect } from "react";
 import { SafeAreaView } from "react-native";
 import MarkCRUD from "../assets/crud/MarkCRUD";
 import { buttonStyles } from "../assets/styles/ButtonDesigner";
@@ -18,7 +20,7 @@ import { Mark } from "../models/Marks";
 import { ModalState } from "../models/ModalState";
 
 
-const marks: Mark[] = [
+let marks: Mark[] = [
     {
         Id: 1,
         Subject: 'Maths',
@@ -49,8 +51,6 @@ const marks: Mark[] = [
     },
 ];
 
-const allMarks = getMarks();
-console.log('Marks from effects: '+ allMarks);
 
 export class MarkPage extends Component{
         constructor(props : any){
@@ -69,7 +69,22 @@ export class MarkPage extends Component{
             Description: '',
             Weight: 0,
         }
+        
+        componentDidMount(){
+            const getAllMarks = async() => {
 
+                var record = await MarkCRUD.getMarks();
+                var res = JSON.stringify(record);
+                var obj = JSON.parse(res);
+                
+                var data = Object.entries(obj).map(item => {return Object.setPrototypeOf(item[1], Mark)})
+                marks = data;
+                this.forceUpdate();
+            }
+
+            getAllMarks();
+        }
+        
 
        invokeModal(mark: Mark | undefined){
             ModalBuilder.props =  mark;
@@ -84,7 +99,7 @@ export class MarkPage extends Component{
             MarkCRUD.createTable();
             ModalBuilder.handleSave = () => {
                 let mark = Object.assign(new Mark(), ModalBuilder.DATA);
-                MarkCRUD.addMark(mark);
+                MarkCRUD.addMark(mark).then(() => {marks.push(mark); this.forceUpdate();});
             };
             return (
                <SafeAreaView>

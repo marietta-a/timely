@@ -12,11 +12,15 @@ import ItemListBuilder from "./ItemListBuider";
 
 class FormListBuilder extends Component<ItemListModel>{
    static SelectedItem : any;
+   static handleRefresh?: any;
+   static refreshing: boolean;
    constructor(props: ItemListModel){
       super(props);
    }
 
    render(){
+      ItemListBuilder.handleRefresh = FormListBuilder.handleRefresh;
+      ItemListBuilder.refreshing = FormListBuilder.refreshing;
      return (
         <SafeAreaView>
         <ItemListBuilder ItemList={this.props.ItemList} style={this.props.style} openModal={this.props.openModal}/>
