@@ -69,8 +69,8 @@ class ItemListBuilder extends Component<ItemListModel> {
     }
     else {
             return (
-                <SafeAreaView>
-                    <Text>No record found</Text>
+                <SafeAreaView style={styles.emptyStateWrapper}>
+                    <Text>No record has been created</Text>
                 </SafeAreaView>
             );
     }
@@ -121,6 +121,13 @@ const styles = StyleSheet.create({
        width: '100%',
        height: '100%',
        backgroundColor: '#cccccc'
+    },
+    emptyStateWrapper: {
+       width: '100%',
+       height: '100%',
+       backgroundColor: '#cccccc',
+       alignItems: 'center',
+       justifyContent: 'center',
     },
     rowWrapper: {
         flexDirection: 'row',

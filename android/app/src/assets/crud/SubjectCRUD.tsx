@@ -10,21 +10,21 @@ import React, { Component } from "react";
 import SQLite, { Transaction } from 'react-native-sqlite-storage';
 import { db } from "../../main/assets/DBConfig";
 import { Mark } from "../../models/Marks";
+import { Subject } from "../../models/Subject";
 
-export default class MarkCRUD extends Component<Mark>{
-    constructor(props: Mark){
+
+export default class MarkCRUD extends Component<Subject>{
+    constructor(props: Subject){
         super(props);
     }
     
 
     static async createTable(){
-        let query = `CREATE TABLE IF NOT EXISTS Marks(
+        let query = `CREATE TABLE IF NOT EXISTS Subjects(
           Id INTEGER PRIMARY KEY AUTOINCREMENT,
-          SubjectCode INTEGER NOT NULL,
-          Mark INTEGER NOT NULL,
-          Weight INTEGER,
-          Title VARCHAR(20),
-          Description VARCHAR(250),
+          Name VARCHAR(150) NOT NULL,
+          Color VARCHAR(20),
+          Teacher VARCHAR(250),
           CreatedBy VARCHAR(50),
           DateCreated VARCHAR(20)
         )`;
@@ -37,18 +37,18 @@ export default class MarkCRUD extends Component<Mark>{
         });
     }
 
-    static async getMarks(){
-         let query = 'SELECT * FROM Marks';
+    static async getSubjects(){
+         let query = 'SELECT * FROM Subjects';
          
-         let records: Mark[] = [];
+         let records: Subject[] = [];
          const transaction = async() => (await db).transaction(function(trans){
             return trans.executeSql(query,[],
                 function(txn, res){
                    res.rows.raw().map(item => {
                         var entry = Object.entries(item);
                         var record = Object.fromEntries(entry);
-                        var mark = Object.setPrototypeOf(record, Mark);
-                        records.push(mark);
+                        var subject = Object.setPrototypeOf(record, Subject);
+                        records.push(subject);
                     });
                    // console.log(records);
                     return records;
@@ -64,14 +64,14 @@ export default class MarkCRUD extends Component<Mark>{
          return records;
     }
 
-    static async addMark(mark: Mark){
-        let query = `INSERT INTO Marks(SubjectCode, Mark, Weight, Title, Description) 
+    static async addSubject(subject: Subject){
+        let query = `INSERT INTO Subjects(Name, Teacher, Color, DateCreated, CreatedBy) 
         VALUES(?,?,?,?,?)`;
-        let params = [mark.SubjectCode, mark.Mark, mark.Weight, mark.Title, mark.Description];
+        let params = [subject.Name, subject.Teacher, subject.Color, subject.DateCreated, subject.CreatedBy];
 
         let results = (await db).transaction(function(trans){
            trans.executeSql(query,params,
-            (txn, res) => console.log(mark + ' successfully added.'),
+            (txn, res) => console.log(subject + ' successfully added.'),
             (err) => console.log(err)
            )
         }).catch(err => console.log(err));
@@ -79,29 +79,29 @@ export default class MarkCRUD extends Component<Mark>{
         return results;
     }
 
-    static async updateMark(mark: Mark){
-        let query = `UPDATE Marks set
-              SubjectCode=?,
-              Mark=?,
-              Weight=?,
-              Title=?,
-              Description=?
-              Where Id=?
+    static async updateSubject(subject: Subject){
+        let query = `UPDATE Subjects set
+        Name=?,
+        Teacher=?,
+        Color=?,
+        DateCreated=?,
+        CreatedBy=?
+        Where Id=?
         `;
-        let params = [mark.SubjectCode, mark.Mark, mark.Weight, mark.Title, mark.Description, mark.Id];
+        let params = [subject.Name, subject.Teacher, subject.Color, subject.DateCreated, subject.CreatedBy, subject.Id];
 
         let results = (await db).transaction(function(trans){
            trans.executeSql(query,params,
-            (txn, res) => console.log(mark + ' successfully updated.'),
+            (txn, res) => console.log('successfully updated.'),
             (err) => console.log(err)
-           )
+           );
         }).catch(err => console.log(err));
 
         return results;
     }
 
-    static async deleteMark(id: number){
-        let query = 'DELETE FROM Marks where Id=?';
+    static async deleteSubject(id: number){
+        let query = 'DELETE FROM Subjects where Id=?';
         let results = (await db).transaction(function(trans){
            trans.executeSql(query,[id],
             (txn, res) => console.log('successfully deleted.'),

@@ -22,12 +22,12 @@ const getAllMarks = async() => {
     var record = await MarkCRUD.getMarks();
     var res = JSON.stringify(record);
     var obj = JSON.parse(res);
-    
     Object.entries(obj).map(item => {
         let mark = Object.setPrototypeOf(item[1], Mark);
         marks.push(mark);
-    })
-}
+    });
+};
+
 
 export class MarkPage extends Component{
         constructor(props : any){
@@ -40,19 +40,18 @@ export class MarkPage extends Component{
 
         emptyMark : Mark ={
             Id: 0,
-            SubjectCode: '01',
+            SubjectCode: 1,
             Subject: '',
             Mark: 0,
             Title: '',
             Description: '',
             Weight: 0,
         }
-        
 
        invokeModal(mark: Mark | undefined){
             ModalBuilder.props =  mark;
             ModalBuilder.modalVisible = true;
-            ModalBuilder.deleteVisible = mark != undefined && mark.Id > 0;
+            ModalBuilder.deleteVisible = mark !== undefined && mark.Id > 0;
             this.setState({modalVisible: true});
         }
         invokeModalClose(){
@@ -65,8 +64,8 @@ export class MarkPage extends Component{
 
         updateRecord(mark: Mark){
             MarkCRUD.updateMark(mark).then(() => {
-                var oldRecord = marks.find(m => m.Id == mark.Id);
-                if(oldRecord){
+                var oldRecord = marks.find(m => m.Id === mark.Id);
+                if (oldRecord){
                     var index = marks.indexOf(oldRecord);
                     marks.splice(index, 1, mark);
                 }
@@ -75,30 +74,31 @@ export class MarkPage extends Component{
         }
         deleteRecord(id: number){
             MarkCRUD.deleteMark(id).then(() => {
-                var oldRecord = marks.find(m => m.Id == id);
-                if(oldRecord){
+                var oldRecord = marks.find(m => m.Id === id);
+                if (oldRecord){
                     var index = marks.indexOf(oldRecord);
                     marks.splice(index, 1);
                 }
                 this.forceUpdate();
             });
         }
-        
+
         render(){
             MarkCRUD.createTable();
             ModalBuilder.handleSave = () => {
                 let mark = Object.assign(new Mark(), ModalBuilder.DATA);
-                if(mark.Id > 0){
+                if (mark.Id > 0){
                     this.updateRecord(mark);
                 }
-                else{
+                else {
                     this.addNewRecord(mark);
                 }
             };
             ModalBuilder.handleDelete = () => {
                 let mark = Object.assign(new Mark(), ModalBuilder.DATA);
                 this.deleteRecord(mark.Id);
-            }
+            };
+
             return (
                <SafeAreaView>
                    <FormListBuilder
@@ -111,7 +111,7 @@ export class MarkPage extends Component{
                     />
                     <ModalBuilder<Mark>
                         Subject={''}
-                        Mark={0} Id={0} SubjectCode={""}/>
+                        Mark={0} Id={0} SubjectCode={1}/>
                </SafeAreaView>
             );
         }

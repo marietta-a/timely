@@ -7,7 +7,7 @@ import React from 'react';
 import { View } from 'react-native';
 
 function isNullOrEmpty(val?: any) {
-    return val === '' || val === null;
+    return val === '' || val === null || Object.values(val).length < 1;
 }
 
 export {isNullOrEmpty};

@@ -26,6 +26,7 @@ LogBox.ignoreLogs([
 ]);
 
 
+SQLite.enablePromise(true);
 
 const Drawer = createDrawerNavigator();
 const App = () => {

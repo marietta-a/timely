@@ -7,7 +7,7 @@ import { ModelBase } from "../common/model/ModelBase";
  interface IMark extends ModelBase{
   Id: number,
   Subject?: string;
-  SubjectCode: string;
+  SubjectCode: number;
   Mark: number;
   Weight?: number;
   Title?: string,
@@ -17,7 +17,7 @@ import { ModelBase } from "../common/model/ModelBase";
 class Mark implements IMark{
   Id!: number;
   Subject?: string | undefined;
-  SubjectCode!: string;
+  SubjectCode!: number;
   Mark!: number;
   Weight?: number | undefined;
   Title?: string | undefined;

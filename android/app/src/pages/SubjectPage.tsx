@@ -6,136 +6,136 @@
 
 import React, { Component, useState } from 'react';
 import { Button, FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import SubjectCRUD from '../assets/crud/SubjectCRUD';
+import { buttonStyles } from '../assets/styles/ButtonDesigner';
 import AddButton from '../common/custom/AddButton';
 import FormListBuilder from '../common/custom/FormListBuilder';
 import { ModalBuilder } from '../common/modal/ModalBuilder';
 import SubjectModal from '../modals/SubjectModal';
+import { Mark } from '../models/Marks';
 import { ModalState } from '../models/ModalState';
 import { Subject } from '../models/Subject';
 
-const STUDENTS : Subject[] = [
+/*const subjects : Subject[] = [
     {
-        Id : '01',
+        Id : 1,
         Name: 'Maths',
         Color: '#571d33',
         Teacher: 'p2' ,
     },
     {
-        Id: '02',
+        Id: 2,
         Name: 'Computer Science',
         Color: 'red',
         Teacher: 'T3' ,
     },
-];
+];*/
+const subjects : Subject[] = [];
 
 let subjectColor = '#000000';
 
-const Item: React.FC<{
-    record: Subject
-}> = ({record}) => (
 
-    <View style={styles.contentWrapper}>
-        <View style = {{
-            height: 50,
-            width: 10,
-            backgroundColor: record.Color,
-        }} />
-        <View style={styles.textContainer}>
-            <Text style={styles.header}>{record.Name}</Text>
-            <Text>{record.Teacher}</Text>
-        </View>
-    </View>
-);
+const getAllRecords = async() => {
 
-const renderItem: React.FC<{
-    item : Subject
- }> = ({item}) => (
-     <Item record={item}/>
- );
+    var record = await SubjectCRUD.getSubjects();
+    var res = JSON.stringify(record);
+    var obj = JSON.parse(res);
+    Object.entries(obj).map(item => {
+        let subject = Object.setPrototypeOf(item[1], Subject);
+        subjects.push(subject);
+    });
+};
+
 class SubjectPage extends Component{
+
+    constructor(props: any){
+        super(props);
+        getAllRecords().then(() => this.forceUpdate());
+    }
 
    state: ModalState = {
        modalVisible: false,
    }
-
-   invokeModal(){
-        this.setState({modalVisible: true});
-        ModalBuilder.modalVisible = this.state.modalVisible;
-    }
     invokeModalClosing(){
         this.setState({modalVisible: false});
         ModalBuilder.modalVisible = this.state.modalVisible;
     }
 
+    emptyItem: Subject = {
+        Id: 0,
+        Name: '',
+        Color: '',
+        Teacher: '',
+    }
+
+    invokeModal(subject: Subject | undefined){
+         ModalBuilder.props =  subject;
+         ModalBuilder.modalVisible = true;
+         ModalBuilder.deleteVisible = subject !== undefined && subject.Id > 0;
+         this.setState({modalVisible: true});
+     }
+     invokeModalClose(){
+          this.setState({modalVisible: false});
+      }
+
+     addNewRecord(subject: Subject){
+         SubjectCRUD.addSubject(subject).then(() => {subjects.push(subject); this.forceUpdate();});
+     }
+
+     updateRecord(subject: Subject){
+         SubjectCRUD.updateSubject(subject).then(() => {
+             var oldRecord = subjects.find(m => m.Id === subject.Id);
+             if (oldRecord){
+                 var index = subjects.indexOf(oldRecord);
+                 subjects.splice(index, 1, subject);
+             }
+             this.forceUpdate();
+         });
+     }
+     deleteRecord(id: number){
+         SubjectCRUD.deleteSubject(id).then(() => {
+             var oldRecord = subjects.find(m => m.Id === id);
+             if (oldRecord){
+                 var index = subjects.indexOf(oldRecord);
+                 subjects.splice(index, 1);
+             }
+             this.forceUpdate();
+         });
+     }
+
     render(){
-        const modalVisible = this.state.modalVisible;
+        SubjectCRUD.createTable();
+        ModalBuilder.handleSave = () => {
+            let item = Object.assign(new Subject(), ModalBuilder.DATA);
+            if (item.Id > 0){
+                this.updateRecord(item);
+            }
+            else {
+                this.addNewRecord(item);
+            }
+        };
+        ModalBuilder.handleDelete = () => {
+            let item = Object.assign(new Subject(), ModalBuilder.DATA);
+            this.deleteRecord(item.Id);
+        };
         return (
-            <SafeAreaView style={styles.main}>
-                <FlatList
-                data={STUDENTS}
-                renderItem={renderItem}
-                keyExtractor={item => item.Id}
+            <SafeAreaView>
+                <FormListBuilder
+                ItemList={subjects}
+                openModal={(item: Subject | undefined) => this.invokeModal(item)}
                 />
                 <AddButton
-                    style={styles.buttonAdd}
-                    onButtonClicked={this.invokeModal.bind(this)}
+                    style={buttonStyles.buttonAdd}
+                    onButtonClicked={this.invokeModal.bind(this, this.emptyItem)}
                 />
-                <ModalBuilder<Subject> Id={''} Name={''} Color={''} Teacher={''}/>
+                <ModalBuilder<Subject>
+                 Id={0}
+                 Name={''}
+                 />
             </SafeAreaView>
         );
     }
 }
 
-const styles = StyleSheet.create(
-    {
-        container: {
-            display: 'flex',
-            flexDirection: 'row',
-            marginTop: 4,
-            borderTopWidth: 0.3,
-            borderTopColor: subjectColor,
-
-        },
-        contentWrapper: {
-            flexDirection: 'row',
-            width: '100%',
-            backgroundColor: 'white',
-            marginTop: 3,
-            borderRadius: 10,
-            shadowColor:'black',
-            shadowOffset: {
-                height: 1,
-                width: 5,
-            },
-            elevation: 6,
-        },
-        header: {
-            fontSize: 18,
-            fontWeight: 'bold',
-        },
-        textContainer: {
-            paddingLeft: 4,
-        },
-        main: {
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'relative',
-          height: '100%',
-          width: '100%',
-        },
-        buttonAdd: {
-            zIndex: 1,
-            position: 'absolute',
-            bottom: '15%',
-            right: '25%',
-        },
-        modalWrapper: {
-            position: 'relative',
-            marginTop: '40%',
-            height: '50%',
-            width: '50%'
-        }
-    }
-);
 
 export default SubjectPage;

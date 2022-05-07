@@ -18,6 +18,8 @@ import { ModalHeader } from '../../modals/ModalHeader';
 import { tsImportEqualsDeclaration } from '@babel/types';
 import { modalStyles } from '../../assets/styles/ModalDesigner';
 import { isNullOrEmpty } from '../../core/Functions';
+import ColorPalette  from 'react-native-color-palette';
+import ColorPaletteModal from '../../modals/ColorPaletteModal';
 
 export class ModalBuilder<T> extends Component<T>{
     static props: any;
@@ -80,8 +82,16 @@ export class ModalBuilder<T> extends Component<T>{
                  ModalBuilder.DATA[prop.Name] = val;
             };
             const focusable = key === 1;
-            
-            if (prop.DataType === typeof ('')){
+
+            if (prop.Name.toLocaleLowerCase().trim() === 'color'){
+                element = (
+                    <View key={prop.Name} style={modalStyles.inputWrapper}>
+                      <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>{prop.Name}</Text></View>
+                      <ColorPaletteModal color={prop.Value}/>
+                     </View>
+                 );
+            }
+            else if (prop.DataType === typeof ('')){
                element = (
                    <View key={prop.Name} style={modalStyles.inputWrapper}>
                     <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>{prop.Name}</Text></View>
