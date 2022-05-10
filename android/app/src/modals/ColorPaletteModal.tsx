@@ -6,19 +6,24 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { Alert, Modal, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { Alert, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { Component } from "react";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { modalStyles } from "../assets/styles/ModalDesigner";
 import { isNullOrEmpty } from "../core/Functions";
 import ColorPalette from 'react-native-color-palette'
+import ColorPaletteModel from "../common/model/ColorPaletteModel";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const ColorPaletteModal: React.FC<{
-    color?: any,
-    modalVisible?: boolean
-}> = ({color, modalVisible}) => {
-    color = isNullOrEmpty(color) ? '#808080' : color;
-    const styles = StyleSheet.create({
+    props?: ColorPaletteModel
+}> = ({props}) => {
+ const defaultColor = props?.color ? props.color : '#aaaaaa';
+ const [color, onChangeColor] = useState(defaultColor);
+ const [visible, onVisibilityChange] = useState(false);
+
+  const   styles = StyleSheet.create({
          paletteWrapper: {
             zIndex: 1,
             justifyContent: 'center',
@@ -36,26 +41,51 @@ const ColorPaletteModal: React.FC<{
          main: {
              flexDirection: 'row',
              width: '70%',
+        },
+        palette: {
+            width: '80%',
+            height: '50%',
+            backgroundColor: '#ffffff',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginLeft: '10%',
+            marginTop: '20%',
+            elevation: 4,
+            shadowColor: props?.color,
         }
     });
 
-    return(
-      <View style={styles.main}>
-         <Text style={modalStyles.textInput}>Choose subject color</Text>
-          <TouchableOpacity onPress={()=> {modalVisible=true}}>
-              <View style={styles.paletteWrapper}/>
-          </TouchableOpacity>
+    function onColorChange(col?: string){
+        onChangeColor(col);
+        onVisibilityChange(false);
+        console.log(col);
+        props?.onColorChange(col);
+    }
+    return (
+        <View style={styles.main}>
+            <Text style={modalStyles.textInput}>Choose subject color</Text>
+            <Pressable 
+                onPress={() => {onVisibilityChange(true)}}>
+                <View style={styles.paletteWrapper}/>
+            </Pressable>
             <Modal
-                visible = {modalVisible}
-                onRequestClose = {() => {modalVisible = false;}}
+            visible={visible}
+            animationType="fade"
+            onRequestClose={() => onVisibilityChange(false)}
+            transparent={true}
             >
-            <ColorPalette />
-          </Modal>
-      </View>
+            <View style={styles.palette}>
+                <Pressable onPress={() => onVisibilityChange(false)}>
+                        <Text style={modalStyles.text}>X</Text>
+                </Pressable>
+                <ColorPalette 
+                    onChange={(col?: string ) => onColorChange(col)}
+                />
+            </View>
+            </Modal>
+        </View>
     );
-};
-
-
+}
 
 export default ColorPaletteModal;
 

@@ -11,6 +11,7 @@ import { Image, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { buttonStyles } from '../../assets/styles/ButtonDesigner';
+import { isNullOrEmpty } from '../../core/Functions';
 import { longest } from '../Functions';
 import { ModalBuilder } from '../modal/ModalBuilder';
 import { ItemListModel } from '../model/ItemListModel';
@@ -80,14 +81,33 @@ const Item: React.FC<{
     record: any,
     openModal?: any,
     }> = ({record, openModal}) => {
-        let i = 0;
+        let i = 1;
         const elements = HEADERS.map(function(header){
-            if (record[header]){
-                return (
+            if (header){
+                if (header.toString().toLocaleLowerCase().trim() === 'color'){
+                    let color = record[header];
+                    return isNullOrEmpty(color) ?
                     <View key={i++}>
                         <View style={styles.cellContentWrapper}><Text>{record[header]}</Text></View>
                     </View>
-                );
+                    : (
+                        <View key={0}>
+                            <View style={{
+                                backgroundColor: color,
+                                position: 'relative',
+                                height: 20,
+                                borderRadius: 20,
+                            }}><Text style={{color: color}}>{2}</Text></View>
+                        </View>
+                    );
+                }
+                else {
+                    return (
+                        <View key={i++}>
+                            <View style={styles.cellContentWrapper}><Text>{record[header]}</Text></View>
+                        </View>
+                    );
+                }
             }
         else {
                 return (

@@ -20,6 +20,7 @@ import { modalStyles } from '../../assets/styles/ModalDesigner';
 import { isNullOrEmpty } from '../../core/Functions';
 import ColorPalette  from 'react-native-color-palette';
 import ColorPaletteModal from '../../modals/ColorPaletteModal';
+import { color } from 'react-native-reanimated';
 
 export class ModalBuilder<T> extends Component<T>{
     static props: any;
@@ -87,7 +88,12 @@ export class ModalBuilder<T> extends Component<T>{
                 element = (
                     <View key={prop.Name} style={modalStyles.inputWrapper}>
                       <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>{prop.Name}</Text></View>
-                      <ColorPaletteModal color={prop.Value}/>
+                      <ColorPaletteModal props=
+                       {{
+                           color:prop.Value, 
+                           modalVisible: false,
+                           onColorChange: ((col?: string) => {onChangeText(!isNullOrEmpty(col) ? col : '#aaaaaa');}),
+                        }}/>
                      </View>
                  );
             }
