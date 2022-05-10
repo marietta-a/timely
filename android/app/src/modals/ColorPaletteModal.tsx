@@ -6,15 +6,17 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, Modal, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { modalStyles } from "../assets/styles/ModalDesigner";
 import { isNullOrEmpty } from "../core/Functions";
+import ColorPalette from 'react-native-color-palette'
 
 const ColorPaletteModal: React.FC<{
-    color?: any
-}> = ({color}) => {
+    color?: any,
+    modalVisible?: boolean
+}> = ({color, modalVisible}) => {
     color = isNullOrEmpty(color) ? '#808080' : color;
     const styles = StyleSheet.create({
          paletteWrapper: {
@@ -30,22 +32,30 @@ const ColorPaletteModal: React.FC<{
             borderColor: '#ffffff',
             shadowRadius: 5,
             position: 'relative',
-         },
+        },
          main: {
              flexDirection: 'row',
              width: '70%',
-         }
+        }
     });
 
     return(
       <View style={styles.main}>
          <Text style={modalStyles.textInput}>Choose subject color</Text>
-          <TouchableOpacity >
+          <TouchableOpacity onPress={()=> {modalVisible=true}}>
               <View style={styles.paletteWrapper}/>
           </TouchableOpacity>
+            <Modal
+                visible = {modalVisible}
+                onRequestClose = {() => {modalVisible = false;}}
+            >
+            <ColorPalette />
+          </Modal>
       </View>
     );
 };
 
 
+
 export default ColorPaletteModal;
+
