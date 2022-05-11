@@ -23,7 +23,10 @@ class FormListBuilder extends Component<ItemListModel>{
       ItemListBuilder.refreshing = FormListBuilder.refreshing;
      return (
         <SafeAreaView>
-        <ItemListBuilder ItemList={this.props.ItemList} style={this.props.style} openModal={this.props.openModal}/>
+        <ItemListBuilder
+        ItemList={this.props.ItemList}
+        style={this.props.style}
+        openModal={this.props.openModal}/>
         </SafeAreaView>
      );
    }

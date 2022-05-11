@@ -6,7 +6,6 @@ import { Timestamp } from "react-native-reanimated/lib/types/lib/reanimated2/com
 import { ModelBase } from "../common/model/ModelBase";
 
 export interface Events extends ModelBase{
-    Id: string,
     Name: string,
     EventDate?: Date,
     Time?: Timestamp,

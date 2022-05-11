@@ -11,12 +11,10 @@ import { Image, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { buttonStyles } from '../../assets/styles/ButtonDesigner';
-import { isNullOrEmpty } from '../../core/Functions';
-import { longest } from '../Functions';
+import { defaultHiddenFields, isNullOrEmpty, longest } from '../Functions';
 import { ModalBuilder } from '../modal/ModalBuilder';
 import { ItemListModel } from '../model/ItemListModel';
 
-let WIDTH = '100%';
 let HEADERS: any[] = [];
 
 
@@ -49,9 +47,6 @@ class ItemListBuilder extends Component<ItemListModel> {
     if (this.props.ItemList.length > 0){
             const headers = Object.keys(longest(this.props.ItemList));
             HEADERS = headers;
-            let i = 0;
-            const colnum = headers.length;
-            WIDTH = Math.ceil(100 / (colnum)) + '%';
             return (
                 <SafeAreaView style={styles.mainWrapper}>
                     <View>
@@ -83,7 +78,8 @@ const Item: React.FC<{
     }> = ({record, openModal}) => {
         let i = 1;
         const elements = HEADERS.map(function(header){
-            if (header){
+            if (defaultHiddenFields?.includes(header)){return; }
+            else if (header){
                 if (header.toString().toLocaleLowerCase().trim() === 'color'){
                     let color = record[header];
                     return isNullOrEmpty(color) ?

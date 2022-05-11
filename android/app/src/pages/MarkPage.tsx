@@ -10,6 +10,7 @@ import MarkCRUD from "../assets/crud/MarkCRUD";
 import { buttonStyles } from "../assets/styles/ButtonDesigner";
 import AddButton from "../common/custom/AddButton";
 import FormListBuilder from "../common/custom/FormListBuilder";
+import { systemFields } from "../common/Functions";
 import { ModalBuilder } from "../common/modal/ModalBuilder";
 import { Mark } from "../models/Marks";
 import { ModalState } from "../models/ModalState";
@@ -103,6 +104,7 @@ export class MarkPage extends Component{
                <SafeAreaView>
                    <FormListBuilder
                    ItemList={marks}
+                   hiddenFields={systemFields}
                    openModal={(item: Mark | undefined) => this.invokeModal(item)}
                    />
                     <AddButton

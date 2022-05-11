@@ -5,7 +5,6 @@ import { ModelBase } from "../common/model/ModelBase";
 
 
 interface ISubject extends ModelBase{
-    Id : number,
     Name: string,
     Color?: string,
     Teacher?: string,

@@ -5,7 +5,6 @@ import { ModelBase } from "../common/model/ModelBase";
 
 
  interface IMark extends ModelBase{
-  Id: number,
   Subject?: string;
   SubjectCode: number;
   Mark: number;

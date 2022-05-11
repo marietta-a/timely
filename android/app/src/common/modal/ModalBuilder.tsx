@@ -17,10 +17,9 @@ import { ModalState } from '../../models/ModalState';
 import { ModalHeader } from '../../modals/ModalHeader';
 import { tsImportEqualsDeclaration } from '@babel/types';
 import { modalStyles } from '../../assets/styles/ModalDesigner';
-import { isNullOrEmpty } from '../../core/Functions';
-import ColorPalette  from 'react-native-color-palette';
 import ColorPaletteModal from '../../modals/ColorPaletteModal';
 import { color } from 'react-native-reanimated';
+import { defaultHiddenFields, isNullOrEmpty } from '../Functions';
 
 export class ModalBuilder<T> extends Component<T>{
     static props: any;
@@ -83,6 +82,10 @@ export class ModalBuilder<T> extends Component<T>{
                  ModalBuilder.DATA[prop.Name] = val;
             };
             const focusable = key === 1;
+
+            const isHiddenField = defaultHiddenFields.includes(prop.Name);
+
+            if (isHiddenField) {return;}
 
             if (prop.Name.toLocaleLowerCase().trim() === 'color'){
                 element = (

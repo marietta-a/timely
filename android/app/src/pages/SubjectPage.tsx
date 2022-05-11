@@ -10,6 +10,7 @@ import SubjectCRUD from '../assets/crud/SubjectCRUD';
 import { buttonStyles } from '../assets/styles/ButtonDesigner';
 import AddButton from '../common/custom/AddButton';
 import FormListBuilder from '../common/custom/FormListBuilder';
+import { systemFields } from '../common/Functions';
 import { ModalBuilder } from '../common/modal/ModalBuilder';
 import SubjectModal from '../modals/SubjectModal';
 import { Mark } from '../models/Marks';
@@ -47,7 +48,6 @@ const getAllRecords = async() => {
 };
 
 class SubjectPage extends Component{
-
     constructor(props: any){
         super(props);
         getAllRecords().then(() => this.forceUpdate());

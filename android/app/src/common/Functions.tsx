@@ -10,5 +10,11 @@ function longest(arr: any[]){
     });
 }
 
+function isNullOrEmpty(val?: any) {
+    return val === '' || val === null || val === undefined || Object.values(val).length < 1;
+}
 
-export {longest}; 
+
+const defaultHiddenFields = ['Id', 'DateCreated', 'CreatedBy', 'SubjectCode'];
+
+export {longest, defaultHiddenFields, isNullOrEmpty};

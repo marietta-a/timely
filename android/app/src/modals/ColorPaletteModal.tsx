@@ -10,7 +10,6 @@ import { Alert, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { Component } from "react";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { modalStyles } from "../assets/styles/ModalDesigner";
-import { isNullOrEmpty } from "../core/Functions";
 import ColorPalette from 'react-native-color-palette'
 import ColorPaletteModel from "../common/model/ColorPaletteModel";
 import { useState } from "react";

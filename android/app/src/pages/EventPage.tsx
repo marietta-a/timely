@@ -15,6 +15,7 @@ import { EventTypes } from '../core/Enums';
 import { Events } from '../models/Events';
 import { ModalState } from '../models/ModalState';
 import SQLite from 'react-native-sqlite-storage';
+import { systemFields } from '../common/Functions';
 
 const events: Events[] = [
     {
@@ -40,7 +41,7 @@ class EventPage extends Component{
         modalVisible: false,
     };
     emptyEvent: Events ={
-        Id: '',
+        Id: 0,
         Name: '',
         EventType: 0,
         Description: '',
@@ -60,13 +61,16 @@ class EventPage extends Component{
         EventCRUD.createTable();
         return (
            <SafeAreaView>
-               <FormListBuilder ItemList={events} openModal={(item: Events | undefined) => this.invokeModal(item)}/>
+               <FormListBuilder
+               ItemList={events}
+               hiddenFields={systemFields}
+               openModal={(item: Events | undefined) => this.invokeModal(item)}/>
                 <AddButton
                     style={styles.buttonAdd}
                     onButtonClicked={this.invokeModal.bind(this, this.emptyEvent)}
                 />
                 <ModalBuilder<Events>
-                 Id={''} Name={''}
+                 Id={0} Name={''}
                  EventType={0}
                 />
            </SafeAreaView>

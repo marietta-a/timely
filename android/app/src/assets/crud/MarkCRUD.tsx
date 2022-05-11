@@ -48,6 +48,7 @@ export default class MarkCRUD extends Component<Mark>{
                         var entry = Object.entries(item);
                         var record = Object.fromEntries(entry);
                         var mark = Object.setPrototypeOf(record, Mark);
+                        mark.Subject = null;
                         records.push(mark);
                     });
                    // console.log(records);
