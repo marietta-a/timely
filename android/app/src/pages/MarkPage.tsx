@@ -4,36 +4,64 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
+import { Option } from "react-dropdown";
 import { Alert, SafeAreaView } from "react-native";
+import { ItemType } from "react-native-dropdown-picker";
 import MarkCRUD from "../assets/crud/MarkCRUD";
+import SubjectCRUD from "../assets/crud/SubjectCRUD";
 import { buttonStyles } from "../assets/styles/ButtonDesigner";
 import AddButton from "../common/custom/AddButton";
 import FormListBuilder from "../common/custom/FormListBuilder";
-import { systemFields } from "../common/Functions";
+import { defaultHiddenFields } from "../common/Functions";
 import { ModalBuilder } from "../common/modal/ModalBuilder";
+import { DataType } from "../common/model/DataType";
+import { DropdownItemModel } from "../common/model/DropdownItemModel";
 import { Mark } from "../models/Marks";
 import { ModalState } from "../models/ModalState";
+import { Subject } from "../models/Subject";
 
 
 const marks: Mark[] = [];
+const subjectLookups: Option[] = [];
 
 const getAllMarks = async() => {
 
     var record = await MarkCRUD.getMarks();
     var res = JSON.stringify(record);
     var obj = JSON.parse(res);
+    let i = 0;
     Object.entries(obj).map(item => {
+        --i;
         let mark = Object.setPrototypeOf(item[1], Mark);
+        let subjectCode = parseInt(mark.SubjectCode, 10);
+        let subject =  subjectLookups.find(s => s.label === subjectCode);
+        mark.Subject = subject?.value;
         marks.push(mark);
     });
 };
 
+const getAllSubjects = async() => {
+    var record = await SubjectCRUD.getSubjects();
+    var res = JSON.stringify(record);
+    var obj = JSON.parse(res);
+    Object.entries(obj).map(item => {
+        let subject = Object.setPrototypeOf(item[1], Subject);
+        let lookup: Option = {
+            value: subject?.Name,
+            label: subject.Id,
+            className: 'Subject',
+            data: subject?.Name
+        };
+        subjectLookups.push(lookup);
+    });
+};
 
 export class MarkPage extends Component{
         constructor(props : any){
             super(props);
-            getAllMarks().then(() => this.forceUpdate());
+            getAllSubjects().then(() => getAllMarks().then(() => this.forceUpdate()));
+            //getAllMarks().then(() => this.forceUpdate());
         }
         state: ModalState = {
             modalVisible: false,
@@ -84,8 +112,20 @@ export class MarkPage extends Component{
             });
         }
 
+        getDropdownItems(){
+            const lookupItems: DropdownItemModel = {
+                Name: 'Subject',
+                Items: subjectLookups,
+            };
+            const dropdownItems: DropdownItemModel[] = [];
+            dropdownItems.push(lookupItems);
+            ModalBuilder.dropdownItems = dropdownItems;
+        }
+
         render(){
             MarkCRUD.createTable();
+
+            this.getDropdownItems();
             ModalBuilder.handleSave = () => {
                 let mark = Object.assign(new Mark(), ModalBuilder.DATA);
                 if (mark.Id > 0){
@@ -104,7 +144,6 @@ export class MarkPage extends Component{
                <SafeAreaView>
                    <FormListBuilder
                    ItemList={marks}
-                   hiddenFields={systemFields}
                    openModal={(item: Mark | undefined) => this.invokeModal(item)}
                    />
                     <AddButton

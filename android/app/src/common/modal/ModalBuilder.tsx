@@ -20,6 +20,8 @@ import { modalStyles } from '../../assets/styles/ModalDesigner';
 import ColorPaletteModal from '../../modals/ColorPaletteModal';
 import { color } from 'react-native-reanimated';
 import { defaultHiddenFields, isNullOrEmpty } from '../Functions';
+import { DropdownItemModel } from '../model/DropdownItemModel';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export class ModalBuilder<T> extends Component<T>{
     static props: any;
@@ -28,12 +30,14 @@ export class ModalBuilder<T> extends Component<T>{
     static handleSave?: any;
     static handleDelete?: any;
     static deleteVisible: boolean = false;
+    static dropdownItems: DropdownItemModel[];
     constructor(props : T){
         super(props);
         ModalBuilder.props = props;
     }
-    state: ModalState = {
+    state = {
         modalVisible: ModalBuilder.modalVisible,
+        dropdownVisible: false,
     };
     static propTypes = () => {
         let dataTypes: DataType[] = [];
@@ -84,10 +88,20 @@ export class ModalBuilder<T> extends Component<T>{
             const focusable = key === 1;
 
             const isHiddenField = defaultHiddenFields.includes(prop.Name);
-
             if (isHiddenField) {return;}
 
-            if (prop.Name.toLocaleLowerCase().trim() === 'color'){
+            const dropdown = ModalBuilder.dropdownItems?.find(a => a.Name === prop.Name);
+            
+            if (dropdown !== undefined){
+                const dropDownRecord = Object.setPrototypeOf(dropdown, DropdownItemModel);
+                element = (
+                    <View key={prop.Name} style={modalStyles.inputWrapper}>
+                      <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>{prop.Name}</Text></View>
+                    
+                     </View>
+                 );
+            }
+            else if (prop.Name.toLocaleLowerCase().trim() === 'color'){
                 element = (
                     <View key={prop.Name} style={modalStyles.inputWrapper}>
                       <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>{prop.Name}</Text></View>

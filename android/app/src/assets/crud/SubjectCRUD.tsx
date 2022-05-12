@@ -37,6 +37,33 @@ export default class MarkCRUD extends Component<Subject>{
         });
     }
 
+    static async getSubjectByIds(Ids: number[]){
+         let query = 'SELECT * FROM Subjects where Id in (?)';
+         
+         let records: Subject[] = [];
+         const transaction = async() => (await db).transaction(function(trans){
+            return trans.executeSql(query,[Ids],
+                function(txn, res){
+                   res.rows.raw().map(item => {
+                        var entry = Object.entries(item);
+                        var record = Object.fromEntries(entry);
+                        var subject = Object.setPrototypeOf(record, Subject);
+                        records.push(subject);
+                    });
+                   // console.log(records);
+                    return records;
+                }
+            );
+         }).catch(err => {
+            console.log('displaying error:' + err);
+            records = [];
+            return records;
+         }).finally(() => {console.log('fetch completed'); return records; });
+
+         await transaction();
+         return records;
+    }
+
     static async getSubjects(){
          let query = 'SELECT * FROM Subjects';
          

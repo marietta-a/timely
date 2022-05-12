@@ -5,5 +5,6 @@ export interface DataType{
     Name: string,
     DataType?: any,
     Value?: any,
+    Code?: any,
     onChangeText?: any
 };

@@ -4,37 +4,25 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import React, { Component, useState } from 'react';
-import { Button, FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import React, { Component, useEffect, useState } from 'react';
+import { Button, FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import SubjectCRUD from '../assets/crud/SubjectCRUD';
+import { buttonStyles } from '../assets/styles/ButtonDesigner';
 import AddButton from '../common/custom/AddButton';
-import FormListBuilder from '../common/custom/FormListBuilder';
 import { ModalBuilder } from '../common/modal/ModalBuilder';
 import SubjectModal from '../modals/SubjectModal';
-import { ModalState } from '../models/ModalState';
 import { Subject } from '../models/Subject';
 
-const STUDENTS : Subject[] = [
-    {
-        Id : 1,
-        Name: 'Maths',
-        Color: '#571d33',
-        Teacher: 'p2' ,
-    },
-    {
-        Id: 2,
-        Name: 'Computer Science',
-        Color: 'red',
-        Teacher: 'T3' ,
-    },
-];
+const Subjects : Subject[] = [];
 
 let subjectColor = '#000000';
+
 
 const Item: React.FC<{
     record: Subject
 }> = ({record}) => (
 
-    <View style={styles.contentWrapper}>
+    <View style={styles.contentWrapper} key={record.Id}>
         <View style = {{
             height: 50,
             width: 10,
@@ -50,41 +38,64 @@ const Item: React.FC<{
 const renderItem: React.FC<{
     item : Subject
  }> = ({item}) => (
-     <Item record={item}/>
+     <Item record={item} key={item.Id}/>
  );
-class SubjectPage extends Component{
 
-   state: ModalState = {
-       modalVisible: false,
-   }
+ const wait = (timeout : number) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+};
 
-   invokeModal(){
-        this.setState({modalVisible: true});
-        ModalBuilder.modalVisible = this.state.modalVisible;
-    }
-    invokeModalClosing(){
-        this.setState({modalVisible: false});
-        ModalBuilder.modalVisible = this.state.modalVisible;
-    }
+const getAllRecords = async() => {
 
-    render(){
-        const modalVisible = this.state.modalVisible;
-        return (
-            <SafeAreaView style={styles.main}>
-                <FlatList
-                data={STUDENTS}
-                renderItem={renderItem}
-                keyExtractor={item => item.Id.toString()}
-                />
-                <AddButton
-                    style={styles.buttonAdd}
-                    onButtonClicked={this.invokeModal.bind(this)}
-                />
-                <ModalBuilder<Subject> Id={0} Name={''} Color={''} Teacher={''}/>
-            </SafeAreaView>
-        );
-    }
-}
+    var record = await SubjectCRUD.getSubjects();
+    var res = JSON.stringify(record);
+    var obj = JSON.parse(res);
+    Object.entries(obj).map(item => {
+        let subject = Object.setPrototypeOf(item[1], Subject);
+        Subjects.push(subject);
+    });
+};
+
+const SubjectPage: React.FC<{
+    props?: any
+}> = ({props}) => {
+
+   const [modalVisible, setModalVisible] = useState(false);
+   const [refreshing, setRefreshing] = useState(false);
+
+   const invokeModal = () => {
+        setModalVisible(true);
+        ModalBuilder.modalVisible = modalVisible;
+    };
+    const invokeModalClosing = () => {
+        setModalVisible(false);
+        ModalBuilder.modalVisible = modalVisible;
+    };
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
+
+    useEffect(() => {
+        getAllRecords().then(()=>{onRefresh();});
+    }, [onRefresh]);
+
+    return (
+        <SafeAreaView style={styles.main}>
+            <FlatList
+            data={Subjects}
+            renderItem={renderItem}
+            keyExtractor={item => item.Id.toString()}
+            />
+            <AddButton
+                style={buttonStyles.buttonAdd}
+                onButtonClicked={() => invokeModal.bind(this)}
+            />
+            <SubjectModal modalState={{modalVisible: modalVisible, onRequestClose: () => invokeModalClosing.bind(this)}} />
+        </SafeAreaView>
+    );
+};
 
 const styles = StyleSheet.create(
     {

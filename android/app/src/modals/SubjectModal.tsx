@@ -5,7 +5,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { Alert, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,59 +14,50 @@ import { ModalState } from '../models/ModalState';
 
 //const SubjectModal = (props: any) => {
 
-class SubjectModal extends Component<ModalState>{
-  constructor(props: any){
-    super(props);
-  }
-  state = {
-    subject: '',
-    teacher: '',
-  }
+const SubjectModal:React.FC<{
+  modalState: ModalState,
+}> = ({modalState}) => {
+    const [subject, setSubject] = useState('');
+    const [teacher, setTeacher] = useState('');
+    const [color, setColor] = useState('');
+    const [refreshing, setRefreshing] = useState(false);
 
-  updateSubject = (value: string) => {
-      this.setState({subject: value});
-  }
-  updateTeacher = (value: string) => {
-    this.setState({teacher: value});
-  }
+    useEffect(() => {
+      setRefreshing(false);
+    }, []);
 
-  render() {
-      const modalVisible = this.props.modalVisible;
-      const subject = this.state.subject;
-      const teacher = this.state.teacher;
-      return (
-        <SafeAreaView>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible = {modalVisible}
-              onRequestClose={() => this.props.onRequestClose}
+    return (
+      <SafeAreaView>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible = {modalState.modalVisible}
+            onRequestClose={modalState?.onRequestClose()}
+          >
+          <View style={styles.mainWrapper}>
+            <Pressable
+              style={styles.textWrapper}
+              onPress={modalState?.onRequestClose()}
             >
-            <View style={styles.mainWrapper}>
-              <Pressable
-                style={styles.textWrapper}
-                onPress={this.props.onRequestClose}
-              >
-                  <Text style={styles.text}>X</Text>
-              </Pressable>
-              <View style={styles.modalView}>
-                <TextInput
-                  value={subject}
-                  placeholder="Subject name"
-                  onChangeText={(txt) => this.updateSubject(txt)}
-                />
-                <TextInput
-                  value={teacher}
-                  placeholder="Teacher's name"
-                  onChangeText={(txt) => this.updateTeacher(txt)}
-                />
-              </View>
+                <Text style={styles.text}>X</Text>
+            </Pressable>
+            <View style={styles.modalView}>
+              <TextInput
+                value={subject}
+                placeholder="Subject name"
+                onChangeText={(text) => setSubject(text)}
+              />
+              <TextInput
+                value={teacher}
+                placeholder="Teacher's name"
+                onChangeText={(txt) => setTeacher(txt)}
+              />
             </View>
-            </Modal>
-        </SafeAreaView>
-      );
-    }
-  }
+          </View>
+          </Modal>
+      </SafeAreaView>
+    );
+};
 
 
 

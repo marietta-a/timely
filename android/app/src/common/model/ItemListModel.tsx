@@ -8,5 +8,5 @@ export interface ItemListModel{
     ItemList: any,
     style?: any,
     openModal: any,
-    dropdownItems?: DropdownItemModel<any>[]
+    //dropdownItems?: DropdownItemModel[]
 }
