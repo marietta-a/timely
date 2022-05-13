@@ -103,7 +103,6 @@ class SubjectPage extends Component{
      }
 
     render(){
-        SubjectCRUD.createTable();
         ModalBuilder.handleSave = () => {
             let item = Object.assign(new Subject(), ModalBuilder.DATA);
             if (item.Id > 0){

@@ -19,11 +19,13 @@ import { CustomDrawerContent } from './android/app/src/common/main/CustomDrawerS
 import { EventScreen, MarkScreen, SubjectScreen } from './android/app/src/screens/Screen';
 import SQLite from 'react-native-sqlite-storage';
 import EventCRUD from './android/app/src/assets/crud/EventCRUD';
+import SubjectCRUD from './android/app/src/assets/crud/SubjectCRUD';
 
 
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
 ]);
+
 
 
 SQLite.enablePromise(true);
@@ -47,3 +49,4 @@ const App = () => {
 
 
 export default App;
+

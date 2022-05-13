@@ -13,7 +13,7 @@ import { ModalBuilder } from '../common/modal/ModalBuilder';
 import SubjectModal from '../modals/SubjectModal';
 import { Subject } from '../models/Subject';
 
-const Subjects : Subject[] = [];
+const subjects : Subject[] = [];
 
 let subjectColor = '#000000';
 
@@ -52,7 +52,7 @@ const getAllRecords = async() => {
     var obj = JSON.parse(res);
     Object.entries(obj).map(item => {
         let subject = Object.setPrototypeOf(item[1], Subject);
-        Subjects.push(subject);
+        subjects.push(subject);
     });
 };
 
@@ -60,39 +60,87 @@ const SubjectPage: React.FC<{
     props?: any
 }> = ({props}) => {
 
+   SubjectCRUD.createTable();
+
    const [modalVisible, setModalVisible] = useState(false);
    const [refreshing, setRefreshing] = useState(false);
 
    const invokeModal = () => {
         setModalVisible(true);
-        ModalBuilder.modalVisible = modalVisible;
     };
     const invokeModalClosing = () => {
         setModalVisible(false);
-        ModalBuilder.modalVisible = modalVisible;
+        console.log('closing modal')
     };
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         wait(2000).then(() => setRefreshing(false));
     }, []);
+    
+   const handleSave = (subject: Subject) => {
+       console.log('save: ' + subject);
+        let item = Object.assign(new Subject(), subject);
+        if (item.Id > 0){
+            updateRecord(item);
+        }
+        else {
+            addNewRecord(item);
+        }
+   }
+
+   function addNewRecord(subject: Subject){
+        SubjectCRUD.addSubject(subject).then(() => 
+        {
+            subjects.push(subject); 
+            onRefresh();
+        });
+    }
+
+    function updateRecord(subject: Subject){
+        SubjectCRUD.updateSubject(subject).then(() => {
+            var oldRecord = subjects.find(m => m.Id === subject.Id);
+            if (oldRecord){
+                var index = subjects.indexOf(oldRecord);
+                subjects.splice(index, 1, subject);
+            }
+            onRefresh();
+        });
+    }
+    function deleteRecord(id: number){
+        SubjectCRUD.deleteSubject(id).then(() => {
+            var oldRecord = subjects.find(m => m.Id === id);
+            console.log('delete: ' + oldRecord);
+            if (oldRecord){
+                var index = subjects.indexOf(oldRecord);
+                subjects.splice(index, 1);
+            }
+            onRefresh();
+        });
+    }
 
     useEffect(() => {
         getAllRecords().then(()=>{onRefresh();});
     }, [onRefresh]);
+    
 
     return (
         <SafeAreaView style={styles.main}>
             <FlatList
-            data={Subjects}
+            data={subjects}
             renderItem={renderItem}
             keyExtractor={item => item.Id.toString()}
             />
             <AddButton
                 style={buttonStyles.buttonAdd}
-                onButtonClicked={() => invokeModal.bind(this)}
+                onButtonClicked={() => invokeModal()}
             />
-            <SubjectModal modalState={{modalVisible: modalVisible, onRequestClose: () => invokeModalClosing.bind(this)}} />
+            <SubjectModal modalState={{ modalVisible: modalVisible }}
+            onRequestClose={() => invokeModalClosing()} 
+            onItemSaved={(item: Subject) => handleSave(item)}
+            onItemDeleted={(id: number) => deleteRecord(id)}
+            deleteVisible={false}
+            />
         </SafeAreaView>
     );
 };
