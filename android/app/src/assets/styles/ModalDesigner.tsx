@@ -64,6 +64,7 @@ const modalStyles = StyleSheet.create({
       backgroundColor: '#cccccc',
       position: 'relative',
       width: '100%',
+      marginBottom: 20,
     },
     crudWrapper: {
        alignItems: 'center',

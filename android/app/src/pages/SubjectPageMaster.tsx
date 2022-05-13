@@ -6,40 +6,44 @@
 
 import React, { Component, useEffect, useState } from 'react';
 import { Button, FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import SubjectCRUD from '../assets/crud/SubjectCRUD';
 import { buttonStyles } from '../assets/styles/ButtonDesigner';
 import AddButton from '../common/custom/AddButton';
+import { isNullOrEmpty } from '../common/Functions';
 import { ModalBuilder } from '../common/modal/ModalBuilder';
 import SubjectModal from '../modals/SubjectModal';
-import { Subject } from '../models/Subject';
+import { ISubject, Subject } from '../models/Subject';
 
-const subjects : Subject[] = [];
+const subjects: Subject[] = [];
 
 let subjectColor = '#000000';
-
+let emptyState: ISubject ={
+    Name: '',
+    Id: -1
+};
+let selectedSubject: Subject = emptyState;
 
 const Item: React.FC<{
-    record: Subject
-}> = ({record}) => (
+    record: Subject,
+    openModal?: any
+}> = ({record, openModal}) => (
 
-    <View style={styles.contentWrapper} key={record.Id}>
+    <TouchableOpacity onPress={openModal(record)} style={styles.contentWrapper} key={record.Id}>
         <View style = {{
             height: 50,
             width: 10,
             backgroundColor: record.Color,
         }} />
         <View style={styles.textContainer}>
-            <Text style={styles.header}>{record.Name}</Text>
+            <Text style={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                color: record?.Color ?? '#777'}}>{record.Name}</Text>
             <Text>{record.Teacher}</Text>
         </View>
-    </View>
+    </TouchableOpacity>
 );
-
-const renderItem: React.FC<{
-    item : Subject
- }> = ({item}) => (
-     <Item record={item} key={item.Id}/>
- );
 
  const wait = (timeout : number) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -64,24 +68,28 @@ const SubjectPage: React.FC<{
 
    const [modalVisible, setModalVisible] = useState(false);
    const [refreshing, setRefreshing] = useState(false);
+   const [isDeleteVisible, setDeleteVisible] = useState(false);
 
-   const invokeModal = () => {
+   const invokeModal = (subject?: Subject) => {
         setModalVisible(true);
+        setDeleteVisible(!isNullOrEmpty(subject?.Name));
+        selectedSubject = subject ?? emptyState;
     };
     const invokeModalClosing = () => {
         setModalVisible(false);
-        console.log('closing modal')
+        //console.log('closing modal');
     };
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         wait(2000).then(() => setRefreshing(false));
     }, []);
-    
+
    const handleSave = (subject: Subject) => {
        console.log('save: ' + subject);
         let item = Object.assign(new Subject(), subject);
-        if (item.Id > 0){
+        console.log(item);
+        if (item.Id > 0 ){
             updateRecord(item);
         }
         else {
@@ -107,10 +115,11 @@ const SubjectPage: React.FC<{
             onRefresh();
         });
     }
-    function deleteRecord(id: number){
+    const deleteRecord = (id: number) => {
+        console.log('deleting ... ' + id);
         SubjectCRUD.deleteSubject(id).then(() => {
             var oldRecord = subjects.find(m => m.Id === id);
-            console.log('delete: ' + oldRecord);
+            //console.log('delete: ' + oldRecord);
             if (oldRecord){
                 var index = subjects.indexOf(oldRecord);
                 subjects.splice(index, 1);
@@ -122,24 +131,35 @@ const SubjectPage: React.FC<{
     useEffect(() => {
         getAllRecords().then(()=>{onRefresh();});
     }, [onRefresh]);
-    
+
+    const renderItem: React.FC<{
+        item : Subject
+    }> = ({item}) => (
+        <Item record={item} key={item.Id} openModal={()=>invokeModal.bind(this, item)}/>
+    );
 
     return (
         <SafeAreaView style={styles.main}>
             <FlatList
             data={subjects}
             renderItem={renderItem}
-            keyExtractor={item => item.Id.toString()}
+            keyExtractor={item => item.Id?.toString() ?? item.Name}
             />
             <AddButton
                 style={buttonStyles.buttonAdd}
                 onButtonClicked={() => invokeModal()}
             />
-            <SubjectModal modalState={{ modalVisible: modalVisible }}
-            onRequestClose={() => invokeModalClosing()} 
-            onItemSaved={(item: Subject) => handleSave(item)}
-            onItemDeleted={(id: number) => deleteRecord(id)}
-            deleteVisible={false}
+            <SubjectModal modalState={{modalVisible: modalVisible }} 
+            props={{
+              Id: selectedSubject.Id,
+              Name: selectedSubject.Name,
+              Color: selectedSubject?.Color,
+              Teacher: selectedSubject?.Teacher,
+            }}
+            onRequestClose={() => invokeModalClosing()}
+            onItemSaved={(item: Subject) => { handleSave(item)}}
+            onItemDeleted={(id: number) => {deleteRecord(id);}}
+            deleteVisible={true}
             />
         </SafeAreaView>
     );

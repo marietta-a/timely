@@ -39,7 +39,7 @@ const ColorPaletteModal: React.FC<{
         },
          main: {
              flexDirection: 'row',
-             width: '70%',
+             width: '85%',
         },
         palette: {
             width: '80%',
@@ -62,7 +62,7 @@ const ColorPaletteModal: React.FC<{
     }
     return (
         <View style={styles.main}>
-            <Text style={modalStyles.textInput}>Choose subject color</Text>
+            <Text style={modalStyles.textInput}>choose subject color (optional)</Text>
             <Pressable 
                 onPress={() => {onVisibilityChange(true)}}>
                 <View style={styles.paletteWrapper}/>

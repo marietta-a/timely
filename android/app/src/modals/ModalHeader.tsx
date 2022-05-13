@@ -34,8 +34,8 @@ const ModalHeader: React.FC<{
          [
            {
              text: 'Cancel',
-             onPress: () => {},
-             style:'default'
+             onPress: () => {onRequestClose();},
+             style:'default',
            },
            {
              text: 'Confirm',
@@ -43,19 +43,19 @@ const ModalHeader: React.FC<{
                handleDelete();
                onRequestClose();
              },
-             style:'destructive'
-           }
+             style:'destructive',
+           },
          ]
        )
     }
     if(deleteVisible){
       return (
           <View style={modalStyles.headerWrapper}>
-            <Pressable style={textWrapper} onPress={onRequestClose}>
+            <Pressable style={textWrapper} onPress={onRequestClose.bind(this)}>
               <Text style={textStyle}>X</Text>
             </Pressable>
             <View style={{justifyContent: 'center', alignItems:'center', width:'20%'}}/>
-            <Pressable style={textWrapper} onPress={() => deleteClick()}>
+            <Pressable style={textWrapper} onPress={deleteClick.bind(this)}>
               <Text style={deleteTextStyle}>Delete</Text>
             </Pressable> 
             <View style={{justifyContent: 'center', alignItems:'center', width:'20%'}}/>

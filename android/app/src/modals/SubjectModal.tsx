@@ -30,58 +30,81 @@ const SubjectModal:React.FC<{
   deleteVisible: boolean,
 }> = ({modalState, props, onRequestClose, onItemSaved, onItemDeleted, deleteVisible}) => {
 
-    const [name, setName] = useState(props?.Name ?? '');
+    const [name, setName] = useState(props?.Name);
     const [teacher, setTeacher] = useState(props?.Teacher);
-    const defaultColor = props?.Color ?? '#aaaaaa';
+    const defaultColor = props?.Color;
     const [color, setColor] = useState(defaultColor);
     const [modalVisible, setModalVisible] = useState(false);
     const [isDeleteVisible, setDeleteVisible] = useState(false);
     const [subject, setSubject] = useState(new Subject());
 
+    const reinitializeStates = () => {
+      setColor('');
+      setTeacher('');
+      setName('');
+      setSubject(new Subject());
+    };
+
     useEffect(() => {
         setModalVisible(modalState.modalVisible);
         setDeleteVisible(deleteVisible);
         let subj: ISubject = {
-          Name: name,
-          Id: subject.Id,
-          Teacher: teacher,
-          Color: color
+          Name: !isNullOrEmpty(name) ? name ?? '' : (props?.Name ?? ''),
+          Id: props?.Id ?? subject.Id,
+          Teacher:!isNullOrEmpty(teacher) ? teacher : props?.Teacher,
+          Color: !isNullOrEmpty(color) ? color : props?.Color,
         };
         setSubject(subj);
-    })
 
+    }, [modalState.modalVisible, deleteVisible, name, props?.Name, props?.Id, props?.Teacher, props?.Color, subject.Id, teacher, color],);
 
+    const handleDelete = () => {
+      onItemDeleted(props?.Id ?? subject.Id);
+      reinitializeStates();
+    };
+    const handleModalClosing = () => {
+      onRequestClose();
+      reinitializeStates();
+    };
+    const handleSave = () => {
+      onItemSaved(subject);
+      reinitializeStates();
+    };
+
+    
     return (
       <SafeAreaView>
           <Modal
             animationType="slide"
             transparent={false}
             visible = {modalVisible}
-            onRequestClose={onRequestClose}
+            onRequestClose={handleModalClosing}
           >
           <View style={modalStyles.mainWrapper}>
-              <ModalHeader 
-                  onRequestClose={onRequestClose} 
-                  handleSave={onItemSaved(subject)}
-                  handleDelete={onItemDeleted(subject.Id)}
+              <ModalHeader
+                  onRequestClose={handleModalClosing}
+                  handleSave={handleSave}
+                  handleDelete={handleDelete}
                   deleteVisible={deleteVisible}
               />
               <View style={modalStyles.inputWrapper}>
                <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>Subject</Text></View>
                    <TextInput
-                   value={name}
+                   value={subject.Name}
                    blurOnSubmit={true}
                    style={modalStyles.textInput}
-                   onChangeText={(val) => setName(val)}
+                   onChangeText={(val) => {setName(val)}}
                    defaultValue={props?.Name}
                    autoFocus={true}
+                   placeholder="required*"
+                   placeholderTextColor="#900C3F"
                    />
                </View>
                 <View style={modalStyles.inputWrapper}>
                 <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>Color</Text></View>
                 <ColorPaletteModal props=
                   {{
-                      color:color, 
+                      color:subject?.Color,
                       modalVisible: false,
                       onColorChange: ((col?: string) => {setColor(col ?? defaultColor);}),
                   }}/>
@@ -89,51 +112,18 @@ const SubjectModal:React.FC<{
                 <View style={modalStyles.inputWrapper}>
                 <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>Teacher</Text></View>
                     <TextInput
-                    value={teacher}
+                    value={subject?.Teacher}
                     blurOnSubmit={true}
                     style={modalStyles.textInput}
                     onChangeText={(val) => setTeacher(val)}
-                    defaultValue = {props?.Teacher ?? 'optional'}
+                    defaultValue = {props?.Teacher}
+                    placeholder="optional"
                     />
                 </View>
-              
            </View>
-              
           </Modal>
       </SafeAreaView>
     );
 };
-
-
-
-const styles = StyleSheet.create({
-   mainWrapper: {
-    margin: 20,
-    backgroundColor: 'white',
-    shadowColor: '#000',
-    borderRadius: 10,
-    shadowOpacity: 0.25,
-    shadowRadius: 3,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    elevation: 10,
-   },
-   modalView:{
-     height: 200,
-     alignItems: 'center',
-     borderRadius: 20,
-   },
-   textWrapper:{
-     alignItems: 'flex-end',
-     paddingRight: 20,
-     paddingTop: 10,
-   },
-   text: {
-     fontWeight: 'bold',
-     fontSize: 24,
-   },
-});
 
 export default SubjectModal;
