@@ -6,10 +6,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import React, { useState, useEffect } from 'react';
-import { Modal, Text, View } from 'react-native';
+import { Modal, Pressable, Text, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { modalStyles } from '../assets/styles/ModalDesigner';
+import SubjectDropdown from '../dropdown/SubjectDropdown';
 import { IMark, Mark } from '../models/Marks';
 import { ModalState } from '../models/ModalState';
 import { Subject } from '../models/Subject';
@@ -28,6 +29,7 @@ const MarkModal:React.FC<{
 }> = ({modalState, props, onRequestClose, onItemSaved, onItemDeleted, deleteVisible}) => {
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [subjectDropdownVisible, setSubjectDropdownVisibility] = useState(false);
     const [isDeleteVisible, setDeleteVisible] = useState(false);
     const [weight, setWeight] = useState(props?.Weight);
     const [markValue, setMarkValue] = useState(props?.Mark);
@@ -77,6 +79,12 @@ const MarkModal:React.FC<{
       reinitializeStates();
     };
 
+    const invokeSubjectDropdown = () => {
+       console.log("subject pressed");
+       setSubjectDropdownVisibility(true);
+       console.log(subjectDropdownVisible);
+    }
+
     return (
       <SafeAreaView>
           <Modal
@@ -94,19 +102,22 @@ const MarkModal:React.FC<{
               />
               <View style={modalStyles.inputWrapper}>
                <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>Subject</Text></View>
-                   <TouchableOpacity>
-                    <TextInput
-                    value={mark?.Subject?.Name}
-                    blurOnSubmit={true}
-                    style={modalStyles.textInput}
-                    onChangeText={(val) => {setSubjectName(val)}}
-                    defaultValue={props?.Subject?.Name}
-                    autoFocus={true}
-                    placeholder="required*"
-                    placeholderTextColor="#900C3F"
-                    editable={false}
-                    />
-                   </TouchableOpacity>
+                   <Pressable onPress={() => invokeSubjectDropdown()}>
+                      <TextInput
+                      value={mark?.Subject?.Name}
+                      blurOnSubmit={true}
+                      style={modalStyles.textInput}
+                      onChangeText={(val) => {setSubjectName(val)}}
+                      defaultValue={props?.Subject?.Name}
+                      autoFocus={true}
+                      placeholder="required*"
+                      placeholderTextColor="#900C3F"
+                      editable={false}
+                      />
+                      <SubjectDropdown
+                      modalState={{modalVisible: subjectDropdownVisible}} 
+                      onRequestClose={undefined}/>
+                   </Pressable>
                </View>
                 <View style={{
                 marginLeft: 20,

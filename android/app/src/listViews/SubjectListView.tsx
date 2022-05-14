@@ -14,48 +14,67 @@ import { subjectStyles } from "../pages/SubjectPage";
 const Item: React.FC<{
     record: ISubject,
     openModal: any,
-    isDropDownList?: boolean
-}> = ({record, openModal, isDropDownList}) => (
-    isDropDownList ?
-    <TouchableOpacity onPress={openModal.bind(this, record)} style={subjectStyles.contentWrapper} key={record.Id}>
-        <View style = {{
-            height: 25,
-            width: 10,
-            backgroundColor: record.Color,
-        }} />
-        <View style={subjectStyles.textContainer}>
-            <Text style={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                color: record?.Color ?? '#777'}}>{record.Name}</Text>
-        </View>
-    </TouchableOpacity>
-    :
-    <TouchableOpacity onPress={openModal.bind(this, record)} style={subjectStyles.contentWrapper} key={record.Id}>
-        <View style = {{
-            height: 50,
-            width: 10,
-            backgroundColor: record.Color,
-        }} />
-        <View style={subjectStyles.textContainer}>
-            <Text style={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                color: record?.Color ?? '#777'}}>{record.Name}</Text>
-            <Text>{ record.Teacher}</Text>
-        </View>
-    </TouchableOpacity>
-);
+    isDropDownList?: boolean,
+    onItemSelected?: any,
+}> = ({record, openModal, isDropDownList, onItemSelected}) => {
+
+    const handleOpenModal = (item : ISubject) => {
+          onItemSelected.bind(this, item);
+          openModal.bind(this, item);
+    };
+
+    if (isDropDownList){
+        return (
+            <TouchableOpacity onPress={() => handleOpenModal(record)} style={subjectStyles.contentWrapper} key={record.Id}>
+                <View style = {{
+                    height: 25,
+                    width: 10,
+                    backgroundColor: record.Color,
+                }} />
+                <View style={subjectStyles.textContainer}>
+                    <Text style={{
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        color: record?.Color ?? '#777'}}>{record.Name}</Text>
+                </View>
+            </TouchableOpacity>
+        );
+    }
+    else {
+        return (
+        <TouchableOpacity onPress={openModal.bind(this, record)} style={subjectStyles.contentWrapper} key={record.Id}>
+            <View style = {{
+                height: 50,
+                width: 10,
+                backgroundColor: record.Color,
+            }} />
+            <View style={subjectStyles.textContainer}>
+                <Text style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    color: record?.Color ?? '#777'}}>{record.Name}</Text>
+                <Text>{ record.Teacher}</Text>
+            </View>
+        </TouchableOpacity>
+        );
+    }
+};
 
 const SubjectListView: React.FC<{
     openModal: any,
     subjects: ISubject[],
-    isDropDownList?: boolean
-}> = ({openModal, subjects, isDropDownList}) => { 
+    isDropDownList?: boolean,
+    onItemSelected?: any,
+}> = ({openModal, subjects, isDropDownList, onItemSelected}) => { 
     const renderItem: React.FC<{
         item : ISubject
     }> = ({item}) => (
-        <Item key={item.Id} record={item} openModal={openModal} isDropDownList={isDropDownList}/>
+        <Item key={item.Id}
+        record={item}
+        openModal={openModal}
+        isDropDownList={isDropDownList}
+        onItemSelected={onItemSelected}
+        />
     );
 
     return (

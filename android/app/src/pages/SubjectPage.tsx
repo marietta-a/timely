@@ -25,29 +25,6 @@ let emptyState: ISubject = {
 };
 let selectedSubject: ISubject = emptyState;
 
-const Item: React.FC<{
-    record: Subject,
-    openModal?: any
-}> = ({record, openModal}) => (
-
-    <TouchableOpacity onPress={openModal(record)} style={subjectStyles.contentWrapper} key={record.Id}>
-        <View style = {{
-            height: 50,
-            width: 10,
-            backgroundColor: record.Color,
-        }} />
-        <View style={subjectStyles.textContainer}>
-            <Text style={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                color: record?.Color ?? '#777'}}>{record.Name}</Text>
-            <Text>{record.Teacher}</Text>
-        </View>
-    </TouchableOpacity>
-);
-
-
-
 const getAllRecords = async() => {
 
     var record = await SubjectCRUD.getSubjects();
@@ -60,8 +37,10 @@ const getAllRecords = async() => {
 };
 
 const SubjectPage: React.FC<{
-    props?: any
-}> = ({props}) => {
+    props?: any,
+    isDropDownList?: boolean,
+    onItemSelected?: any,
+}> = ({props, isDropDownList, onItemSelected}) => {
 
    SubjectCRUD.createTable();
 
@@ -127,17 +106,15 @@ const SubjectPage: React.FC<{
         getAllRecords().then(()=>{onRefresh();});
     }, [onRefresh]);
 
-    const renderItem: React.FC<{
-        item : Subject
-    }> = ({item}) => (
-        <Item record={item} key={item.Id} openModal={()=>invokeModal.bind(this, item)}/>
-    );
-
     return (
         <SafeAreaView style={subjectStyles.main}>
             <SubjectListView
             openModal={(item: ISubject)=> {invokeModal(item)}}
-            subjects={subjects}/>
+            subjects={subjects}
+            onItemSelected={onItemSelected}
+            isDropDownList={isDropDownList}
+            />
+
             <AddButton
                 style={buttonStyles.buttonAdd}
                 onButtonClicked={() => invokeModal()}

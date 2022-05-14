@@ -15,7 +15,7 @@ import FormListBuilder from "../custom/FormListBuilder";
 import { defaultHiddenFields, groupBy, wait } from "../common/Functions";
 import { ModalBuilder } from "../modals/ModalBuilder";
 import { DropdownItemModel } from "../common/model/DropdownItemModel";
-import MarkModal from "../modals/MarkModal";
+import MarkModal from "../modals/MarksModal";
 import { IMark, Mark } from "../models/Marks";
 import { ISubject, Subject } from "../models/Subject";
 import { subjectStyles } from "./SubjectPage";
