@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 
-import { ModelBase } from "../common/model/ModelBase";
+import { ModelBase } from "../common/ModelBase";
+import { ISubject } from "./Subject";
 
 
  interface IMark extends ModelBase{
-  Subject?: string;
+  Subject?: ISubject;
   SubjectCode: number;
   Mark: number;
   Weight?: number;
@@ -15,7 +16,6 @@ import { ModelBase } from "../common/model/ModelBase";
 
 class Mark implements IMark{
   Id!: number;
-  Subject?: string | undefined;
   SubjectCode!: number;
   Mark!: number;
   Weight?: number | undefined;
@@ -23,7 +23,7 @@ class Mark implements IMark{
   Description?: string | undefined;
   DateCreated?: Date | undefined;
   CreatedBy?: string | undefined;
-  
+  Subject?: ISubject | undefined;
 }
 
 export { Mark }; export type { IMark };

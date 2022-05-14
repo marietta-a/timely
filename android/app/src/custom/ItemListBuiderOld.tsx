@@ -10,7 +10,7 @@ import React, { Component, ReactElement } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { longest } from '../Functions';
+import { longest } from '../common/Functions';
 
 let WIDTH = '100%';
 let HEADERS: any[] = [];

@@ -6,154 +6,186 @@
 
 import React, { Component, useEffect, useState } from "react";
 import { Option } from "react-dropdown";
-import { Alert, SafeAreaView } from "react-native";
-import { ItemType } from "react-native-dropdown-picker";
+import { Alert, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import MarkCRUD from "../assets/crud/MarkCRUD";
 import SubjectCRUD from "../assets/crud/SubjectCRUD";
 import { buttonStyles } from "../assets/styles/ButtonDesigner";
-import AddButton from "../common/custom/AddButton";
-import FormListBuilder from "../common/custom/FormListBuilder";
-import { defaultHiddenFields } from "../common/Functions";
-import { ModalBuilder } from "../common/modal/ModalBuilder";
-import { DataType } from "../common/model/DataType";
+import AddButton from "../custom/AddButton";
+import FormListBuilder from "../custom/FormListBuilder";
+import { defaultHiddenFields, groupBy, wait } from "../common/Functions";
+import { ModalBuilder } from "../modals/ModalBuilder";
 import { DropdownItemModel } from "../common/model/DropdownItemModel";
-import { Mark } from "../models/Marks";
-import { ModalState } from "../models/ModalState";
-import { Subject } from "../models/Subject";
+import MarkModal from "../modals/MarkModal";
+import { IMark, Mark } from "../models/Marks";
+import { ISubject, Subject } from "../models/Subject";
+import { subjectStyles } from "./SubjectPage";
 
 
-const marks: Mark[] = [];
-const subjectLookups: Option[] = [];
+const marks: IMark[] = [];
+const subjects: ISubject[] = [];
+let marksGrouping: any = [];
 
 const getAllMarks = async() => {
 
     var record = await MarkCRUD.getMarks();
     var res = JSON.stringify(record);
     var obj = JSON.parse(res);
-    let i = 0;
-    Object.entries(obj).map(item => {
-        --i;
-        let mark = Object.setPrototypeOf(item[1], Mark);
-        let subjectCode = parseInt(mark.SubjectCode, 10);
-        let subject =  subjectLookups.find(s => s.label === subjectCode);
-        mark.Subject = subject?.value;
+
+    var data = Object.entries(obj).map(item => {
+        let mark = Object.assign(new Mark(), item[1]);
+        let subject =  subjects.find(b => b.Id === mark.SubjectCode);
+        mark.Subject = subject;
         marks.push(mark);
+        return mark;
     });
+    let group = groupBy(data, 'Subject');
+    marksGrouping = group;
+    console.log(marksGrouping);
+    return data;
 };
 
 const getAllSubjects = async() => {
     var record = await SubjectCRUD.getSubjects();
     var res = JSON.stringify(record);
     var obj = JSON.parse(res);
-    Object.entries(obj).map(item => {
-        let subject = Object.setPrototypeOf(item[1], Subject);
-        let lookup: Option = {
-            value: subject?.Name,
-            label: subject.Id,
-            className: 'Subject',
-            data: subject?.Name
-        };
-        subjectLookups.push(lookup);
-    });
+    const data = Object.entries(obj).map(item => {
+                    let subject = Object.assign(new Subject(), item[1]);
+                    subjects.push(subject);
+                    return subject;
+                });
+    return data;
 };
+const emptyMark : IMark = {
+     Id: 0,
+     SubjectCode: 1,
+     Subject: undefined,
+     Mark: 0,
+     Title: '',
+     Description: '',
+     Weight: 0,
+ };
+ 
+const Item: React.FC<{
+    record: any,
+    openModal?: any
+}> = ({record, openModal}) => (
 
-export class MarkPage extends Component{
-        constructor(props : any){
-            super(props);
-            getAllSubjects().then(() => getAllMarks().then(() => this.forceUpdate()));
-            //getAllMarks().then(() => this.forceUpdate());
-        }
-        state: ModalState = {
-            modalVisible: false,
+    <TouchableOpacity onPress={openModal(record)} style={subjectStyles.contentWrapper} key={record.Id}>
+        <View style = {{
+            height: 50,
+            width: 10,
+            backgroundColor: record.Color,
+        }} />
+        <View style={subjectStyles.textContainer}>
+            <Text style={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                color: record?.Color ?? '#777'}}>{record.Name}
+             </Text>
+        </View>
+    </TouchableOpacity>
+);
+
+const  MarkPage:React.FC<{
+    props?: any
+}> = ({props}) => {
+        MarkCRUD.createTable();
+
+        let currentMark: IMark = new Mark();
+
+        const [modalVisible, setModalVisible] = useState(false);
+        const [resfreshing, setRefreshing] = useState(false);
+        const [isDeleteVisible, setDeleteVisible] = useState(false);
+
+        const onRefresh = React.useCallback(() => {
+            setRefreshing(true);
+            wait(1000).then(() => setRefreshing(false));
+        }, []);
+
+        useEffect(() => {
+             getAllSubjects().then(() => getAllMarks().then(() => onRefresh()));
+        }, [onRefresh])
+
+
+        const invokeModal = (mark: Mark | undefined) => {
+            setModalVisible(true);
+            setDeleteVisible(mark !== undefined && mark?.Id >= 0);
+            currentMark = mark ?? new Mark();
         };
 
-        emptyMark : Mark ={
-            Id: 0,
-            SubjectCode: 1,
-            Subject: '',
-            Mark: 0,
-            Title: '',
-            Description: '',
-            Weight: 0,
-        }
+        const invokeModalClosing = () => {
+             setModalVisible(false);
+        };
 
-       invokeModal(mark: Mark | undefined){
-            ModalBuilder.props =  mark;
-            ModalBuilder.modalVisible = true;
-            ModalBuilder.deleteVisible = mark !== undefined && mark.Id > 0;
-            this.setState({modalVisible: true});
-        }
-        invokeModalClose(){
-             this.setState({modalVisible: false});
-         }
 
-        addNewRecord(mark: Mark){
-            MarkCRUD.addMark(mark).then(() => {marks.push(mark); this.forceUpdate();});
+        const handleSave = (mark: IMark) => {
+            let item = Object.assign(new Mark(), mark);
+            if (item.Id > 0 ){
+                updateRecord(item);
+            }
+            else {
+                addNewRecord(item);
+            }
+       };
+    
+       function addNewRecord(mark: IMark){
+            MarkCRUD.addMark(mark).then(() =>
+            {
+                marks.push(mark);
+                onRefresh();
+            });
         }
-
-        updateRecord(mark: Mark){
+    
+        function updateRecord(mark: IMark){
             MarkCRUD.updateMark(mark).then(() => {
                 var oldRecord = marks.find(m => m.Id === mark.Id);
                 if (oldRecord){
                     var index = marks.indexOf(oldRecord);
                     marks.splice(index, 1, mark);
                 }
-                this.forceUpdate();
+                onRefresh();
             });
         }
-        deleteRecord(id: number){
+        const deleteRecord = (id: number) => {
+            console.log('deleting ... ' + id);
             MarkCRUD.deleteMark(id).then(() => {
                 var oldRecord = marks.find(m => m.Id === id);
                 if (oldRecord){
                     var index = marks.indexOf(oldRecord);
                     marks.splice(index, 1);
                 }
-                this.forceUpdate();
+                onRefresh();
             });
-        }
+        };
+/*
+                <FormListBuilder
+                ItemList={marks}
+                openModal={(item: Mark | undefined) => invokeModal(item)}
+                />*/
+        return (
+            <SafeAreaView>
+                <AddButton
+                    style={buttonStyles.buttonAdd}
+                    onButtonClicked={invokeModal.bind(this, emptyMark)}
+                />
+                <MarkModal modalState={{modalVisible: modalVisible}}
+                props={{
+                    Id: currentMark?.Id ?? -1,
+                    SubjectCode: currentMark?.SubjectCode ?? -1,
+                    Mark: currentMark?.Mark,
+                    Description: currentMark?.Description,
+                    Title: currentMark?.Title,
+                    Subject: currentMark?.Subject,
+                }}
+                onRequestClose={() => invokeModalClosing()}
+                onItemSaved={(item: IMark) => { handleSave(item)}}
+                onItemDeleted={(id: number) => {deleteRecord(id);}}
+                deleteVisible={isDeleteVisible}
+                />
 
-        getDropdownItems(){
-            const lookupItems: DropdownItemModel = {
-                Name: 'Subject',
-                Items: subjectLookups,
-            };
-            const dropdownItems: DropdownItemModel[] = [];
-            dropdownItems.push(lookupItems);
-            ModalBuilder.dropdownItems = dropdownItems;
-        }
+            </SafeAreaView>
+        );
+};
 
-        render(){
-            MarkCRUD.createTable();
 
-            this.getDropdownItems();
-            ModalBuilder.handleSave = () => {
-                let mark = Object.assign(new Mark(), ModalBuilder.DATA);
-                if (mark.Id > 0){
-                    this.updateRecord(mark);
-                }
-                else {
-                    this.addNewRecord(mark);
-                }
-            };
-            ModalBuilder.handleDelete = () => {
-                let mark = Object.assign(new Mark(), ModalBuilder.DATA);
-                this.deleteRecord(mark.Id);
-            };
-
-            return (
-               <SafeAreaView>
-                   <FormListBuilder
-                   ItemList={marks}
-                   openModal={(item: Mark | undefined) => this.invokeModal(item)}
-                   />
-                    <AddButton
-                        style={buttonStyles.buttonAdd}
-                        onButtonClicked={this.invokeModal.bind(this, this.emptyMark)}
-                    />
-                    <ModalBuilder<Mark>
-                        Subject={''}
-                        Mark={0} Id={0} SubjectCode={1}/>
-               </SafeAreaView>
-            );
-        }
-}
+export default MarkPage;

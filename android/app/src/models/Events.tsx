@@ -3,7 +3,7 @@
 
 import { EventType } from "react-native-gesture-handler/lib/typescript/EventType";
 import { Timestamp } from "react-native-reanimated/lib/types/lib/reanimated2/commonTypes";
-import { ModelBase } from "../common/model/ModelBase";
+import { ModelBase } from "../common/ModelBase";
 
 export interface Events extends ModelBase{
     Name: string,

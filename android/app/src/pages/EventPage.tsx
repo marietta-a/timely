@@ -8,23 +8,23 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import EventCRUD from '../assets/crud/EventCRUD';
-import AddButton from '../common/custom/AddButton';
-import FormListBuilder from '../common/custom/FormListBuilder';
-import { ModalBuilder } from '../common/modal/ModalBuilder';
+import AddButton from '../custom/AddButton';
+import FormListBuilder from '../custom/FormListBuilder';
+import { ModalBuilder } from '../modals/ModalBuilder';
 import { EventTypes } from '../core/Enums';
 import { Events } from '../models/Events';
 import { ModalState } from '../models/ModalState';
 import SQLite from 'react-native-sqlite-storage';
-import { systemFields } from '../common/Functions';
+import { defaultHiddenFields } from '../common/Functions';
 
 const events: Events[] = [
     {
-        Id: '01',
+        Id: 1,
         EventType: EventTypes.Assignment,
         Name: 'Assignment',
     },
     {
-        Id: '02',
+        Id: 2,
         EventType: EventTypes.Exam,
         Name: 'Exam',
         Description: 'Math Exam',
@@ -63,7 +63,7 @@ class EventPage extends Component{
            <SafeAreaView>
                <FormListBuilder
                ItemList={events}
-               hiddenFields={systemFields}
+               hiddenFields={defaultHiddenFields}
                openModal={(item: Events | undefined) => this.invokeModal(item)}/>
                 <AddButton
                     style={styles.buttonAdd}

@@ -4,7 +4,7 @@
 
 import React, { Component } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { ModalBuilder } from "./modal/ModalBuilder";
+import { ModalBuilder } from "../modals/ModalBuilder";
 import { Events } from "../models/Events";
 
 let color = '#ffffff';

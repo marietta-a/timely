@@ -10,9 +10,9 @@ import React, { Component, ReactElement } from 'react';
 import { Image, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { buttonStyles } from '../../assets/styles/ButtonDesigner';
-import { defaultHiddenFields, isNullOrEmpty, longest } from '../Functions';
-import { ModalBuilder } from '../modal/ModalBuilder';
+import { buttonStyles } from '../assets/styles/ButtonDesigner';
+import { defaultHiddenFields, isNullOrEmpty, longest } from '../common/Functions';
+import { ModalBuilder } from '../modals/ModalBuilder';
 import { ItemListModel } from '../model/ItemListModel';
 
 let HEADERS: any[] = [];

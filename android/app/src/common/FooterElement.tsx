@@ -4,7 +4,7 @@
 
 import React, { Component } from "react"
 import { Text, View } from "react-native";
-import AddButton from "./custom/AddButton";
+import AddButton from "../custom/AddButton";
 
 const FooterElement: React.FC<{
     Element?: View

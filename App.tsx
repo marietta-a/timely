@@ -15,7 +15,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 import {LogBox} from 'react-native';
-import { CustomDrawerContent } from './android/app/src/common/main/CustomDrawerSettings';
+import { CustomDrawerContent } from './android/app/src/core/CustomDrawerSettings';
 import { EventScreen, MarkScreen, SubjectScreen } from './android/app/src/screens/Screen';
 import SQLite from 'react-native-sqlite-storage';
 import EventCRUD from './android/app/src/assets/crud/EventCRUD';

@@ -4,35 +4,48 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import React, { Component, useState } from 'react';
-import { Button, FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import React, { Component, useEffect, useState } from 'react';
+import { Button, FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import SubjectCRUD from '../assets/crud/SubjectCRUD';
 import { buttonStyles } from '../assets/styles/ButtonDesigner';
-import AddButton from '../common/custom/AddButton';
-import FormListBuilder from '../common/custom/FormListBuilder';
-import { ModalBuilder } from '../common/modal/ModalBuilder';
+import AddButton from '../custom/AddButton';
+import { isNullOrEmpty, wait } from '../common/Functions';
+import { ModalBuilder } from '../modals/ModalBuilder';
+import SubjectListView from '../listViews/SubjectListView';
 import SubjectModal from '../modals/SubjectModal';
-import { Mark } from '../models/Marks';
-import { ModalState } from '../models/ModalState';
-import { Subject } from '../models/Subject';
+import { ISubject, Subject } from '../models/Subject';
 
-/*const subjects : Subject[] = [
-    {
-        Id : 1,
-        Name: 'Maths',
-        Color: '#571d33',
-        Teacher: 'p2' ,
-    },
-    {
-        Id: 2,
-        Name: 'Computer Science',
-        Color: 'red',
-        Teacher: 'T3' ,
-    },
-];*/
-const subjects : Subject[] = [];
+const subjects: ISubject[] = [];
 
 let subjectColor = '#000000';
+let emptyState: ISubject = {
+    Name: '',
+    Id: -1,
+};
+let selectedSubject: ISubject = emptyState;
+
+const Item: React.FC<{
+    record: Subject,
+    openModal?: any
+}> = ({record, openModal}) => (
+
+    <TouchableOpacity onPress={openModal(record)} style={subjectStyles.contentWrapper} key={record.Id}>
+        <View style = {{
+            height: 50,
+            width: 10,
+            backgroundColor: record.Color,
+        }} />
+        <View style={subjectStyles.textContainer}>
+            <Text style={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                color: record?.Color ?? '#777'}}>{record.Name}</Text>
+            <Text>{record.Teacher}</Text>
+        </View>
+    </TouchableOpacity>
+);
+
 
 
 const getAllRecords = async() => {
@@ -46,94 +59,156 @@ const getAllRecords = async() => {
     });
 };
 
-class SubjectPage extends Component{
-    constructor(props: any){
-        super(props);
-        getAllRecords().then(() => this.forceUpdate());
+const SubjectPage: React.FC<{
+    props?: any
+}> = ({props}) => {
+
+   SubjectCRUD.createTable();
+
+   const [modalVisible, setModalVisible] = useState(false);
+   const [refreshing, setRefreshing] = useState(false);
+   const [isDeleteVisible, setDeleteVisible] = useState(false);
+
+   const invokeModal = (subject?: ISubject) => {
+        setModalVisible(true);
+        setDeleteVisible(subject !== undefined && subject?.Id > 0);
+        selectedSubject = subject ?? emptyState;
+    };
+    const invokeModalClosing = () => {
+        setModalVisible(false);
+    };
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
+
+   const handleSave = (subject: Subject) => {
+        let item = Object.assign(new Subject(), subject);
+        if (item.Id > 0 ){
+            updateRecord(item);
+        }
+        else {
+            addNewRecord(item);
+        }
+   };
+
+   function addNewRecord(subject: Subject){
+        SubjectCRUD.addSubject(subject).then(() =>
+        {
+            subjects.push(subject);
+            onRefresh();
+        });
     }
 
-   state: ModalState = {
-       modalVisible: false,
-   }
-    invokeModalClosing(){
-        this.setState({modalVisible: false});
-        ModalBuilder.modalVisible = this.state.modalVisible;
-    }
-
-    emptyItem: Subject = {
-        Id: 0,
-        Name: '',
-        Color: '',
-        Teacher: '',
-    }
-
-    invokeModal(subject: Subject | undefined){
-         ModalBuilder.props =  subject;
-         ModalBuilder.modalVisible = true;
-         ModalBuilder.deleteVisible = subject !== undefined && subject.Id > 0;
-         this.setState({modalVisible: true});
-     }
-     invokeModalClose(){
-          this.setState({modalVisible: false});
-      }
-
-     addNewRecord(subject: Subject){
-         SubjectCRUD.addSubject(subject).then(() => {subjects.push(subject); this.forceUpdate();});
-     }
-
-     updateRecord(subject: Subject){
-         SubjectCRUD.updateSubject(subject).then(() => {
-             var oldRecord = subjects.find(m => m.Id === subject.Id);
-             if (oldRecord){
-                 var index = subjects.indexOf(oldRecord);
-                 subjects.splice(index, 1, subject);
-             }
-             this.forceUpdate();
-         });
-     }
-     deleteRecord(id: number){
-         SubjectCRUD.deleteSubject(id).then(() => {
-             var oldRecord = subjects.find(m => m.Id === id);
-             if (oldRecord){
-                 var index = subjects.indexOf(oldRecord);
-                 subjects.splice(index, 1);
-             }
-             this.forceUpdate();
-         });
-     }
-
-    render(){
-        ModalBuilder.handleSave = () => {
-            let item = Object.assign(new Subject(), ModalBuilder.DATA);
-            if (item.Id > 0){
-                this.updateRecord(item);
+    function updateRecord(subject: Subject){
+        SubjectCRUD.updateSubject(subject).then(() => {
+            var oldRecord = subjects.find(m => m.Id === subject.Id);
+            if (oldRecord){
+                var index = subjects.indexOf(oldRecord);
+                subjects.splice(index, 1, subject);
             }
-            else {
-                this.addNewRecord(item);
-            }
-        };
-        ModalBuilder.handleDelete = () => {
-            let item = Object.assign(new Subject(), ModalBuilder.DATA);
-            this.deleteRecord(item.Id);
-        };
-        return (
-            <SafeAreaView>
-                <FormListBuilder
-                ItemList={subjects}
-                openModal={(item: Subject | undefined) => this.invokeModal(item)}
-                />
-                <AddButton
-                    style={buttonStyles.buttonAdd}
-                    onButtonClicked={this.invokeModal.bind(this, this.emptyItem)}
-                />
-                <ModalBuilder<Subject>
-                 Id={0}
-                 Name={''}
-                 />
-            </SafeAreaView>
-        );
+            onRefresh();
+        });
     }
-}
+    const deleteRecord = (id: number) => {
+        console.log('deleting ... ' + id);
+        SubjectCRUD.deleteSubject(id).then(() => {
+            var oldRecord = subjects.find(m => m.Id === id);
+            if (oldRecord){
+                var index = subjects.indexOf(oldRecord);
+                subjects.splice(index, 1);
+            }
+            onRefresh();
+        });
+    };
 
+    useEffect(() => {
+        getAllRecords().then(()=>{onRefresh();});
+    }, [onRefresh]);
+
+    const renderItem: React.FC<{
+        item : Subject
+    }> = ({item}) => (
+        <Item record={item} key={item.Id} openModal={()=>invokeModal.bind(this, item)}/>
+    );
+
+    return (
+        <SafeAreaView style={subjectStyles.main}>
+            <SubjectListView
+            openModal={(item: ISubject)=> {invokeModal(item)}}
+            subjects={subjects}/>
+            <AddButton
+                style={buttonStyles.buttonAdd}
+                onButtonClicked={() => invokeModal()}
+            />
+            <SubjectModal modalState={{modalVisible: modalVisible }}
+            props={{
+              Id: selectedSubject.Id,
+              Name: selectedSubject.Name,
+              Color: selectedSubject?.Color,
+              Teacher: selectedSubject?.Teacher,
+            }}
+            onRequestClose={() => invokeModalClosing()}
+            onItemSaved={(item: Subject) => { handleSave(item)}}
+            onItemDeleted={(id: number) => {deleteRecord(id);}}
+            deleteVisible={isDeleteVisible}
+            />
+        </SafeAreaView>
+    );
+};
+
+const subjectStyles = StyleSheet.create(
+    {
+        container: {
+            display: 'flex',
+            flexDirection: 'row',
+            marginTop: 4,
+            borderTopWidth: 0.3,
+            borderTopColor: subjectColor,
+
+        },
+        contentWrapper: {
+            flexDirection: 'row',
+            width: '100%',
+            backgroundColor: 'white',
+            marginTop: 3,
+            borderRadius: 10,
+            shadowColor:'black',
+            shadowOffset: {
+                height: 1,
+                width: 5,
+            },
+            elevation: 6,
+        },
+        header: {
+            fontSize: 18,
+            fontWeight: 'bold',
+        },
+        textContainer: {
+            paddingLeft: 4,
+        },
+        main: {
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative',
+          height: '100%',
+          width: '100%',
+        },
+        buttonAdd: {
+            zIndex: 1,
+            position: 'absolute',
+            bottom: '15%',
+            right: '25%',
+        },
+        modalWrapper: {
+            position: 'relative',
+            marginTop: '40%',
+            height: '50%',
+            width: '50%'
+        }
+    }
+);
 
 export default SubjectPage;
+export {subjectStyles};

@@ -35,7 +35,7 @@ const modalStyles = StyleSheet.create({
     textInput: {
       fontSize: 18,
       borderBottomWidth: 2,
-      width: '100%',
+      width: '98%',
       borderBottomColor: '#555555',
       paddingBottom: 0,
     },

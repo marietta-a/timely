@@ -10,18 +10,14 @@
 import React, { Component, ReactElement, useState } from 'react';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { DataType } from '../model/DataType';
-import {Mark} from '../../models/Marks';
 import { Alert, Modal, StyleSheet, Text, View } from 'react-native';
-import { ModalState } from '../../models/ModalState';
-import { ModalHeader } from '../../modals/ModalHeader';
-import { tsImportEqualsDeclaration } from '@babel/types';
-import { modalStyles } from '../../assets/styles/ModalDesigner';
-import ColorPaletteModal from '../../modals/ColorPaletteModal';
-import { color } from 'react-native-reanimated';
-import { defaultHiddenFields, isNullOrEmpty } from '../Functions';
-import { DropdownItemModel } from '../model/DropdownItemModel';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { ModalState } from '../models/ModalState';
+import { ModalHeader } from './ModalHeader';
+import { modalStyles } from '../assets/styles/ModalDesigner';
+import ColorPaletteModal from './ColorPaletteModal';
+import { defaultHiddenFields, isNullOrEmpty } from '../common/Functions';
+import { DropdownItemModel } from '../common/DropdownItemModel';
+import { DataType } from '../common/DataType';
 
 export class ModalBuilder<T> extends Component<T>{
     static props: any;

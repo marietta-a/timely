@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import SubjectCRUD from '../assets/crud/SubjectCRUD';
 import { modalStyles } from '../assets/styles/ModalDesigner';
 import { isNullOrEmpty } from '../common/Functions';
-import { ModalBuilder } from '../common/modal/ModalBuilder';
+import { ModalBuilder } from './ModalBuilder';
 import { ModalState } from '../models/ModalState';
 import { ISubject, Subject } from '../models/Subject';
 import ColorPaletteModal from './ColorPaletteModal';

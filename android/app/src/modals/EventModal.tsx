@@ -9,7 +9,7 @@ import React, { Component } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { modalStyles } from "../assets/styles/ModalDesigner";
-import { ModalBuilder } from "../common/modal/ModalBuilder";
+import { ModalBuilder } from "./ModalBuilder";
 import { Events } from "../models/Events";
 import { ModalState } from '../models/ModalState';
 import { ModalHeader } from "./ModalHeader";

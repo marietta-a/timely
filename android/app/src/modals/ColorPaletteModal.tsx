@@ -11,7 +11,7 @@ import React, { Component } from "react";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { modalStyles } from "../assets/styles/ModalDesigner";
 import ColorPalette from 'react-native-color-palette'
-import ColorPaletteModel from "../common/model/ColorPaletteModel";
+import ColorPaletteModel from "../common/ColorPaletteModel";
 import { useState } from "react";
 import { useEffect } from "react";
 
