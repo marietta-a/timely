@@ -10,8 +10,7 @@
 import React, { Component, ReactElement, useState } from 'react';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Alert, Modal, StyleSheet, Text, View } from 'react-native';
-import { ModalState } from '../models/ModalState';
+import { Modal, StyleSheet, Text, View } from 'react-native';
 import { ModalHeader } from './ModalHeader';
 import { modalStyles } from '../assets/styles/ModalDesigner';
 import ColorPaletteModal from './ColorPaletteModal';

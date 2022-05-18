@@ -6,14 +6,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import React, { useState, useEffect } from 'react';
-import { Modal, Pressable, Text, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { modalStyles } from '../assets/styles/ModalDesigner';
+import { modalStyles, requiredFieldColor } from '../assets/styles/ModalDesigner';
 import SubjectDropdown from '../dropdown/SubjectDropdown';
 import { IMark, Mark } from '../models/Marks';
 import { ModalState } from '../models/ModalState';
-import { Subject } from '../models/Subject';
+import { ISubject, Subject } from '../models/Subject';
 import { ModalHeader } from './ModalHeader';
 
 
@@ -54,9 +54,10 @@ const MarkModal:React.FC<{
         setDeleteVisible(deleteVisible);
         const mk: IMark = {
             Id: props?.Id ?? -1,
-            Mark: props?.Mark ?? 0,
+            Mark: markValue ?? props?.Mark,
             SubjectCode: subject?.Id ?? props?.SubjectCode ?? -1,
             Subject: subject ?? props?.Subject,
+            SubjectName: subjectName ?? props?.Subject?.Name,
             Weight: weight ?? props?.Weight,
             Description: description ?? props?.Description,
             Title: title ?? props?.Title,
@@ -71,19 +72,33 @@ const MarkModal:React.FC<{
       reinitializeStates();
     };
     const handleModalClosing = () => {
-      onRequestClose();
       reinitializeStates();
+      onRequestClose();
     };
     const handleSave = () => {
-      onItemSaved(subject);
+      onItemSaved(mark);
       reinitializeStates();
     };
 
     const invokeSubjectDropdown = () => {
-       console.log("subject pressed");
        setSubjectDropdownVisibility(true);
-       console.log(subjectDropdownVisible);
     }
+    
+    const handleSubjectSelected = (item: ISubject) => {
+      setSubject(item);
+      setSubjectName(item?.Name);
+      setSubjectDropdownVisibility(false);
+    }
+
+    const styles = StyleSheet.create({
+      subjectWrapper: {
+        fontSize: 18,
+        borderBottomWidth: 2,
+        width: '98%',
+        borderBottomColor: '#555555',
+        paddingBottom: 0,
+        color: mark?.Subject?.Color
+      },});
 
     return (
       <SafeAreaView>
@@ -106,17 +121,20 @@ const MarkModal:React.FC<{
                       <TextInput
                       value={mark?.Subject?.Name}
                       blurOnSubmit={true}
-                      style={modalStyles.textInput}
+                      style={styles?.subjectWrapper}
                       onChangeText={(val) => {setSubjectName(val)}}
                       defaultValue={props?.Subject?.Name}
                       autoFocus={true}
                       placeholder="required*"
-                      placeholderTextColor="#900C3F"
+                      placeholderTextColor= {requiredFieldColor} 
                       editable={false}
                       />
                       <SubjectDropdown
-                      modalState={{modalVisible: subjectDropdownVisible}} 
-                      onRequestClose={undefined}/>
+                      modalState={{ modalVisible: subjectDropdownVisible }}
+                      onRequestClose={handleModalClosing}
+                      openModal={() => invokeSubjectDropdown()} 
+                      onItemSelected={(item: ISubject) => handleSubjectSelected(item)}
+                      />
                    </Pressable>
                </View>
                 <View style={{
@@ -136,6 +154,7 @@ const MarkModal:React.FC<{
                         onChangeText={(val) => setMarkValue(parseInt(val, 10))}
                         defaultValue = {props?.Mark?.toString()}
                         placeholder="required"
+                        placeholderTextColor={requiredFieldColor}
                         keyboardType="numeric"
                         />
                     </View>

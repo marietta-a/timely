@@ -16,7 +16,7 @@ import SubjectListView from '../listViews/SubjectListView';
 import SubjectModal from '../modals/SubjectModal';
 import { ISubject, Subject } from '../models/Subject';
 
-const subjects: ISubject[] = [];
+let subjects: ISubject[] = [];
 
 let subjectColor = '#000000';
 let emptyState: ISubject = {
@@ -27,13 +27,15 @@ let selectedSubject: ISubject = emptyState;
 
 const getAllRecords = async() => {
 
-    var record = await SubjectCRUD.getSubjects();
-    var res = JSON.stringify(record);
-    var obj = JSON.parse(res);
-    Object.entries(obj).map(item => {
-        let subject = Object.setPrototypeOf(item[1], Subject);
-        subjects.push(subject);
+    let record = await SubjectCRUD.getSubjects();
+    let res = JSON.stringify(record);
+    let obj = JSON.parse(res);
+    let data = Object.entries(obj).map(item => {
+        let subject = Object.assign(new Subject(), item[1]);
+        return subject;
     });
+
+    subjects = data;
 };
 
 const SubjectPage: React.FC<{
@@ -101,13 +103,19 @@ const SubjectPage: React.FC<{
             onRefresh();
         });
     };
+    
 
     useEffect(() => {
         getAllRecords().then(()=>{onRefresh();});
+        return () => 
+        {
+            setRefreshing(false);
+            subjects = [];
+        }
     }, [onRefresh]);
 
     return (
-        <SafeAreaView style={subjectStyles.main}>
+        <SafeAreaView style={listViewStyles.main}>
             <SubjectListView
             openModal={(item: ISubject)=> {invokeModal(item)}}
             subjects={subjects}
@@ -135,7 +143,7 @@ const SubjectPage: React.FC<{
     );
 };
 
-const subjectStyles = StyleSheet.create(
+const listViewStyles = StyleSheet.create(
     {
         container: {
             display: 'flex',
@@ -188,4 +196,4 @@ const subjectStyles = StyleSheet.create(
 );
 
 export default SubjectPage;
-export {subjectStyles};
+export {listViewStyles};

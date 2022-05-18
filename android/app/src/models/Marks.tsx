@@ -8,23 +8,30 @@ import { ISubject } from "./Subject";
  interface IMark extends ModelBase{
   Subject?: ISubject;
   SubjectCode: number;
-  Mark: number;
+  Mark: number | undefined;
   Weight?: number;
   Title?: string,
-  Description?: string
+  Description?: string,
+  SubjectName?: string | undefined,
 }
 
 class Mark implements IMark{
   Id!: number;
   SubjectCode!: number;
-  Mark!: number;
+  Mark: number | undefined;
   Weight?: number | undefined;
   Title?: string | undefined;
   Description?: string | undefined;
   DateCreated?: Date | undefined;
   CreatedBy?: string | undefined;
   Subject?: ISubject | undefined;
+  SubjectName?: string | undefined;
 }
 
-export { Mark }; export type { IMark };
+interface IMarkGrouping{
+ GroupName?: string,
+ Marks?: Mark[]
+}
+
+export { Mark }; export type { IMark, IMarkGrouping }; 
 

@@ -10,7 +10,7 @@ import { Alert, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SubjectCRUD from '../assets/crud/SubjectCRUD';
-import { modalStyles } from '../assets/styles/ModalDesigner';
+import { modalStyles, requiredFieldColor } from '../assets/styles/ModalDesigner';
 import { isNullOrEmpty } from '../common/Functions';
 import { ModalBuilder } from './ModalBuilder';
 import { ModalState } from '../models/ModalState';
@@ -97,7 +97,7 @@ const SubjectModal:React.FC<{
                    defaultValue={props?.Name}
                    autoFocus={true}
                    placeholder="required*"
-                   placeholderTextColor="#900C3F"
+                   placeholderTextColor= {requiredFieldColor}
                    />
                </View>
                 <View style={modalStyles.inputWrapper}>

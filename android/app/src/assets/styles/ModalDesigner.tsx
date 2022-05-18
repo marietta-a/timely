@@ -8,6 +8,7 @@
 
 import { StyleSheet } from "react-native";
 
+const requiredFieldColor = "#900C3F";
 const modalStyles = StyleSheet.create({
     mainWrapper: {
      margin: 20,
@@ -73,5 +74,5 @@ const modalStyles = StyleSheet.create({
     },
  });
 
- export {modalStyles};
+ export {modalStyles, requiredFieldColor};
 

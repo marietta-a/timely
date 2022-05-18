@@ -5,25 +5,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import React, { Component, useEffect, useState } from "react";
-import { Option } from "react-dropdown";
-import { Alert, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import MarkCRUD from "../assets/crud/MarkCRUD";
 import SubjectCRUD from "../assets/crud/SubjectCRUD";
 import { buttonStyles } from "../assets/styles/ButtonDesigner";
 import AddButton from "../custom/AddButton";
-import FormListBuilder from "../custom/FormListBuilder";
-import { defaultHiddenFields, groupBy, wait } from "../common/Functions";
-import { ModalBuilder } from "../modals/ModalBuilder";
-import { DropdownItemModel } from "../common/model/DropdownItemModel";
+import { groupBy, wait } from "../common/Functions";
 import MarkModal from "../modals/MarksModal";
-import { IMark, Mark } from "../models/Marks";
+import { IMark, IMarkGrouping, Mark } from "../models/Marks";
 import { ISubject, Subject } from "../models/Subject";
-import { subjectStyles } from "./SubjectPage";
+import { listViewStyles } from "./SubjectPage";
+import MarkListView from "../listViews/MarkListView";
 
 
 const marks: IMark[] = [];
 const subjects: ISubject[] = [];
-let marksGrouping: any = [];
+let marksGrouping: IMarkGrouping[] = [];
 
 const getAllMarks = async() => {
 
@@ -35,14 +32,36 @@ const getAllMarks = async() => {
         let mark = Object.assign(new Mark(), item[1]);
         let subject =  subjects.find(b => b.Id === mark.SubjectCode);
         mark.Subject = subject;
+        mark.SubjectName = subject?.Name;
         marks.push(mark);
         return mark;
     });
-    let group = groupBy(data, 'Subject');
-    marksGrouping = group;
-    console.log(marksGrouping);
+
+    generateMarkGroupings();
+    
     return data;
 };
+
+const generateMarkGroupings = () => {
+    
+    let group = groupBy(marks, 'SubjectName');
+    const entries = Object.entries(group);
+    const groupings = entries.map(item => {
+        const subjectName = item[0];
+        let subItemStr = JSON.stringify(item[1]);
+        let subItemObj = JSON.parse(subItemStr);
+        const itemElements = Object.entries(subItemObj).map(item => {
+            return Object.assign(new Mark(), item[1]);
+        })
+        const grouping: IMarkGrouping ={
+            GroupName: subjectName,
+            Marks: itemElements
+        }
+        return grouping;
+    });
+
+    marksGrouping = groupings;
+}
 
 const getAllSubjects = async() => {
     var record = await SubjectCRUD.getSubjects();
@@ -65,26 +84,6 @@ const emptyMark : IMark = {
      Weight: 0,
  };
  
-const Item: React.FC<{
-    record: any,
-    openModal?: any
-}> = ({record, openModal}) => (
-
-    <TouchableOpacity onPress={openModal(record)} style={subjectStyles.contentWrapper} key={record.Id}>
-        <View style = {{
-            height: 50,
-            width: 10,
-            backgroundColor: record.Color,
-        }} />
-        <View style={subjectStyles.textContainer}>
-            <Text style={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                color: record?.Color ?? '#777'}}>{record.Name}
-             </Text>
-        </View>
-    </TouchableOpacity>
-);
 
 const  MarkPage:React.FC<{
     props?: any
@@ -120,6 +119,7 @@ const  MarkPage:React.FC<{
 
         const handleSave = (mark: IMark) => {
             let item = Object.assign(new Mark(), mark);
+            console.log('handling save ...' + mark);
             if (item.Id > 0 ){
                 updateRecord(item);
             }
@@ -132,6 +132,7 @@ const  MarkPage:React.FC<{
             MarkCRUD.addMark(mark).then(() =>
             {
                 marks.push(mark);
+                generateMarkGroupings();
                 onRefresh();
             });
         }
@@ -143,6 +144,7 @@ const  MarkPage:React.FC<{
                     var index = marks.indexOf(oldRecord);
                     marks.splice(index, 1, mark);
                 }
+                generateMarkGroupings();
                 onRefresh();
             });
         }
@@ -154,16 +156,14 @@ const  MarkPage:React.FC<{
                     var index = marks.indexOf(oldRecord);
                     marks.splice(index, 1);
                 }
+                generateMarkGroupings();
                 onRefresh();
             });
         };
-/*
-                <FormListBuilder
-                ItemList={marks}
-                openModal={(item: Mark | undefined) => invokeModal(item)}
-                />*/
+
         return (
-            <SafeAreaView>
+            <SafeAreaView style={listViewStyles.main}>
+                <MarkListView openModal={(item: IMark)=> {invokeModal(item)}} records={marksGrouping} />
                 <AddButton
                     style={buttonStyles.buttonAdd}
                     onButtonClicked={invokeModal.bind(this, emptyMark)}

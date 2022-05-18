@@ -6,6 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Modal, SafeAreaView, View } from 'react-native';
+import { modalStyles } from '../assets/styles/ModalDesigner';
 import DefaultCloseModal from '../modals/DefaultCloseModal';
 import { ModalState } from '../models/ModalState';
 import { ISubject, Subject } from '../models/Subject';
@@ -16,16 +17,38 @@ const SubjectDropdown: React.FC<{
     modalState: ModalState,
     props?: Subject,
     onRequestClose: any,
-    onItemSelected?: any,
-    openModal: any
-}> = ({modalState, props, onRequestClose, onItemSelected, openModal}) => {
-
-    const [modalVisible, setModalVisible] = useState(modalState.modalVisible);
+    onItemSelected: any,
+    openModal: any,
+    style?: any,
+}> = ({modalState, props, onRequestClose, onItemSelected, openModal, style}) => {
+    
+    const [modalVisible, setModalVisible] = useState(false);
+    useEffect(()=>{
+        const ab = new AbortController();
+        async function promise(){
+            setModalVisible(modalState.modalVisible);
+            console.log('effects(modal Visible): '+ modalVisible);
+        }
+        Promise.all([promise()]);
+        return () => ab.abort();
+    }, [modalState.modalVisible])
 
     const handleRequestClose = () => {
         setModalVisible(false);
-        onRequestClose.bind(this);
+        onRequestClose
     };
+    const handleItemSelected = (item: ISubject) => {
+        onItemSelected(item);
+        onRequestClose;
+    }
+
+    const defaultStyle = style !== undefined? style : 
+                        {
+                            width: '80%',
+                            height: '70%',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        };
 
     return (
             <Modal
@@ -34,13 +57,15 @@ const SubjectDropdown: React.FC<{
                 visible = {modalVisible}
                 onRequestClose={() => handleRequestClose()}
              >
-                 <DefaultCloseModal onVisibilityChange={onRequestClose}/>
-                 <View>
-                    <SubjectPage
-                    isDropDownList={true}
-                    onItemSelected={onItemSelected}
-                    />
-                </View>
+                 <View style={modalStyles.mainWrapper}>
+                    <DefaultCloseModal onVisibilityChange={() => handleRequestClose()}/>
+                    <View>
+                        <SubjectPage
+                        isDropDownList={true}
+                        onItemSelected={(item: ISubject) => handleItemSelected(item)}
+                        />
+                    </View>
+                 </View>
             </Modal>
     );
 };

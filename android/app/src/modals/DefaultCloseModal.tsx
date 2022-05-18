@@ -14,7 +14,7 @@ const DefaultCloseModal: React.FC<{
     onVisibilityChange: any
 }> = ({onVisibilityChange}) => {
     return (
-        <Pressable onPress={onVisibilityChange.bind(this)}>
+        <Pressable onPress={onVisibilityChange}>
          <Text style={modalStyles.text}>X</Text>
         </Pressable>
     );

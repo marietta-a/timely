@@ -7,7 +7,7 @@
 import React from "react";
 import { TouchableOpacity, View, Text, FlatList } from "react-native";
 import { ISubject, Subject } from "../models/Subject";
-import { subjectStyles } from "../pages/SubjectPage";
+import { listViewStyles } from "../pages/SubjectPage";
 
 
 
@@ -18,20 +18,19 @@ const Item: React.FC<{
     onItemSelected?: any,
 }> = ({record, openModal, isDropDownList, onItemSelected}) => {
 
-    const handleOpenModal = (item : ISubject) => {
+    const handleDropdownclosing = (item : ISubject) => {
           onItemSelected.bind(this, item);
-          openModal.bind(this, item);
     };
 
     if (isDropDownList){
         return (
-            <TouchableOpacity onPress={() => handleOpenModal(record)} style={subjectStyles.contentWrapper} key={record.Id}>
+            <TouchableOpacity onPress={onItemSelected.bind(this, record)} style={listViewStyles.contentWrapper} key={record.Id}>
                 <View style = {{
                     height: 25,
                     width: 10,
                     backgroundColor: record.Color,
                 }} />
-                <View style={subjectStyles.textContainer}>
+                <View style={listViewStyles.textContainer}>
                     <Text style={{
                         fontSize: 18,
                         fontWeight: 'bold',
@@ -42,13 +41,13 @@ const Item: React.FC<{
     }
     else {
         return (
-        <TouchableOpacity onPress={openModal.bind(this, record)} style={subjectStyles.contentWrapper} key={record.Id}>
+        <TouchableOpacity onPress={openModal.bind(this, record)} style={listViewStyles.contentWrapper} key={record.Id}>
             <View style = {{
                 height: 50,
                 width: 10,
                 backgroundColor: record.Color,
             }} />
-            <View style={subjectStyles.textContainer}>
+            <View style={listViewStyles.textContainer}>
                 <Text style={{
                     fontSize: 18,
                     fontWeight: 'bold',
