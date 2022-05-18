@@ -18,8 +18,6 @@ import {LogBox} from 'react-native';
 import { CustomDrawerContent } from './android/app/src/core/CustomDrawerSettings';
 import { EventScreen, MarkScreen, SubjectScreen } from './android/app/src/screens/Screen';
 import SQLite from 'react-native-sqlite-storage';
-import EventCRUD from './android/app/src/assets/crud/EventCRUD';
-import SubjectCRUD from './android/app/src/assets/crud/SubjectCRUD';
 
 
 LogBox.ignoreLogs([
@@ -40,8 +38,8 @@ const App = () => {
          drawerContent={(props)=> <CustomDrawerContent {...props}/>}
         >
           <Drawer.Screen name="Subjects" component={SubjectScreen} />
-          <Drawer.Screen name="Events" component={EventScreen} />
           <Drawer.Screen name="Marks" component={MarkScreen} />
+          <Drawer.Screen name="Events" component={EventScreen} />
        </Drawer.Navigator>
     </NavigationContainer>
   );

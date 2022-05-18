@@ -90,11 +90,11 @@ const  MarkPage:React.FC<{
 }> = ({props}) => {
         MarkCRUD.createTable();
 
-        let currentMark: IMark = new Mark();
 
         const [modalVisible, setModalVisible] = useState(false);
         const [resfreshing, setRefreshing] = useState(false);
         const [isDeleteVisible, setDeleteVisible] = useState(false);
+        const [currentMark, setCurrentMark] = useState(new Mark());
 
         const onRefresh = React.useCallback(() => {
             setRefreshing(true);
@@ -107,9 +107,9 @@ const  MarkPage:React.FC<{
 
 
         const invokeModal = (mark: Mark | undefined) => {
+            setCurrentMark(mark ?? new Mark());
             setModalVisible(true);
             setDeleteVisible(mark !== undefined && mark?.Id >= 0);
-            currentMark = mark ?? new Mark();
         };
 
         const invokeModalClosing = () => {
@@ -163,7 +163,10 @@ const  MarkPage:React.FC<{
 
         return (
             <SafeAreaView style={listViewStyles.main}>
-                <MarkListView openModal={(item: IMark)=> {invokeModal(item)}} records={marksGrouping} />
+                <MarkListView
+                openModal={(item: IMark) => { invokeModal(item); } }
+                records={marksGrouping}
+                onItemSelected={(item: IMark) => invokeModal.bind(this, item)} />
                 <AddButton
                     style={buttonStyles.buttonAdd}
                     onButtonClicked={invokeModal.bind(this, emptyMark)}
@@ -173,6 +176,7 @@ const  MarkPage:React.FC<{
                     Id: currentMark?.Id ?? -1,
                     SubjectCode: currentMark?.SubjectCode ?? -1,
                     Mark: currentMark?.Mark,
+                    Weight: currentMark?.Weight,
                     Description: currentMark?.Description,
                     Title: currentMark?.Title,
                     Subject: currentMark?.Subject,

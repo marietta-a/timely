@@ -35,7 +35,7 @@ const MarkModal:React.FC<{
     const [markValue, setMarkValue] = useState(props?.Mark);
     const [mark, setMark] = useState(props);
     const [title, setTitle] = useState(props?.Title);
-    const [description, setDescription] = useState(props?.Title);
+    const [description, setDescription] = useState(props?.Description);
     const [subject, setSubject] = useState(props?.Subject);
     const [subjectName, setSubjectName] = useState(props?.Subject?.Name);
 

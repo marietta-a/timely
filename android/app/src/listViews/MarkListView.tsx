@@ -16,7 +16,7 @@ import { listViewStyles } from "../pages/SubjectPage";
 const MarkItem: React.FC<{
     record: IMarkGrouping,
     openModal: any,
-    onItemSelected?: any,
+    onItemSelected: any,
 }> = ({record, onItemSelected, openModal}) => {
 
     if(record == undefined){
@@ -37,12 +37,24 @@ const MarkItem: React.FC<{
           borderBottomWidth: 1,
           width: '98%',
           elevation: 2
-      }
+      },
+      contentWrapper: {
+          flexDirection: 'row',
+          width: '99%',
+          backgroundColor: '#ddd',
+          marginTop: 5,
+          shadowColor:'#dddddd',
+          shadowOffset: {
+              height: 0,
+              width: 2,
+          },
+          elevation: 2,
+      },
     });
         
     return(
         <View>
-            <TouchableOpacity style={listViewStyles.contentWrapper} key={record.GroupName}>
+            <View style={styles.contentWrapper} key={record.GroupName}>
                 <View style = {{
                     height: 25,
                     width: 10,
@@ -54,12 +66,12 @@ const MarkItem: React.FC<{
                         fontWeight: 'bold',
                         color: subjectColor ?? '#777'}}>{record.GroupName}</Text>
                 </View>
-            </TouchableOpacity>
+            </View>
             <View style={styles.markWrapper}>
                 {
                     record?.Marks?.map(el => {
                         return(
-                            <TouchableOpacity key={el.Id}>
+                            <TouchableOpacity key={el.Id} onPress={onItemSelected(el)}>
                                 <View style={{flexDirection: 'row'}}>
                                     <View  style = {{
                                         height: 20,
@@ -89,7 +101,7 @@ const MarkItem: React.FC<{
 const MarkListView: React.FC<{
     openModal: any,
     records: IMarkGrouping[],
-    onItemSelected?: any,
+    onItemSelected: any,
 }> = ({openModal, records, onItemSelected}) => { 
 
     const renderItem: React.FC<{
