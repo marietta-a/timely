@@ -10,6 +10,7 @@ import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { modalStyles, requiredFieldColor } from '../assets/styles/ModalDesigner';
+import { isNullOrEmpty } from '../common/Functions';
 import SubjectDropdown from '../dropdown/SubjectDropdown';
 import { IMark, Mark } from '../models/Marks';
 import { ModalState } from '../models/ModalState';
@@ -54,18 +55,18 @@ const MarkModal:React.FC<{
         setDeleteVisible(deleteVisible);
         const mk: IMark = {
             Id: props?.Id ?? -1,
-            Mark: markValue ?? props?.Mark,
+            Mark: markValue?? props?.Mark ,
             SubjectCode: subject?.Id ?? props?.SubjectCode ?? -1,
-            Subject: subject ?? props?.Subject,
-            SubjectName: subjectName ?? props?.Subject?.Name,
+            Subject: !isNullOrEmpty(subject) ? subject : props?.Subject,
+            SubjectName: !isNullOrEmpty(subject?.Name) ? subject?.Name : props?.Subject?.Name,
             Weight: weight ?? props?.Weight,
-            Description: description ?? props?.Description,
-            Title: title ?? props?.Title,
+            Description: !isNullOrEmpty(description) ? description : props?.Description,
+            Title: !isNullOrEmpty(title) ? title : props?.Title,
         };
         setMark(mk);
     }, [modalState.modalVisible, deleteVisible, props?.Id, props?.Mark,
         props?.SubjectCode, props?.Subject, props?.Weight, props?.Description,
-        props?.Title, subject, weight, description, title]);
+        props?.Title, subject, weight, description, title, markValue]);
 
     const handleDelete = () => {
       onItemDeleted(props?.Id ?? mark?.Id);
@@ -117,7 +118,7 @@ const MarkModal:React.FC<{
               />
               <View style={modalStyles.inputWrapper}>
                <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>Subject</Text></View>
-                   <Pressable onPress={() => invokeSubjectDropdown()}>
+                   <Pressable onPress={() => invokeSubjectDropdown()} >
                       <TextInput
                       value={mark?.Subject?.Name}
                       blurOnSubmit={true}
@@ -148,10 +149,10 @@ const MarkModal:React.FC<{
                     <View style={modalStyles.labelWrapper}>
                         <Text style={modalStyles.textLabel}>Mark</Text>
                         <TextInput
-                        value={mark?.Mark?.toString()}
+                        value={markValue?.toString()}
                         blurOnSubmit={true}
                         style={modalStyles.textInput}
-                        onChangeText={(val) => setMarkValue(parseInt(val, 10))}
+                        onChangeText={(val: string) => { !isNullOrEmpty(val) ? setMarkValue(parseInt(val, 10)) : setMarkValue(0)} }
                         defaultValue = {props?.Mark?.toString()}
                         placeholder="required"
                         placeholderTextColor={requiredFieldColor}
@@ -164,7 +165,7 @@ const MarkModal:React.FC<{
                         value={mark?.Weight?.toString()}
                         blurOnSubmit={true}
                         style={modalStyles.textInput}
-                        onChangeText={(val) => setWeight(parseInt(val, 10))}
+                        onChangeText={(val) => !isNullOrEmpty(val) ? setWeight(parseInt(val, 10)) : setWeight(0)}
                         defaultValue = {props?.Weight?.toString()}
                         placeholder="optional"
                         keyboardType="numeric"

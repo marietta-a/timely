@@ -106,12 +106,12 @@ const SubjectPage: React.FC<{
     
 
     useEffect(() => {
-        getAllRecords().then(()=>{onRefresh();});
-        return () => 
-        {
-            setRefreshing(false);
-            subjects = [];
+        const ab = new AbortController();
+        const signal = ab.signal;
+        if(!signal.aborted){
+            getAllRecords().then(()=>{onRefresh();});
         }
+        return () => ab.abort();
     }, [onRefresh]);
 
     return (

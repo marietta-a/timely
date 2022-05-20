@@ -8,8 +8,8 @@ import { ISubject } from "./Subject";
  interface IMark extends ModelBase{
   Subject?: ISubject;
   SubjectCode: number;
-  Mark: number | undefined;
-  Weight?: number;
+  Mark?: number | undefined | null;
+  Weight?: number | undefined | null;
   Title?: string,
   Description?: string,
   SubjectName?: string | undefined,
@@ -18,8 +18,8 @@ import { ISubject } from "./Subject";
 class Mark implements IMark{
   Id!: number;
   SubjectCode!: number;
-  Mark: number | undefined;
-  Weight?: number | undefined;
+  Mark?: number | undefined | null;
+  Weight?: number | undefined | null;
   Title?: string | undefined;
   Description?: string | undefined;
   DateCreated?: Date | undefined;

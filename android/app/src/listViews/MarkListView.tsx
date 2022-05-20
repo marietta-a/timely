@@ -111,6 +111,7 @@ const MarkListView: React.FC<{
         record={item}
         openModal={openModal}
         onItemSelected={onItemSelected}
+        key={item.GroupName}
         />
     );
 

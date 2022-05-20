@@ -25,11 +25,9 @@ const SubjectDropdown: React.FC<{
     const [modalVisible, setModalVisible] = useState(false);
     useEffect(()=>{
         const ab = new AbortController();
-        async function promise(){
+        if(!ab.signal.aborted){
             setModalVisible(modalState.modalVisible);
-            console.log('effects(modal Visible): '+ modalVisible);
         }
-        Promise.all([promise()]);
         return () => ab.abort();
     }, [modalState.modalVisible])
 
@@ -39,6 +37,7 @@ const SubjectDropdown: React.FC<{
     };
     const handleItemSelected = (item: ISubject) => {
         onItemSelected(item);
+        console.log(item);
         onRequestClose;
     }
 
