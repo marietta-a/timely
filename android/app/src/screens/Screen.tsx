@@ -8,6 +8,7 @@ import HeaderElement from '../common/HeaderElement';
 import EventPage from '../pages/EventPage';
 import MarkPage from '../pages/MarkPage';
 import SubjectPage from '../pages/SubjectPage';
+import TimeTablePage from '../pages/TimeTablePage';
 
 function SubjectScreen(){
     return (
@@ -38,4 +39,12 @@ function MarkScreen(){
   );
 }
 
-export {SubjectScreen, EventScreen, HeaderScreen, MarkScreen};
+function TimeTablesCreen(){
+  return (
+    <SafeAreaView>
+      <TimeTablePage />
+    </SafeAreaView>
+  );
+}
+
+export {SubjectScreen, EventScreen, HeaderScreen, MarkScreen, TimeTablesCreen};

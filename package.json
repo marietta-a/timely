@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-navigation/drawer": "^6.4.1",
     "@react-navigation/native": "^6.0.10",
+    "moment": "^2.29.3",
     "react": "17.0.2",
     "react-dropdown": "^1.10.0",
     "react-native": "0.68.0",

@@ -16,7 +16,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 import {LogBox} from 'react-native';
 import { CustomDrawerContent } from './android/app/src/core/CustomDrawerSettings';
-import { EventScreen, MarkScreen, SubjectScreen } from './android/app/src/screens/Screen';
+import { EventScreen, MarkScreen, SubjectScreen, TimeTablesCreen } from './android/app/src/screens/Screen';
 import SQLite from 'react-native-sqlite-storage';
 
 
@@ -39,6 +39,7 @@ const App = () => {
         >
           <Drawer.Screen name="Subjects" component={SubjectScreen} />
           <Drawer.Screen name="Marks" component={MarkScreen} />
+          <Drawer.Screen name="Time table" component={TimeTablesCreen} />
           <Drawer.Screen name="Events" component={EventScreen} />
        </Drawer.Navigator>
     </NavigationContainer>
