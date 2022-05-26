@@ -3,24 +3,26 @@ import { ModelBase } from "../common/ModelBase";
 import { Subject } from "./Subject";
 
 interface ISchedule extends ModelBase{
-    DayOfTheWeek: string,
-    SubjectCode: string,
-    StartTime: Timestamp,
-    EndTime?: Timestamp,
+    DayOfTheWeek: number,
+    SubjectCode: number,
+    StartTime: string,
+    EndTime?: string,
     Room?: string,
-    Subject?: Subject
+    Subject?: Subject,
+    Color?: string,
 }
 
 class Schedule implements ISchedule{
     Id!: number;
-    DayOfTheWeek!: string;
-    SubjectCode!: string;
-    StartTime!: Timestamp;
-    EndTime?: number | undefined;
+    DayOfTheWeek!: number;
+    SubjectCode!: number;
+    StartTime!: string;
+    EndTime?: string | undefined;
     Room?: string | undefined;
     DateCreated?: Date | undefined;
     CreatedBy?: string | undefined;
     Subject?: Subject | undefined;
+    Color?: string;
 }
 
 export {Schedule}

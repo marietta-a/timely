@@ -9,15 +9,27 @@ import { StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { createTimeSlot } from "../common/Functions";
 import { TIMESLOT_HEIGHT, WeekDays } from "../constants/Constants";
-import { DayOfTheWeek } from "../models/DayOfTheWeek";
+import { DayOfTheWeek, WeekDaySlot } from "../models/DayOfTheWeek";
+import { ISchedule } from "../models/Schedule";
 
 const TimetableTemplate: React.FC<{
    startTime: string,
-   endTime: string
-}> = ({startTime, endTime}) => {
+   endTime: string,
+   OnItemSelected: any,
+   records: ISchedule[]
+}> = ({startTime, endTime, OnItemSelected, records}) => {
     const weekDays = WeekDays;
     const timeSlots = createTimeSlot(startTime, endTime);
     let dayIndex = 0;
+
+    
+    const ItemSelected =(day: DayOfTheWeek, slot: string) => {
+        const weekDaySlot: WeekDaySlot = {
+            DayOfTheWeek: day,
+            slot: slot
+        }
+        OnItemSelected(weekDaySlot);
+    }
 
     return(
         <View style={styles.rowWrapper}>
@@ -46,7 +58,7 @@ const TimetableTemplate: React.FC<{
                                 {
                                     timeSlots.map(slot => {
                                         return(
-                                            <TouchableOpacity key={slot} onPress={() => {ItemSelected(day, slot)}}>
+                                            <TouchableOpacity key={slot} onPress={() => ItemSelected(day, slot)}>
                                                 <View style={[styles.slotWrapper, bgColor]}/>
                                             </TouchableOpacity>
                                         );
@@ -60,10 +72,6 @@ const TimetableTemplate: React.FC<{
     );
 }
 
-function ItemSelected(day: DayOfTheWeek, slot: string) {
-   console.log(day);
-   console.log(slot);
-}
 
 const styles = StyleSheet.create({
     dayWrapper: {

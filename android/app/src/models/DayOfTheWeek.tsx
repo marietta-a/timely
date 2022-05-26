@@ -9,5 +9,10 @@ type DayOfTheWeek = {
     ShortName: string,
     SortOrder: number
  }
+ 
+ type WeekDaySlot = {
+     DayOfTheWeek: DayOfTheWeek,
+     slot: String,
+ }
 
- export type {DayOfTheWeek}
+ export type {DayOfTheWeek, WeekDaySlot}
