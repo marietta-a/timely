@@ -8,7 +8,7 @@ import HeaderElement from '../common/HeaderElement';
 import EventPage from '../pages/EventPage';
 import MarkPage from '../pages/MarkPage';
 import SubjectPage from '../pages/SubjectPage';
-import TimeTablePage from '../pages/TimeTablePage';
+import TimeTablePage from '../pages/timetable/TimeTablePage';
 
 function SubjectScreen(){
     return (

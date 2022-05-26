@@ -4,6 +4,8 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import moment from "moment";
+
 function longest(arr: any[]){
     return arr.reduce(function(a:any, b:any){
         return a.length > b.length ? a : b;
@@ -26,6 +28,21 @@ function groupBy(objectArray : Array<any>, property : any) {
       return acc;
     }, {});
   }
+
+  const createTimeSlot = (from: moment.MomentInput, to: moment.MomentInput) => {
+    let startTime = moment(from, 'HH:mm');
+    let endTime = moment(to, 'HH:mm');
+    if (endTime.isBefore(startTime)){
+        endTime.add('day', 1);
+    }
+    const arr = [];
+    while (startTime <= endTime){
+        arr.push(startTime.format('HH:mm'));
+        startTime.add(1, 'hour');
+    }
+    return arr;
+};
+
 const defaultHiddenFields = ['Id', 'DateCreated', 'CreatedBy', 'SubjectCode'];
 
-export {longest, defaultHiddenFields, isNullOrEmpty, wait, groupBy};
+export {longest, defaultHiddenFields, isNullOrEmpty, wait, groupBy, createTimeSlot};
