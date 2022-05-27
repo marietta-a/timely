@@ -30,7 +30,7 @@ const getAllMarks = async() => {
 
     var data = Object.entries(obj).map(item => {
         let mark = Object.assign(new Mark(), item[1]);
-        let subject =  subjects.find(b => b.Id === mark.SubjectCode);
+        let subject =  subjects.find(b => b.Id == mark.SubjectCode || b.Id === mark.SubjectCode);
         mark.Subject = subject;
         mark.SubjectName = subject?.Name;
         marks.push(mark);

@@ -8,9 +8,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import TimetableTemplate from "../../listViews/TimetableTemplate";
+import TimetableTemplate from "./TimetableTemplate";
 import { WeekDaySlot } from "../../models/DayOfTheWeek";
 import { ISchedule, Schedule } from "../../models/Schedule";
+import { SLOT_ENDTIME, SLOT_STARTTIME, TIMESLOT_HEIGHT, TIMESLOT_PADDINGLEFT, TIMESLOT_PADDINGTOP, TIMESLOT_WIDTH } from "../../constants/Constants";
+import moment from "moment";
+import { isNullOrEmpty } from "../../common/Functions";
+import ScheduleTemplate from "./ScheduleTemplate";
 
 const TimeTablePage = () => {
 
@@ -20,20 +24,42 @@ const TimeTablePage = () => {
         {
             DayOfTheWeek: 1,
             Id: 1,
-            StartTime: "13:00",
-            EndTime: "14:45",
+            StartTime: "16:00",
+            EndTime: "10:45",
             Room: "R1",
             SubjectCode: 1,
             Color: "green",
+            SubjectName: "Computer Science"
         },
         {
             DayOfTheWeek: 4,
             Id: 2,
-            StartTime: "8:00",
-            EndTime: "10:15",
+            StartTime: "15:00",
+            EndTime: "17:15",
             Room: "R1",
             SubjectCode: 2,
             Color: "blue",
+            SubjectName: "Maths"
+        },
+        {
+            DayOfTheWeek: 6,
+            Id: 3,
+            StartTime: "21:00",
+            EndTime: "23:00",
+            Room: "R1",
+            SubjectCode: 2,
+            Color: "brown",
+            SubjectName: "Chemistry"
+        },
+        {
+            DayOfTheWeek: 0,
+            Id: 4,
+            StartTime: "10:00",
+            EndTime: "13:00",
+            Room: "R6",
+            SubjectCode: 2,
+            Color: "magenta",
+            SubjectName: "Micro controllers"
         }
     ]
     
@@ -48,10 +74,11 @@ const TimeTablePage = () => {
         <SafeAreaView>
            <ScrollView>
                <TimetableTemplate
-                    startTime={"5:00"}
-                    endTime={"23:00"}
-                    OnItemSelected={(weekDaySlot: WeekDaySlot) => OnItemSelected(weekDaySlot)} 
-                    records={records}               />
+                    startTime={SLOT_STARTTIME}
+                    endTime={SLOT_ENDTIME}
+                    OnItemSelected={(weekDaySlot: WeekDaySlot) => OnItemSelected(weekDaySlot)}
+                />
+                <ScheduleTemplate records={records} />
            </ScrollView>
         </SafeAreaView>
     )
