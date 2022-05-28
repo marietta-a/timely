@@ -4,7 +4,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import moment from "moment"
+import moment from 'moment';
 import React from "react"
 import { Pressable, Text, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
@@ -67,7 +67,7 @@ const ScheduleTemplate: React.FC<{
                     })
                 }
         </SafeAreaView>
-    )
-}
+    );
+};
 
 export default ScheduleTemplate;

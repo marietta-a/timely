@@ -6,19 +6,20 @@
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import TimetableTemplate from "./TimetableTemplate";
 import { WeekDaySlot } from "../../models/DayOfTheWeek";
 import { ISchedule, Schedule } from "../../models/Schedule";
-import { SLOT_ENDTIME, SLOT_STARTTIME, TIMESLOT_HEIGHT, TIMESLOT_PADDINGLEFT, TIMESLOT_PADDINGTOP, TIMESLOT_WIDTH } from "../../constants/Constants";
-import moment from "moment";
-import { isNullOrEmpty } from "../../common/Functions";
+import { SLOT_ENDTIME, SLOT_STARTTIME } from "../../constants/Constants";
 import ScheduleTemplate from "./ScheduleTemplate";
+import ScheduleModal from "../../modals/ScheduleModal";
 
 const TimeTablePage = () => {
 
-    const[schedules, setSchedules] = useState([]);
+    const [schedules, setSchedules] = useState([]);
+    const [schedule, setSchedule] = useState(new Schedule());
+    const [modalVisible, setModalVisibility] = useState(false);
 
     const records: ISchedule[] = [
         {
@@ -65,10 +66,17 @@ const TimeTablePage = () => {
     
     useEffect(() => {
     },[]);
-    
-    const OnItemSelected = (weekDaySlot: WeekDaySlot) => {
-        console.log('record: ' + weekDaySlot.DayOfTheWeek.Day);
-    }
+
+    const OnWeekDaySelected = (weekDaySlot: WeekDaySlot) => {
+        //console.log('record: ' + weekDaySlot.DayOfTheWeek.Day);
+    };
+    const handleItemSelected = () => {
+        setModalVisibility(false);
+    };
+    const onScheduleSelected = (item: ISchedule) => {
+        setModalVisibility(true);
+        setSchedule(item);
+    };
 
     return(
         <SafeAreaView>
@@ -76,9 +84,14 @@ const TimeTablePage = () => {
                <TimetableTemplate
                     startTime={SLOT_STARTTIME}
                     endTime={SLOT_ENDTIME}
-                    OnItemSelected={(weekDaySlot: WeekDaySlot) => OnItemSelected(weekDaySlot)}
+                    OnItemSelected={(weekDaySlot: WeekDaySlot) => OnWeekDaySelected(weekDaySlot)}
                 />
-                <ScheduleTemplate records={records} OnItemSelected={(item: ISchedule) => {console.log(item)}} />
+                <ScheduleTemplate records={records} OnItemSelected={(item: ISchedule) => { onScheduleSelected(item)}} />
+                <ScheduleModal
+                props={schedule}
+                OnItemSelected={() => handleItemSelected()}
+                modalVisible={modalVisible} 
+                onModalClosing={(visible: boolean) => {setModalVisibility(visible)}}/>
            </ScrollView>
         </SafeAreaView>
     )

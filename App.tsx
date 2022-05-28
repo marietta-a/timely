@@ -38,8 +38,8 @@ const App = () => {
          drawerContent={(props)=> <CustomDrawerContent {...props}/>}
         >
           <Drawer.Screen name="Subjects" component={SubjectScreen} />
+          <Drawer.Screen name="Timetable" component={TimeTablesCreen} />
           <Drawer.Screen name="Marks" component={MarkScreen} />
-          <Drawer.Screen name="Time table" component={TimeTablesCreen} />
           <Drawer.Screen name="Events" component={EventScreen} />
        </Drawer.Navigator>
     </NavigationContainer>

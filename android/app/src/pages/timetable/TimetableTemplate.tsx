@@ -10,7 +10,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { createTimeSlot } from "../../common/Functions";
 import { TIMESLOTNAME_WIDTH, TIMESLOT_HEIGHT, TIMESLOT_PADDINGLEFT, TIMESLOT_PADDINGTOP, TIMESLOT_WIDTH, WeekDays } from "../../constants/Constants";
 import { DayOfTheWeek, WeekDaySlot } from "../../models/DayOfTheWeek";
-import { ISchedule } from "../../models/Schedule";
 
 const TimetableTemplate: React.FC<{
    startTime: string,
@@ -34,7 +33,7 @@ const TimetableTemplate: React.FC<{
             <View style={[styles.slotNameWrapper]}>
                 {
                     timeSlots.map(slot => {
-                        return(
+                        return (
                             <View key={slot} style={[styles.slotWrapper]}>
                                  <Text style={[styles.slotNameText]}>{slot}</Text>
                             </View>
@@ -45,8 +44,7 @@ const TimetableTemplate: React.FC<{
             {
                 weekDays.map((day) => {
                     dayIndex++;
-                    console.log(day);
-                    let bgColor = day.SortOrder % 2 !== 0 ? 
+                    let bgColor = day.SortOrder % 2 !== 0 ?
                     {backgroundColor: '#ffffff'} :
                     {backgroundColor: '#dddddd'};
 

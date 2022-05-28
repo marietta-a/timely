@@ -15,7 +15,7 @@ const ModalHeader: React.FC<{
   textWrapper?: any,
   textStyle?: any,
   deleteTextStyle?: any,
-  onRequestClose?: any,
+  onRequestClose: any,
   handleSave?: any,
   handleDelete?: any,
   deleteVisible: boolean,
