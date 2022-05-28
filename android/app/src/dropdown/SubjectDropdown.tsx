@@ -60,8 +60,8 @@ const SubjectDropdown: React.FC<{
                     <DefaultCloseModal onVisibilityChange={() => handleRequestClose()}/>
                     <View>
                         <SubjectPage
-                        isDropDownList={true}
-                        onItemSelected={(item: ISubject) => handleItemSelected(item)}
+                            isDropDownList={true}
+                            onItemSelected={(item: ISubject) => handleItemSelected(item)}
                         />
                     </View>
                  </View>

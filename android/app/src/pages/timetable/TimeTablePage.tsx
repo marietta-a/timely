@@ -78,7 +78,7 @@ const TimeTablePage = () => {
                     endTime={SLOT_ENDTIME}
                     OnItemSelected={(weekDaySlot: WeekDaySlot) => OnItemSelected(weekDaySlot)}
                 />
-                <ScheduleTemplate records={records} />
+                <ScheduleTemplate records={records} OnItemSelected={(item: ISchedule) => {console.log(item)}} />
            </ScrollView>
         </SafeAreaView>
     )

@@ -13,6 +13,7 @@ interface ISchedule extends ModelBase {
   Subject?: Subject;
   Color?: string;
   SubjectName?: string;
+  day?: string
 }
 
 class Schedule implements ISchedule {
@@ -27,6 +28,7 @@ class Schedule implements ISchedule {
   Subject?: Subject | undefined;
   Color?: string;
   SubjectName?: string;
+  day?: string | undefined;
 }
 
 export {Schedule};
