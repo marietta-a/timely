@@ -42,7 +42,9 @@ const SubjectPage: React.FC<{
     props?: any,
     isDropDownList?: boolean,
     onItemSelected?: any,
-}> = ({props, isDropDownList, onItemSelected}) => {
+    buttonSytle?: any,
+    modalHeaderVisible?: boolean,
+}> = ({props, isDropDownList, onItemSelected, buttonSytle, modalHeaderVisible}) => {
 
    SubjectCRUD.createTable();
 
@@ -124,7 +126,7 @@ const SubjectPage: React.FC<{
             />
 
             <AddButton
-                style={buttonStyles.buttonAdd}
+                style={[buttonStyles.buttonAdd, buttonSytle]}
                 onButtonClicked={() => invokeModal()}
             />
             <SubjectModal modalState={{modalVisible: modalVisible }}
@@ -138,6 +140,7 @@ const SubjectPage: React.FC<{
             onItemSaved={(item: Subject) => { handleSave(item)}}
             onItemDeleted={(id: number) => {deleteRecord(id);}}
             deleteVisible={isDeleteVisible}
+            modalHeaderVisible={modalHeaderVisible}
             />
         </SafeAreaView>
     );

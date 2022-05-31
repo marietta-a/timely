@@ -28,8 +28,9 @@ const SubjectModal:React.FC<{
   onItemSaved: any,
   onItemDeleted: any,
   deleteVisible: boolean,
-}> = ({modalState, props, onRequestClose, onItemSaved, onItemDeleted, deleteVisible}) => {
-
+  modalHeaderVisible?: boolean,
+}> = ({modalState, props, onRequestClose, onItemSaved, onItemDeleted, deleteVisible, modalHeaderVisible}) => {
+    modalHeaderVisible = modalHeaderVisible === undefined ? true : modalHeaderVisible;
     const [name, setName] = useState(props?.Name);
     const [teacher, setTeacher] = useState(props?.Teacher);
     const defaultColor = props?.Color;
@@ -81,12 +82,18 @@ const SubjectModal:React.FC<{
             onRequestClose={handleModalClosing}
           >
           <View style={modalStyles.mainWrapper}>
-              <ModalHeader
-                  onRequestClose={handleModalClosing}
-                  handleSave={handleSave}
-                  handleDelete={handleDelete}
-                  deleteVisible={deleteVisible}
-              />
+              {
+                  modalHeaderVisible === true
+                  ?
+                    <ModalHeader
+                      onRequestClose={handleModalClosing}
+                      handleSave={handleSave}
+                      handleDelete={handleDelete}
+                      deleteVisible={deleteVisible}
+                  />
+                  :
+                  <Text>Subjects</Text>
+              }
               <View style={modalStyles.inputWrapper}>
                <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>Subject</Text></View>
                    <TextInput

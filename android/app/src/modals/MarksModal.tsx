@@ -127,13 +127,12 @@ const MarkModal:React.FC<{
                       defaultValue={props?.Subject?.Name}
                       autoFocus={true}
                       placeholder="required*"
-                      placeholderTextColor= {requiredFieldColor} 
+                      placeholderTextColor= {requiredFieldColor}
                       editable={false}
                       />
                       <SubjectDropdown
                       modalState={{ modalVisible: subjectDropdownVisible }}
                       onRequestClose={handleModalClosing}
-                      openModal={() => invokeSubjectDropdown()} 
                       onItemSelected={(item: ISubject) => handleSubjectSelected(item)}
                       />
                    </Pressable>

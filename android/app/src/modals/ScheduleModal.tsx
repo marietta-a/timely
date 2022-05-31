@@ -5,9 +5,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import React, { useEffect, useState } from "react";
-import { Modal, Pressable, Text, TextInput, View } from "react-native";
+import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { modalStyles, requiredFieldColor } from "../assets/styles/ModalDesigner";
+import { isNullOrEmpty } from "../common/Functions";
 import SubjectDropdown from "../dropdown/SubjectDropdown";
 import WeekDaysDropDown from "../dropdown/WeekDaysDropDown";
 import { DayOfTheWeek } from "../models/DayOfTheWeek";
@@ -26,7 +27,6 @@ onModalClosing?: any,
         ShortName: "",
         SortOrder: 0
     };
-    const [visible, setVisibility] = useState(modalVisible);
     const [weekDay, setWeekDay] = useState(day);
     const [weekDayVisible, setWeekDayVisible] = useState(false);
     const [schedule, setSchedule] = useState(props);
@@ -37,10 +37,6 @@ onModalClosing?: any,
     const [subjectVisible, setSubjectVisibility] = useState(false);
     const [subjectName, setSubjectName] = useState('');
 
-    useEffect(() => {
-        setVisibility(modalVisible);
-        console.log('schedule visible: ' + modalVisible);
-    }, [modalVisible]);
 
     const invokeWeekDayDropdown = () => {
         setWeekDayVisible(true);
@@ -51,72 +47,104 @@ onModalClosing?: any,
     };
     const invokeSubjectDropdown = () => {
         setSubjectVisibility(true);
+        console.log('invoke subject modal: ' + subjectVisible);
     };
     const handleSubjectSelected = (item: ISubject) => {
         setSubject(item);
+        setSubjectVisibility(false);
     };
     const handleModalClosing = () => {
         console.log('closing schedule modal');
-        setVisibility(false);
-        onModalClosing(visible);
+        onModalClosing(false);
     };
+    const handleSubjectModalClosing = () => {
+        setSubjectVisibility(false);
+    };
+
+    const subjectWrapper = {
+          fontSize: 18,
+          borderBottomWidth: 2,
+          width: '98%',
+          borderBottomColor: '#555555',
+          paddingBottom: 0,
+          color: subject?.Color,
+        };
 
     return (
         <SafeAreaView>
             <Modal
              animationType="slide"
              transparent={false}
-             visible={visible}
+             visible={modalVisible}
             >
-                <ModalHeader deleteVisible={false} onRequestClose={() => handleModalClosing()} />
-                <View style={modalStyles.inputWrapper}>
-                <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>Day of the week</Text></View>
-                    <Pressable onPress={() => invokeWeekDayDropdown()} >
-                        <TextInput
-                        value={weekDay.Day}
-                        blurOnSubmit={true}
-                        style={modalStyles.textInput}
-                        onChangeText={(val) => {setDayName(val)}}
-                        defaultValue={props?.day}
-                        autoFocus={true}
-                        placeholder="required*"
-                        placeholderTextColor= {requiredFieldColor} 
-                        editable={false}
-                        />
-                        <WeekDaysDropDown
-                        visible={weekDayVisible}
-                        onItemSelected={(item: DayOfTheWeek) => handleWeedDaySelected(item)}
-                        />
-                    </Pressable>
-                </View>
-
-                <View style={modalStyles.inputWrapper}>
-                    <View style={modalStyles.labelWrapper}>
-                        <Text style={modalStyles.textLabel}>Subject</Text>
+                <View style={[modalStyles.mainWrapper]}>
+                    <ModalHeader deleteVisible={false} onRequestClose={() => handleModalClosing()} />
+                    <View style={modalStyles.inputWrapper}>
+                    <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>Day of the week</Text></View>
+                        <Pressable onPress={() => invokeWeekDayDropdown()} >
+                            <TextInput
+                            value={weekDay.Day}
+                            blurOnSubmit={true}
+                            style={modalStyles.textInput}
+                            onChangeText={(val) => {setDayName(val)}}
+                            defaultValue={props?.day}
+                            autoFocus={true}
+                            placeholder="required*"
+                            placeholderTextColor= {requiredFieldColor}
+                            editable={false}
+                            />
+                            <WeekDaysDropDown
+                            visible={weekDayVisible}
+                            onItemSelected={(item: DayOfTheWeek) => handleWeedDaySelected(item)}
+                            style={[styles.modalWrapper]}
+                            />
+                        </Pressable>
                     </View>
-                    <Pressable onPress={() => invokeSubjectDropdown()} >
-                        <TextInput
-                        value={subject?.Name}
-                        blurOnSubmit={true}
-                        style={modalStyles.textInput}
-                        onChangeText={(val) => {setSubjectName(val)}}
-                        defaultValue={props?.SubjectName}
-                        autoFocus={true}
-                        placeholder="required*"
-                        placeholderTextColor= {requiredFieldColor}
-                        editable={false}
-                        />
-                        <SubjectDropdown
-                        modalState={{ modalVisible: subjectVisible }}
-                        onRequestClose={() => {setSubjectVisibility(false)} }
-                        openModal={() => invokeSubjectDropdown() }
-                        onItemSelected={(item: ISubject) => handleSubjectSelected(item)}
-                        />
-                    </Pressable>
+
+                    <View style={modalStyles.inputWrapper}>
+                        <View style={modalStyles.labelWrapper}>
+                            <Text style={modalStyles.textLabel}>Subject</Text>
+                        </View>
+                        <Pressable onPress={() => invokeSubjectDropdown()} >
+                            <TextInput
+                                value={subject?.Name}
+                                blurOnSubmit={true}
+                                style={[modalStyles.textInput, subjectWrapper]}
+                                onChangeText={(val) => {setSubjectName(val)}}
+                                defaultValue={props?.SubjectName}
+                                autoFocus={true}
+                                placeholder="required*"
+                                placeholderTextColor= {requiredFieldColor}
+                                editable={false}
+                            />
+                            <SubjectDropdown
+                                modalState={{ modalVisible: subjectVisible }}
+                                onRequestClose={() => handleSubjectModalClosing() }
+                                onItemSelected={(item: ISubject) => handleSubjectSelected(item)}
+                                style={styles.subjectModalWrapper}
+                                modalHeaderVisible={false}
+                            />
+                        </Pressable>
+                    </View>
                 </View>
             </Modal>
         </SafeAreaView>
     )
-}
+};
+
+
+const styles = StyleSheet.create({
+    modalWrapper: {
+        width: '50%',
+        height: '40%',
+        marginLeft: '20%',
+        marginTop: '15%',
+    },
+    subjectModalWrapper: {
+        width: '70%',
+        height: '90%',
+        marginLeft: '15%'
+    }
+});
 
 export default ScheduleModal;

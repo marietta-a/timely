@@ -5,14 +5,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import React, { useEffect, useState } from "react"
-import { Modal } from "react-native";
+import { Modal, StyleSheet, View } from "react-native";
+import { modalStyles } from "../assets/styles/ModalDesigner";
 import WeekDaysListView from "../listViews/WeekDaysListView";
 import { DayOfTheWeek } from "../models/DayOfTheWeek";
 
 const WeekDaysDropDown: React.FC<{
  visible: boolean,
  onItemSelected: any,
-}> = ({visible, onItemSelected}) => {
+ style?: any,
+}> = ({visible, onItemSelected, style}) => {
     const [modalVisible, setModalVisible] = useState(visible);
 
     useEffect(() => {
@@ -27,12 +29,14 @@ const WeekDaysDropDown: React.FC<{
     return(
        <Modal 
          animationType="fade"
-         transparent={false}
+         transparent={true}
          visible={modalVisible}
         >
-           <WeekDaysListView onItemSelected={(item: DayOfTheWeek) => handleItemSelected(item)}/>
+            <View style={[modalStyles.mainWrapper, style]}>
+                <WeekDaysListView onItemSelected={(item: DayOfTheWeek) => handleItemSelected(item)}/>
+            </View>
        </Modal>
     );
-}
+};
 
 export default WeekDaysDropDown;

@@ -91,7 +91,7 @@ const TimeTablePage = () => {
                 props={schedule}
                 OnItemSelected={() => handleItemSelected()}
                 modalVisible={modalVisible} 
-                onModalClosing={(visible: boolean) => {setModalVisibility(visible)}}/>
+                onModalClosing={(visible: boolean) => {setModalVisibility(visible); }}/>
            </ScrollView>
         </SafeAreaView>
     )

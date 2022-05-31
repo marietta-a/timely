@@ -18,9 +18,9 @@ const SubjectDropdown: React.FC<{
     props?: Subject,
     onRequestClose: any,
     onItemSelected: any,
-    openModal: any,
     style?: any,
-}> = ({modalState, props, onRequestClose, onItemSelected, openModal, style}) => {
+    modalHeaderVisible?: boolean,
+}> = ({modalState, props, onRequestClose, onItemSelected, style, modalHeaderVisible}) => {
     
     const [modalVisible, setModalVisible] = useState(false);
     useEffect(()=>{
@@ -41,27 +41,20 @@ const SubjectDropdown: React.FC<{
         onRequestClose;
     }
 
-    const defaultStyle = style !== undefined? style : 
-                        {
-                            width: '80%',
-                            height: '70%',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        };
-
     return (
             <Modal
                 animationType="slide"
                 transparent={false}
-                visible = {modalVisible}
+                visible = {modalState.modalVisible}
                 onRequestClose={() => handleRequestClose()}
              >
-                 <View style={modalStyles.mainWrapper}>
+                 <View style={[modalStyles.mainWrapper, style]}>
                     <DefaultCloseModal onVisibilityChange={() => handleRequestClose()}/>
                     <View>
                         <SubjectPage
                             isDropDownList={true}
                             onItemSelected={(item: ISubject) => handleItemSelected(item)}
+                            modalHeaderVisible={modalHeaderVisible}
                         />
                     </View>
                  </View>
