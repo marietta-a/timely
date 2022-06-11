@@ -4,6 +4,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import React, { useEffect, useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,6 +16,8 @@ import { DayOfTheWeek } from "../models/DayOfTheWeek";
 import { ISchedule, Schedule } from "../models/Schedule";
 import { ISubject, Subject } from "../models/Subject";
 import { ModalHeader } from "./ModalHeader";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import DatePicker from "react-native-date-picker";
 
 const ScheduleModal: React.FC<{
 props: ISchedule,
@@ -36,6 +39,9 @@ onModalClosing?: any,
     const [dayName, setDayName] = useState('');
     const [subjectVisible, setSubjectVisibility] = useState(false);
     const [subjectName, setSubjectName] = useState('');
+
+    const [startDate, setStartDate] = useState(new Date());
+    const [openStart, setOpenStart] = useState(false);
 
 
     const invokeWeekDayDropdown = () => {
@@ -124,6 +130,39 @@ onModalClosing?: any,
                                 style={styles.subjectModalWrapper}
                                 modalHeaderVisible={false}
                             />
+                        </Pressable>
+                    </View>
+
+
+                    <View style={modalStyles.inputWrapper}>
+                        <View style={modalStyles.labelWrapper}>
+                            <Text style={modalStyles.textLabel}>Start Time</Text>
+                        </View>
+                        <Pressable onPress={() => {}} >
+                            <TextInput
+                                value={startTime}
+                                blurOnSubmit={true}
+                                style={[modalStyles.textInput]}
+                                onChangeText={(val) => {setStartTime(val)}}
+                                defaultValue={props?.StartTime}
+                                autoFocus={true}
+                                placeholder="required*"
+                                placeholderTextColor= {requiredFieldColor}
+                                onPressIn={() => { console.log('start Time: ' + new Date()); setOpenStart(true);}}
+                            />
+                            <DatePicker
+                                modal
+                                mode="time"
+                                open={openStart}
+                                date={startDate}
+                                onConfirm={(val) => {
+                                    setOpenStart(false);
+                                    setStartDate(val);
+                                }}
+                                onCancel={() => {
+                                    setOpenStart(false);
+                                }}
+                             />
                         </Pressable>
                     </View>
                 </View>

@@ -140,7 +140,6 @@ const SubjectPage: React.FC<{
             onItemSaved={(item: Subject) => { handleSave(item)}}
             onItemDeleted={(id: number) => {deleteRecord(id);}}
             deleteVisible={isDeleteVisible}
-            modalHeaderVisible={modalHeaderVisible}
             />
         </SafeAreaView>
     );

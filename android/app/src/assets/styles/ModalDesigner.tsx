@@ -39,6 +39,7 @@ const modalStyles = StyleSheet.create({
       width: '98%',
       borderBottomColor: '#555555',
       paddingBottom: 0,
+      color: '#555',
     },
     inputWrapper:{
       marginLeft: 20,

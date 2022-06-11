@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import React, { useEffect, useState } from 'react';
-import { Modal, SafeAreaView, View } from 'react-native';
+import { Modal, SafeAreaView, Text, View } from 'react-native';
 import { modalStyles } from '../assets/styles/ModalDesigner';
 import DefaultCloseModal from '../modals/DefaultCloseModal';
 import { ModalState } from '../models/ModalState';
@@ -21,7 +21,7 @@ const SubjectDropdown: React.FC<{
     style?: any,
     modalHeaderVisible?: boolean,
 }> = ({modalState, props, onRequestClose, onItemSelected, style, modalHeaderVisible}) => {
-    
+    modalHeaderVisible = modalHeaderVisible === undefined ? true : modalHeaderVisible;
     const [modalVisible, setModalVisible] = useState(false);
     useEffect(()=>{
         const ab = new AbortController();
@@ -44,12 +44,16 @@ const SubjectDropdown: React.FC<{
     return (
             <Modal
                 animationType="slide"
-                transparent={false}
+                transparent={true}
                 visible = {modalState.modalVisible}
                 onRequestClose={() => handleRequestClose()}
              >
                  <View style={[modalStyles.mainWrapper, style]}>
-                    <DefaultCloseModal onVisibilityChange={() => handleRequestClose()}/>
+                     {
+                         modalHeaderVisible ?
+                           <DefaultCloseModal onVisibilityChange={() => handleRequestClose()}/>
+                        : <Text style={[modalStyles.textLabel]}>Subjects</Text>
+                     }
                     <View>
                         <SubjectPage
                             isDropDownList={true}

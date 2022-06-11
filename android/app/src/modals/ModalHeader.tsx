@@ -68,7 +68,7 @@ const ModalHeader: React.FC<{
     else{
       return (
           <View style={modalStyles.headerWrapper}>
-            <Pressable style={textWrapper} onPress={onRequestClose}>
+            <Pressable style={textWrapper} onPress={onRequestClose.bind(this)}>
               <Text style={textStyle}>X</Text>
             </Pressable>
             <View style={{justifyContent: 'center', alignItems:'center', width:'65%'}}/>
