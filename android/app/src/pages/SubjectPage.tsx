@@ -26,7 +26,6 @@ let emptyState: ISubject = {
 let selectedSubject: ISubject = emptyState;
 
 const getAllRecords = async() => {
-
     let record = await SubjectCRUD.getSubjects();
     let res = JSON.stringify(record);
     let obj = JSON.parse(res);
@@ -105,7 +104,6 @@ const SubjectPage: React.FC<{
             onRefresh();
         });
     };
-    
 
     useEffect(() => {
         const ab = new AbortController();

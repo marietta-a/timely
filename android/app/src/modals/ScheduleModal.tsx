@@ -4,7 +4,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import React, { useEffect, useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,32 +15,50 @@ import { DayOfTheWeek } from "../models/DayOfTheWeek";
 import { ISchedule, Schedule } from "../models/Schedule";
 import { ISubject, Subject } from "../models/Subject";
 import { ModalHeader } from "./ModalHeader";
-import DateTimePicker from '@react-native-community/datetimepicker';
 import DatePicker from "react-native-date-picker";
 
 const ScheduleModal: React.FC<{
-props: ISchedule,
+props: Schedule,
 OnItemSelected: any,
 modalVisible: boolean,
-onModalClosing?: any,
-}> = ({props, OnItemSelected, modalVisible, onModalClosing}) => {
+onRequestClose?: any,
+onItemSaved: any,
+onItemDeleted: any,
+deleteVisible: boolean,
+}> = ({props, OnItemSelected, modalVisible, onRequestClose, onItemSaved, onItemDeleted, deleteVisible}) => {
     const day: DayOfTheWeek = {
         Day: "",
         ShortName: "",
         SortOrder: 0
     };
-    const [weekDay, setWeekDay] = useState(day);
+    const date = new Date().toDateString();
+    const [weekDay, setWeekDay] = useState(props?.WeekDay ?? day);
     const [weekDayVisible, setWeekDayVisible] = useState(false);
     const [schedule, setSchedule] = useState(props);
     const [subject, setSubject] = useState(new Subject());
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
-    const [dayName, setDayName] = useState('');
+    const [startTime, setStartTime] = useState(new Date());
+    const [openStart, setOpenStart] = useState(false);
+    const [endTime, setEndTime] = useState(new Date());
+    const [openEnd, setOpenEnd] = useState(false);
     const [subjectVisible, setSubjectVisibility] = useState(false);
     const [subjectName, setSubjectName] = useState('');
+    const [dayName, setDayName] = useState('');
+    const [room, setRoom] = useState('');
 
-    const [startDate, setStartDate] = useState(new Date());
-    const [openStart, setOpenStart] = useState(false);
+    useEffect(() => {
+        //setDeleteVisible(deleteVisible);
+        let sched: Schedule = {
+            Id: schedule?.Id ?? props.Id,
+            DayOfTheWeek:  !isNullOrEmpty(weekDay?.SortOrder) ? weekDay?.SortOrder ?? '' : (props?.WeekDay?.SortOrder ?? -1),
+            SubjectCode: !isNullOrEmpty(subject?.Id) ? subject.Id : (props?.SubjectCode ?? -1),
+            StartTime:  startTime.toLocaleTimeString('en-US'),
+            EndTime: endTime.toLocaleTimeString('en-US'),
+            WeekDay: weekDay ?? props?.WeekDay,
+            SubjectName: subject?.Name ?? props?.SubjectName,
+            Room: room ?? props?.Room,
+        };
+        setSchedule(sched);
+    }, [schedule?.Id, props.Id, props?.WeekDay?.SortOrder, props?.SubjectCode, weekDay?.SortOrder, subject.Id, startTime, endTime, props?.WeekDay, weekDay, props?.SubjectName, subjectName, props?.Room, room, subject?.Name]);
 
 
     const invokeWeekDayDropdown = () => {
@@ -61,10 +78,20 @@ onModalClosing?: any,
     };
     const handleModalClosing = () => {
         console.log('closing schedule modal');
-        onModalClosing(false);
+        onRequestClose(false);
     };
     const handleSubjectModalClosing = () => {
         setSubjectVisibility(false);
+    };
+
+    const handleSave = () => {
+        onItemSaved(subject);
+       // reinitializeStates();
+    };
+
+    const handleDelete = () => {
+        onItemDeleted(props?.Id ?? subject.Id);
+       // reinitializeStates();
     };
 
     const subjectWrapper = {
@@ -84,16 +111,21 @@ onModalClosing?: any,
              visible={modalVisible}
             >
                 <View style={[modalStyles.mainWrapper]}>
-                    <ModalHeader deleteVisible={false} onRequestClose={() => handleModalClosing()} />
+                    <ModalHeader
+                    deleteVisible={deleteVisible}
+                    onRequestClose={() => handleModalClosing()}
+                    handleSave={handleSave}
+                    handleDelete={handleDelete}
+                    />
                     <View style={modalStyles.inputWrapper}>
                     <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>Day of the week</Text></View>
                         <Pressable onPress={() => invokeWeekDayDropdown()} >
                             <TextInput
-                            value={weekDay.Day}
+                            value={schedule?.WeekDay?.Day}
                             blurOnSubmit={true}
                             style={modalStyles.textInput}
                             onChangeText={(val) => {setDayName(val)}}
-                            defaultValue={props?.day}
+                            defaultValue={props?.WeekDay?.Day}
                             autoFocus={true}
                             placeholder="required*"
                             placeholderTextColor= {requiredFieldColor}
@@ -113,7 +145,7 @@ onModalClosing?: any,
                         </View>
                         <Pressable onPress={() => invokeSubjectDropdown()} >
                             <TextInput
-                                value={subject?.Name}
+                                value={schedule?.SubjectName}
                                 blurOnSubmit={true}
                                 style={[modalStyles.textInput, subjectWrapper]}
                                 onChangeText={(val) => {setSubjectName(val)}}
@@ -133,42 +165,94 @@ onModalClosing?: any,
                         </Pressable>
                     </View>
 
-
-                    <View style={modalStyles.inputWrapper}>
-                        <View style={modalStyles.labelWrapper}>
-                            <Text style={modalStyles.textLabel}>Start Time</Text>
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                        <View style={modalStyles.inputWrapper}>
+                            <View style={modalStyles.labelWrapper}>
+                                <Text style={modalStyles.textLabel}>Start Time</Text>
+                            </View>
+                            <View>
+                                <Pressable onPress={() => {}} >
+                                    <TextInput
+                                        value={schedule?.StartTime}
+                                        blurOnSubmit={true}
+                                        style={[modalStyles.textInput]}
+                                        //onChangeText={(val) => {setStartTime(val)}}
+                                        defaultValue={props?.StartTime}
+                                        autoFocus={true}
+                                        placeholder="required*"
+                                        placeholderTextColor= {requiredFieldColor}
+                                        onPressIn={() => {setOpenStart(true);}}
+                                    />
+                                    <DatePicker
+                                        modal
+                                        mode="time"
+                                        open={openStart}
+                                        date={startTime}
+                                        onConfirm={(val) => {
+                                            console.log(val.toLocaleTimeString('en-US'));
+                                            setOpenStart(false);
+                                            setStartTime(val);
+                                        }}
+                                        onCancel={() => {
+                                            setOpenStart(false);
+                                        }}
+                                    />
+                                </Pressable>
+                            </View>
                         </View>
-                        <Pressable onPress={() => {}} >
+
+                        <View style={modalStyles.inputWrapper}>
+                            <View style={modalStyles.labelWrapper}>
+                                <Text style={modalStyles.textLabel}>End Time</Text>
+                            </View>
+                            <View>
+                                <Pressable onPress={() => {}} >
+                                    <TextInput
+                                        value={schedule?.EndTime}
+                                        blurOnSubmit={true}
+                                        style={[modalStyles.textInput]}
+                                        //onChangeText={(val) => {setStartTime(val)}}
+                                        defaultValue={props?.EndTime}
+                                        autoFocus={true}
+                                    // placeholder="required*"
+                                        placeholderTextColor= {requiredFieldColor}
+                                        onPressIn={() => {setOpenEnd(true);}}
+                                    />
+                                    <DatePicker
+                                        modal
+                                        mode="time"
+                                        open={openEnd}
+                                        date={endTime}
+                                        onConfirm={(val) => {
+                                            console.log(val.toLocaleTimeString('en-US'));
+                                            setOpenEnd(false);
+                                            setEndTime(val);
+                                        }}
+                                        onCancel={() => {
+                                            setOpenEnd(false);
+                                        }}
+                                    />
+                                </Pressable>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={modalStyles.inputWrapper}>
+                        <View style={modalStyles.labelWrapper}><Text style={modalStyles.textLabel}>Room</Text></View>
                             <TextInput
-                                value={startTime}
-                                blurOnSubmit={true}
-                                style={[modalStyles.textInput]}
-                                onChangeText={(val) => {setStartTime(val)}}
-                                defaultValue={props?.StartTime}
-                                autoFocus={true}
-                                placeholder="required*"
-                                placeholderTextColor= {requiredFieldColor}
-                                onPressIn={() => { console.log('start Time: ' + new Date()); setOpenStart(true);}}
+                            value={schedule?.Room}
+                            blurOnSubmit={true}
+                            style={modalStyles.textInput}
+                            onChangeText={(val) => {setRoom(val)}}
+                            defaultValue={props?.Room}
+                            autoFocus={true}
+                            placeholder=""
+                            placeholderTextColor= {requiredFieldColor}
                             />
-                            <DatePicker
-                                modal
-                                mode="time"
-                                open={openStart}
-                                date={startDate}
-                                onConfirm={(val) => {
-                                    setOpenStart(false);
-                                    setStartDate(val);
-                                }}
-                                onCancel={() => {
-                                    setOpenStart(false);
-                                }}
-                             />
-                        </Pressable>
                     </View>
                 </View>
             </Modal>
         </SafeAreaView>
-    )
+    );
 };
 
 
@@ -182,8 +266,11 @@ const styles = StyleSheet.create({
     subjectModalWrapper: {
         width: '70%',
         height: '90%',
-        marginLeft: '15%'
-    }
+        marginLeft: '15%',
+    },
+    timeWrapper: {
+        width: '40%',
+    },
 });
 
 export default ScheduleModal;

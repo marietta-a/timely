@@ -12,7 +12,7 @@ type DayOfTheWeek = {
  
  type WeekDaySlot = {
      DayOfTheWeek: DayOfTheWeek,
-     slot: String,
+     slot: string,
  }
 
  export type {DayOfTheWeek, WeekDaySlot}

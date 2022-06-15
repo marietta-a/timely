@@ -92,8 +92,8 @@ export default class ScheduleCRUD extends Component<Schedule>{
     }
 
     static async addSchedule(schedule: Schedule){
-        let query = `INSERT INTO Schedules(DayOfTheWeek, SubjectCode, StartTime,EndTime, Room, DateCreated, CreatedBy) 
-        VALUES(?,?,?,?,?)`;
+        let query = `INSERT INTO Schedules(DayOfTheWeek, SubjectCode, StartTime, EndTime, Room, DateCreated, CreatedBy) 
+        VALUES(?,?,?,?,?,?,?)`;
         let params = [schedule.DayOfTheWeek, schedule.SubjectCode, schedule.StartTime, schedule?.EndTime, schedule?.Room, schedule?.DateCreated, schedule?.CreatedBy];
 
         let results = (await db).transaction(function(trans){

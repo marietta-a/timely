@@ -2,6 +2,7 @@
 /* eslint-disable prettier/prettier */
 
 import {ModelBase} from '../common/ModelBase';
+import { DayOfTheWeek } from './DayOfTheWeek';
 import {Subject} from './Subject';
 
 interface ISchedule extends ModelBase {
@@ -29,6 +30,7 @@ class Schedule implements ISchedule {
   Color?: string;
   SubjectName?: string;
   day?: string | undefined;
+  WeekDay?: DayOfTheWeek | undefined;
 }
 
 export {Schedule};
