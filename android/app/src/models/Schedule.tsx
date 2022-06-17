@@ -12,7 +12,6 @@ interface ISchedule extends ModelBase {
   EndTime?: string;
   Room?: string;
   Subject?: Subject;
-  Color?: string;
   SubjectName?: string;
   day?: string
 }
@@ -27,7 +26,6 @@ class Schedule implements ISchedule {
   DateCreated?: Date | undefined;
   CreatedBy?: string | undefined;
   Subject?: Subject | undefined;
-  Color?: string;
   SubjectName?: string;
   day?: string | undefined;
   WeekDay?: DayOfTheWeek | undefined;

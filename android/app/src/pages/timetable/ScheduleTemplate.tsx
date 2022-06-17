@@ -44,7 +44,7 @@ const ScheduleTemplate: React.FC<{
                                 top: top,
                                 left: left,
                                 position: 'absolute',
-                                backgroundColor: record.Color,
+                                backgroundColor: record?.Subject?.Color,
                                 borderRadius: 5,
                                 width: TIMESLOT_WIDTH - 5,
                                 height: slotHeight,
@@ -59,7 +59,7 @@ const ScheduleTemplate: React.FC<{
                                 elevation: 4,
                             }}>
                               <TouchableOpacity>
-                                <Text style={{color: '#000', fontSize: 14}}>{record.SubjectName}</Text>
+                                <Text style={{color: '#000', fontSize: 14}}>{record?.Subject?.Name}</Text>
                                 <Text style={{color: '#000', fontSize: 12}}>{record.Room}</Text>
                               </TouchableOpacity>
                             </Pressable>

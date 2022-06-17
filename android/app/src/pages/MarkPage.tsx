@@ -50,8 +50,8 @@ const generateMarkGroupings = () => {
         const subjectName = item[0];
         let subItemStr = JSON.stringify(item[1]);
         let subItemObj = JSON.parse(subItemStr);
-        const itemElements = Object.entries(subItemObj).map(item => {
-            return Object.assign(new Mark(), item[1]);
+        const itemElements = Object.entries(subItemObj).map(record => {
+            return Object.assign(new Mark(), record[1]);
         })
         const grouping: IMarkGrouping ={
             GroupName: subjectName,
@@ -83,7 +83,7 @@ const emptyMark : IMark = {
      Description: '',
      Weight: 0,
  };
- 
+
 
 const  MarkPage:React.FC<{
     props?: any

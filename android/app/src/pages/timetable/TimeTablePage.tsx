@@ -11,17 +11,20 @@ import { ScrollView } from "react-native-gesture-handler";
 import TimetableTemplate from "./TimetableTemplate";
 import { WeekDaySlot } from "../../models/DayOfTheWeek";
 import { ISchedule, Schedule } from "../../models/Schedule";
-import { SLOT_ENDTIME, SLOT_STARTTIME } from "../../constants/Constants";
+import { SLOT_ENDTIME, SLOT_STARTTIME, WeekDays } from "../../constants/Constants";
 import ScheduleTemplate from "./ScheduleTemplate";
 import ScheduleModal from "../../modals/ScheduleModal";
 import ScheduleCRUD from "../../assets/crud/ScheduleCRUD";
 import { wait } from "../../common/Functions";
+import { ISubject, Subject } from "../../models/Subject";
+import SubjectCRUD from "../../assets/crud/SubjectCRUD";
 
 
+const subjects: ISubject[] = [];
 let schedules: ISchedule[] = [];
 let emptyState: ISchedule = {
     Id: -1,
-    DayOfTheWeek: "0",
+    DayOfTheWeek: 0,
     SubjectCode: 0,
     StartTime: '',
 };
@@ -34,14 +37,27 @@ const getAllRecords = async() => {
     let obj = JSON.parse(res);
     let data = Object.entries(obj).map(item => {
         let schedule = Object.assign(new Schedule(), item[1]);
+        let subject =  subjects.find(b => b.Id == schedule.SubjectCode || b.Id === schedule.SubjectCode);
+        let weekDay = WeekDays.find(w => w.SortOrder == schedule.DayOfTheWeek || w.SortOrder === schedule.DayOfTheWeek);
+        schedule.Subject = subject;
+        schedule.WeekDay = weekDay;
         return schedule;
     });
-
     schedules = data;
 };
 
+const getAllSubjects = async() => {
+    var record = await SubjectCRUD.getSubjects();
+    var res = JSON.stringify(record);
+    var obj = JSON.parse(res);
+    const data = Object.entries(obj).map(item => {
+                    let subject = Object.assign(new Subject(), item[1]);
+                    subjects.push(subject);
+                    return subject;
+                });
+    return data;
+};
 const TimeTablePage = () => {
-
    ScheduleCRUD.createTable();
 
     const [schedule, setSchedule] = useState(new Schedule());
@@ -56,24 +72,14 @@ const TimeTablePage = () => {
     }, []);
 
     useEffect(() => {
-        const ab = new AbortController();
-        const signal = ab.signal;
-        if(!signal.aborted){
-            getAllRecords().then(()=>{onRefresh();});
-        }
-        return () => ab.abort();
+        getAllSubjects().then(() => getAllRecords().then(() => onRefresh()));
     }, [onRefresh]);
 
     const OnWeekDaySelected = (weekDaySlot: WeekDaySlot) => {
-        selectedSchedule = {
-            Id: -1,
-            DayOfTheWeek: weekDaySlot?.DayOfTheWeek?.SortOrder,
-            StartTime: weekDaySlot?.slot,
-            EndTime: '',
-            SubjectCode: -1,
-            WeekDay: weekDaySlot?.DayOfTheWeek,
-            day: weekDaySlot?.DayOfTheWeek?.Day,
-        };
+        selectedSchedule.WeekDay = weekDaySlot?.DayOfTheWeek;
+        selectedSchedule.day = weekDaySlot?.DayOfTheWeek?.Day;
+        selectedSchedule.DayOfTheWeek = weekDaySlot?.DayOfTheWeek?.SortOrder;
+        selectedSchedule.StartTime = weekDaySlot.slot;
         setSchedule(selectedSchedule);
         setModalVisibility(true);
     };
@@ -87,7 +93,6 @@ const TimeTablePage = () => {
 
    const handleSave = (record: Schedule) => {
         let item = Object.assign(new Schedule(), record);
-        console.log('schedule: ' + item);
         if (item.Id > 0 ){
             updateRecord(item);
         }
@@ -100,6 +105,7 @@ const TimeTablePage = () => {
     };
 
     function addNewRecord(item: Schedule){
+        console.log('adding ...');
         ScheduleCRUD.addSchedule(item).then(() =>
         {
             schedules.push(item);
@@ -108,6 +114,7 @@ const TimeTablePage = () => {
     }
 
     function updateRecord(record: Schedule){
+        console.log('updating ...');
         ScheduleCRUD.updateSchedule(record).then(() => {
             var oldRecord = schedules.find(m => m.Id === record.Id);
             if (oldRecord){

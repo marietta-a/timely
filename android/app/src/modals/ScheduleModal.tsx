@@ -49,8 +49,8 @@ deleteVisible: boolean,
         //setDeleteVisible(deleteVisible);
         let sched: Schedule = {
             Id: schedule?.Id ?? props.Id,
-            DayOfTheWeek:  !isNullOrEmpty(weekDay?.SortOrder) ? weekDay?.SortOrder ?? '' : (props?.WeekDay?.SortOrder ?? -1),
-            SubjectCode: !isNullOrEmpty(subject?.Id) ? subject.Id : (props?.SubjectCode ?? -1),
+            DayOfTheWeek:  !isNullOrEmpty(weekDay?.SortOrder) ? weekDay?.SortOrder  : (props?.WeekDay?.SortOrder ?? -1),
+            SubjectCode: subject?.Id > 0 ? subject.Id : props.SubjectCode,
             StartTime:  startTime.toLocaleTimeString('en-US'),
             EndTime: endTime.toLocaleTimeString('en-US'),
             WeekDay: weekDay ?? props?.WeekDay,
@@ -85,12 +85,12 @@ deleteVisible: boolean,
     };
 
     const handleSave = () => {
-        onItemSaved(subject);
+        onItemSaved(schedule);
        // reinitializeStates();
     };
 
     const handleDelete = () => {
-        onItemDeleted(props?.Id ?? subject.Id);
+        onItemDeleted(props?.Id ?? schedule.Id);
        // reinitializeStates();
     };
 

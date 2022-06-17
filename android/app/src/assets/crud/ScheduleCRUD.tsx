@@ -117,7 +117,7 @@ export default class ScheduleCRUD extends Component<Schedule>{
         CreatedBy=?
         Where Id=?
         `;
-        let params = [schedule.DayOfTheWeek, schedule.SubjectCode, schedule.StartTime, schedule.EndTime, schedule.StartTime, schedule.Room, schedule.DateCreated, schedule.CreatedBy, schedule.Id];
+        let params = [schedule.DayOfTheWeek, schedule.SubjectCode, schedule.StartTime, schedule.EndTime, schedule.Room, schedule.DateCreated, schedule.CreatedBy, schedule.Id];
 
         let results = (await db).transaction(function(trans){
            trans.executeSql(query,params,
