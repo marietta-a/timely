@@ -21,7 +21,7 @@ import SubjectCRUD from "../../assets/crud/SubjectCRUD";
 
 
 const subjects: ISubject[] = [];
-let schedules: ISchedule[] = [];
+const schedules: ISchedule[] = [];
 let emptyState: ISchedule = {
     Id: -1,
     DayOfTheWeek: 0,
@@ -30,8 +30,20 @@ let emptyState: ISchedule = {
 };
 let selectedSchedule: Schedule = emptyState;
 
-const getAllRecords = async() => {
+const DATA: ISchedule[] = [
+    {
+        Id: -11,
+        DayOfTheWeek: 2,
+        StartTime: '10:00',
+        SubjectCode: 2,
+        Color: 'red',
+        SubjectName: 'Computer Science',
+        EndTime: '13:15',
+        Room: 'p4'
+    }
+]
 
+const getAllRecords = async() => {
     let record = await ScheduleCRUD.getSchedules();
     let res = JSON.stringify(record);
     let obj = JSON.parse(res);
@@ -41,9 +53,11 @@ const getAllRecords = async() => {
         let weekDay = WeekDays.find(w => w.SortOrder == schedule.DayOfTheWeek || w.SortOrder === schedule.DayOfTheWeek);
         schedule.Subject = subject;
         schedule.WeekDay = weekDay;
+        schedule.SubjectName = subject?.Name;
+        schedule.Color = subject?.Color;
+        schedules.push(schedule);
         return schedule;
     });
-    schedules = data;
 };
 
 const getAllSubjects = async() => {
@@ -108,6 +122,15 @@ const TimeTablePage = () => {
         console.log('adding ...');
         ScheduleCRUD.addSchedule(item).then(() =>
         {
+            let subject =  subjects.find(b => b.Id == schedule.SubjectCode || b.Id === schedule.SubjectCode);
+            let weekDay = WeekDays.find(w => w.SortOrder == schedule.DayOfTheWeek || w.SortOrder === schedule.DayOfTheWeek);
+
+            item.Subject = subject;
+            item.WeekDay = weekDay;
+            item.SubjectName = subject?.Name;
+            item.Color = subject?.Color;
+
+           // console.log(JSON.stringify(item));
             schedules.push(item);
             onRefresh();
         });
@@ -144,7 +167,7 @@ const TimeTablePage = () => {
                     endTime={SLOT_ENDTIME}
                     OnItemSelected={(weekDaySlot: WeekDaySlot) => OnWeekDaySelected(weekDaySlot)}
                 />
-                <ScheduleTemplate records={schedules} OnItemSelected={(item: ISchedule) => { onScheduleSelected(item)}} />
+                <ScheduleTemplate records={schedules} OnItemSelected={(item: ISchedule) => { onScheduleSelected(item); } } />
                 <ScheduleModal
                 props={schedule}
                 OnItemSelected={() => handleItemSelected()}

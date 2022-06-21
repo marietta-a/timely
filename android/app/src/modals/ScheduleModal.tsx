@@ -26,19 +26,20 @@ onItemSaved: any,
 onItemDeleted: any,
 deleteVisible: boolean,
 }> = ({props, OnItemSelected, modalVisible, onRequestClose, onItemSaved, onItemDeleted, deleteVisible}) => {
-    const day: DayOfTheWeek = {
+    const dayOfTheWeek: DayOfTheWeek = {
         Day: "",
         ShortName: "",
         SortOrder: 0
     };
-    const date = new Date().toDateString();
-    const [weekDay, setWeekDay] = useState(props?.WeekDay ?? day);
+    const date = new Date().toDateString() + ' ' + props.StartTime;
+    const propsStart = new Date(date);
+    const [weekDay, setWeekDay] = useState(props?.WeekDay ?? dayOfTheWeek);
     const [weekDayVisible, setWeekDayVisible] = useState(false);
     const [schedule, setSchedule] = useState(props);
-    const [subject, setSubject] = useState(new Subject());
-    const [startTime, setStartTime] = useState(new Date());
+    const [subject, setSubject] = useState(props?.Subject ?? new Subject());
+    const [startTime, setStartTime] = useState(props.StartTime);
     const [openStart, setOpenStart] = useState(false);
-    const [endTime, setEndTime] = useState(new Date());
+    const [endTime, setEndTime] = useState(props.EndTime);
     const [openEnd, setOpenEnd] = useState(false);
     const [subjectVisible, setSubjectVisibility] = useState(false);
     const [subjectName, setSubjectName] = useState('');
@@ -47,13 +48,14 @@ deleteVisible: boolean,
 
     useEffect(() => {
         //setDeleteVisible(deleteVisible);
+        console.log(weekDay);
         let sched: Schedule = {
             Id: schedule?.Id ?? props.Id,
             DayOfTheWeek:  !isNullOrEmpty(weekDay?.SortOrder) ? weekDay?.SortOrder  : (props?.WeekDay?.SortOrder ?? -1),
             SubjectCode: subject?.Id > 0 ? subject.Id : props.SubjectCode,
-            StartTime:  startTime.toLocaleTimeString('en-US'),
-            EndTime: endTime.toLocaleTimeString('en-US'),
-            WeekDay: weekDay ?? props?.WeekDay,
+            StartTime: !isNullOrEmpty(startTime) ? startTime : props?.StartTime,
+            EndTime: !isNullOrEmpty(endTime) ? endTime : props?.EndTime,
+            WeekDay: !isNullOrEmpty(weekDay?.Day) ? weekDay : props?.WeekDay,
             SubjectName: subject?.Name ?? props?.SubjectName,
             Room: room ?? props?.Room,
         };
@@ -85,6 +87,7 @@ deleteVisible: boolean,
     };
 
     const handleSave = () => {
+        console.log(schedule);
         onItemSaved(schedule);
        // reinitializeStates();
     };
@@ -187,11 +190,13 @@ deleteVisible: boolean,
                                         modal
                                         mode="time"
                                         open={openStart}
-                                        date={startTime}
+                                        date={propsStart}
+                                        locale='fr-FR'
                                         onConfirm={(val) => {
-                                            console.log(val.toLocaleTimeString('en-US'));
+                                            var time = val.toLocaleTimeString();
+                                            console.log(time);
                                             setOpenStart(false);
-                                            setStartTime(val);
+                                            setStartTime(time);
                                         }}
                                         onCancel={() => {
                                             setOpenStart(false);
@@ -222,11 +227,11 @@ deleteVisible: boolean,
                                         modal
                                         mode="time"
                                         open={openEnd}
-                                        date={endTime}
+                                        date={propsStart}
                                         onConfirm={(val) => {
-                                            console.log(val.toLocaleTimeString('en-US'));
+                                            var time = val.toLocaleTimeString('en-US');
                                             setOpenEnd(false);
-                                            setEndTime(val);
+                                            setEndTime(time);
                                         }}
                                         onCancel={() => {
                                             setOpenEnd(false);
@@ -271,6 +276,9 @@ const styles = StyleSheet.create({
     timeWrapper: {
         width: '40%',
     },
+    endTimeWrapper: {
+        paddingRight: '10px'
+    }
 });
 
 export default ScheduleModal;

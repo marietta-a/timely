@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import moment from 'moment';
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Pressable, Text, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { SafeAreaView } from "react-native-safe-area-context"
@@ -21,8 +21,10 @@ const ScheduleTemplate: React.FC<{
     const ItemSelected = (item: ISchedule) => {
          OnItemSelected(item);
     }
+    
+
     return (
-        <SafeAreaView style={{position: 'absolute'}}>
+        <SafeAreaView style={{position: 'absolute', zIndex: 1}}>
             {
                     records.map(record => {
                         const defaultStartTime = moment(SLOT_STARTTIME, 'HH: mm');
@@ -39,12 +41,12 @@ const ScheduleTemplate: React.FC<{
                         const top = ((startDiff) * TIMESLOT_HEIGHT) + TIMESLOT_PADDINGTOP + (startMinute/60 * TIMESLOT_HEIGHT) + 5 + startDiff;
                         const topEnd = ((endDiff) * TIMESLOT_HEIGHT) + TIMESLOT_PADDINGTOP + (endMinute/60 * TIMESLOT_HEIGHT) + 5 + endDiff;
                         const slotHeight = topEnd - top;
+
                         return (
                             <Pressable key={record.Id} onPress={() => ItemSelected(record)} style={{
                                 top: top,
                                 left: left,
-                                position: 'absolute',
-                                backgroundColor: record?.Subject?.Color,
+                                backgroundColor: record?.Color,
                                 borderRadius: 5,
                                 width: TIMESLOT_WIDTH - 5,
                                 height: slotHeight,
@@ -59,8 +61,8 @@ const ScheduleTemplate: React.FC<{
                                 elevation: 4,
                             }}>
                               <TouchableOpacity>
-                                <Text style={{color: '#000', fontSize: 14}}>{record?.Subject?.Name}</Text>
-                                <Text style={{color: '#000', fontSize: 12}}>{record.Room}</Text>
+                                <Text style={{color: '#000', fontSize: 14}}>{record.SubjectName}</Text>
+                                <Text style={{color: '#000', fontSize: 12}}>{record.Room} </Text>
                               </TouchableOpacity>
                             </Pressable>
                         );
