@@ -101,6 +101,7 @@ const TimeTablePage = () => {
         setModalVisibility(false);
     };
     const onScheduleSelected = (item: ISchedule) => {
+        setDeleteVisible(item.Id > 0);
         setModalVisibility(true);
         setSchedule(item);
     };
@@ -122,15 +123,14 @@ const TimeTablePage = () => {
         console.log('adding ...');
         ScheduleCRUD.addSchedule(item).then(() =>
         {
-            let subject =  subjects.find(b => b.Id == schedule.SubjectCode || b.Id === schedule.SubjectCode);
-            let weekDay = WeekDays.find(w => w.SortOrder == schedule.DayOfTheWeek || w.SortOrder === schedule.DayOfTheWeek);
+            let subject =  subjects.find(b => b.Id == item.SubjectCode || b.Id === item.SubjectCode);
+            let weekDay = WeekDays.find(w => w.SortOrder == item.DayOfTheWeek || w.SortOrder === item.DayOfTheWeek);
 
             item.Subject = subject;
             item.WeekDay = weekDay;
-            item.SubjectName = subject?.Name;
-            item.Color = subject?.Color;
+            
+            console.log(JSON.stringify(item));
 
-           // console.log(JSON.stringify(item));
             schedules.push(item);
             onRefresh();
         });

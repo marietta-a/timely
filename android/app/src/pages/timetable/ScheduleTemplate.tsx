@@ -24,7 +24,7 @@ const ScheduleTemplate: React.FC<{
     
 
     return (
-        <SafeAreaView style={{position: 'absolute', zIndex: 1}}>
+        <SafeAreaView style={{position: 'absolute'}}>
             {
                     records.map(record => {
                         const defaultStartTime = moment(SLOT_STARTTIME, 'HH: mm');
@@ -37,13 +37,15 @@ const ScheduleTemplate: React.FC<{
                         const startDiff = startHour - defaultStartTime.hour();
                         const endDiff = endHour - defaultStartTime.hour();
 
-                        const left = (TIMESLOT_WIDTH * (record.DayOfTheWeek + 1)) - (TIMESLOT_PADDINGLEFT * 2);
+                        const leftOld = (TIMESLOT_WIDTH * (record.DayOfTheWeek + 1)) - (TIMESLOT_PADDINGLEFT * 2);
                         const top = ((startDiff) * TIMESLOT_HEIGHT) + TIMESLOT_PADDINGTOP + (startMinute/60 * TIMESLOT_HEIGHT) + 5 + startDiff;
                         const topEnd = ((endDiff) * TIMESLOT_HEIGHT) + TIMESLOT_PADDINGTOP + (endMinute/60 * TIMESLOT_HEIGHT) + 5 + endDiff;
                         const slotHeight = topEnd - top;
+                        const left  = 40 +  (TIMESLOT_WIDTH * record.DayOfTheWeek);
 
                         return (
                             <Pressable key={record.Id} onPress={() => ItemSelected(record)} style={{
+                                position: 'absolute',
                                 top: top,
                                 left: left,
                                 backgroundColor: record?.Color,

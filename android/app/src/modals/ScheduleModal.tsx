@@ -57,12 +57,21 @@ deleteVisible: boolean,
             EndTime: !isNullOrEmpty(endTime) ? endTime : props?.EndTime,
             WeekDay: !isNullOrEmpty(weekDay?.Day) ? weekDay : props?.WeekDay,
             SubjectName: subject?.Name ?? props?.SubjectName,
-            Room: room ?? props?.Room,
+            Room: !isNullOrEmpty(room) ? room : props?.Room,
         };
         setSchedule(sched);
     }, [schedule?.Id, props.Id, props?.WeekDay?.SortOrder, props?.SubjectCode, weekDay?.SortOrder, subject.Id, startTime, endTime, props?.WeekDay, weekDay, props?.SubjectName, subjectName, props?.Room, room, subject?.Name]);
 
 
+
+    const reinitializeStates = () => {
+        setWeekDay(dayOfTheWeek);
+        setSchedule(new Schedule ());
+        setSubject(new Subject());
+        setStartTime('');
+        setEndTime('');
+        setRoom('');
+    }
     const invokeWeekDayDropdown = () => {
         setWeekDayVisible(true);
     };
@@ -79,8 +88,8 @@ deleteVisible: boolean,
         setSubjectVisibility(false);
     };
     const handleModalClosing = () => {
-        console.log('closing schedule modal');
         onRequestClose(false);
+        reinitializeStates();
     };
     const handleSubjectModalClosing = () => {
         setSubjectVisibility(false);
@@ -89,12 +98,12 @@ deleteVisible: boolean,
     const handleSave = () => {
         console.log(schedule);
         onItemSaved(schedule);
-       // reinitializeStates();
+       reinitializeStates();
     };
 
     const handleDelete = () => {
         onItemDeleted(props?.Id ?? schedule.Id);
-       // reinitializeStates();
+       reinitializeStates();
     };
 
     const subjectWrapper = {
@@ -103,7 +112,7 @@ deleteVisible: boolean,
           width: '98%',
           borderBottomColor: '#555555',
           paddingBottom: 0,
-          color: subject?.Color,
+          color: subject?.Color ?? props?.Subject?.Color,
         };
 
     return (
@@ -155,7 +164,7 @@ deleteVisible: boolean,
                                 defaultValue={props?.SubjectName}
                                 autoFocus={true}
                                 placeholder="required*"
-                                placeholderTextColor= {requiredFieldColor}
+                                placeholderTextColor= { requiredFieldColor}
                                 editable={false}
                             />
                             <SubjectDropdown
