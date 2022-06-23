@@ -21,7 +21,7 @@ import SubjectCRUD from "../../assets/crud/SubjectCRUD";
 
 
 const subjects: ISubject[] = [];
-const schedules: ISchedule[] = [];
+let schedules: ISchedule[] = [];
 let emptyState: ISchedule = {
     Id: -1,
     DayOfTheWeek: 0,
@@ -55,9 +55,9 @@ const getAllRecords = async() => {
         schedule.WeekDay = weekDay;
         schedule.SubjectName = subject?.Name;
         schedule.Color = subject?.Color;
-        schedules.push(schedule);
         return schedule;
     });
+    schedules = data;
 };
 
 const getAllSubjects = async() => {
@@ -87,14 +87,17 @@ const TimeTablePage = () => {
 
     useEffect(() => {
         getAllSubjects().then(() => getAllRecords().then(() => onRefresh()));
-    }, [onRefresh]);
+    }, [onRefresh, schedule]);
 
     const OnWeekDaySelected = (weekDaySlot: WeekDaySlot) => {
-        selectedSchedule.WeekDay = weekDaySlot?.DayOfTheWeek;
-        selectedSchedule.day = weekDaySlot?.DayOfTheWeek?.Day;
-        selectedSchedule.DayOfTheWeek = weekDaySlot?.DayOfTheWeek?.SortOrder;
-        selectedSchedule.StartTime = weekDaySlot.slot;
-        setSchedule(selectedSchedule);
+        var sched = new Schedule();
+        sched.Id = -1;
+        sched.WeekDay = weekDaySlot?.DayOfTheWeek;
+        sched.day = weekDaySlot?.DayOfTheWeek?.Day;
+        sched.DayOfTheWeek = weekDaySlot?.DayOfTheWeek?.SortOrder;
+        sched.StartTime = weekDaySlot.slot;
+        setSchedule(sched);
+        setDeleteVisible(sched.Id > 0);
         setModalVisibility(true);
     };
     const handleItemSelected = () => {
@@ -108,6 +111,8 @@ const TimeTablePage = () => {
 
    const handleSave = (record: Schedule) => {
         let item = Object.assign(new Schedule(), record);
+        console.log(item);
+        console.log(item.Id);
         if (item.Id > 0 ){
             updateRecord(item);
         }
@@ -128,11 +133,11 @@ const TimeTablePage = () => {
 
             item.Subject = subject;
             item.WeekDay = weekDay;
-            
             console.log(JSON.stringify(item));
 
             schedules.push(item);
-            onRefresh();
+            setSchedule(item);
+            //onRefresh();
         });
     }
 
@@ -144,6 +149,7 @@ const TimeTablePage = () => {
                 var index = schedules.indexOf(oldRecord);
                 schedules.splice(index, 1, record);
             }
+            setSchedule(schedule);
             onRefresh();
         });
     }
@@ -178,7 +184,7 @@ const TimeTablePage = () => {
                 onRequestClose={(visible: boolean) => {setModalVisibility(visible); }}/>
            </ScrollView>
         </SafeAreaView>
-    )
+    );
 };
 
 const styles = StyleSheet.create({

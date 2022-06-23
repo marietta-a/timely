@@ -31,6 +31,8 @@ deleteVisible: boolean,
         ShortName: "",
         SortOrder: 0
     };
+    const initialState = new Schedule();
+    initialState.Id = -1;
     const date = new Date().toDateString() + ' ' + props.StartTime;
     const propsStart = new Date(date);
     const [weekDay, setWeekDay] = useState(props?.WeekDay ?? dayOfTheWeek);
@@ -44,7 +46,7 @@ deleteVisible: boolean,
     const [subjectVisible, setSubjectVisibility] = useState(false);
     const [subjectName, setSubjectName] = useState('');
     const [dayName, setDayName] = useState('');
-    const [room, setRoom] = useState('');
+    const [room, setRoom] = useState(props?.Room);
 
     useEffect(() => {
         //setDeleteVisible(deleteVisible);
@@ -57,21 +59,24 @@ deleteVisible: boolean,
             EndTime: !isNullOrEmpty(endTime) ? endTime : props?.EndTime,
             WeekDay: !isNullOrEmpty(weekDay?.Day) ? weekDay : props?.WeekDay,
             SubjectName: subject?.Name ?? props?.SubjectName,
-            Room: !isNullOrEmpty(room) ? room : props?.Room,
+            Room: room,
         };
         setSchedule(sched);
-    }, [schedule?.Id, props.Id, props?.WeekDay?.SortOrder, props?.SubjectCode, weekDay?.SortOrder, subject.Id, startTime, endTime, props?.WeekDay, weekDay, props?.SubjectName, subjectName, props?.Room, room, subject?.Name]);
+    }, [schedule?.Id, props.Id, props?.WeekDay?.SortOrder, props.SubjectCode,
+        weekDay?.SortOrder, subject.Id, startTime, endTime, props?.WeekDay,
+        weekDay, props?.SubjectName, subjectName, props?.Room, room,
+        subject?.Name, props?.StartTime, props?.EndTime]);
 
 
 
     const reinitializeStates = () => {
         setWeekDay(dayOfTheWeek);
-        setSchedule(new Schedule ());
+        setSchedule(initialState);
         setSubject(new Subject());
         setStartTime('');
         setEndTime('');
         setRoom('');
-    }
+    };
     const invokeWeekDayDropdown = () => {
         setWeekDayVisible(true);
     };
