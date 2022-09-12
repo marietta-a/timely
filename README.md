@@ -7,8 +7,8 @@
 Timely
 
 ## Description
-An android time table application developed using React Native and TypeScript
-Beginner's project created to farmiliarize myself with React Native 
+An android time table application developed using React Native and TypeScript.
+Beginner's project created to learn React-Native 
 
 If you have ideas for releases in the future, it is a good idea to list them in the README.
 
